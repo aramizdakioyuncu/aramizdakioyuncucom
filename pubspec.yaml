@@ -16,7 +16,11 @@ dependencies:
   cached_network_image: ^3.4.1
   cupertino_icons: ^1.0.6
   carousel_slider: ^5.0.0
+  photo_view: ^0.15.0
+  like_button: ^2.0.5
+
   armoyu_services: ^1.0.0+7
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

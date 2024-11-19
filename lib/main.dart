@@ -1,4 +1,4 @@
-import 'package:aramizdakioyuncucom/app.dart';
+import 'package:aramizdakioyuncucom/app/app.dart';
 import 'package:flutter/material.dart';
 
 void main() {
