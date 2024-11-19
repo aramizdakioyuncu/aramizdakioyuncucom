@@ -1,9 +1,9 @@
-import 'package:aramizdakioyuncucom/modules/home/views/home_view.dart';
+import 'package:aramizdakioyuncucom/modules/home/controllers/home_controller.dart';
 import 'package:get/get.dart';
 
 class HomeBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<HomeView>(() => const HomeView());
+    Get.lazyPut<HomeController>(() => HomeController());
   }
 }

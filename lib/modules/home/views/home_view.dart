@@ -1,4 +1,6 @@
+import 'package:aramizdakioyuncucom/modules/home/controllers/home_controller.dart';
 import 'package:aramizdakioyuncucom/utils/applist.dart';
+import 'package:aramizdakioyuncucom/widgets/app_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,8 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(HomeController());
+
     return Scaffold(
       backgroundColor: Colors.black87,
       appBar: AppBar(
@@ -34,7 +38,15 @@ class HomeView extends StatelessWidget {
             icon: const Icon(Icons.search),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              AppWidget.loginModal(
+                context,
+                username: controller.usernameController.value,
+                userpassword: controller.userpassController.value,
+                login: controller.login,
+                register: controller.login,
+              );
+            },
             icon: const Icon(Icons.person),
           ),
         ],
