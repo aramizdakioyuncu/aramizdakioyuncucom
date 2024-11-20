@@ -37,17 +37,39 @@ class HomeView extends StatelessWidget {
             onPressed: () {},
             icon: const Icon(Icons.search),
           ),
-          IconButton(
-            onPressed: () {
-              AppWidget.loginModal(
-                context,
-                username: controller.usernameController.value,
-                userpassword: controller.userpassController.value,
-                login: controller.login,
-                register: controller.login,
-              );
-            },
-            icon: const Icon(Icons.person),
+          Obx(
+            () => Applist.currentUser.value == null
+                ? IconButton(
+                    onPressed: () {
+                      AppWidget.loginModal(
+                        context,
+                        username: controller.usernameController.value,
+                        userpassword: controller.userpassController.value,
+                        login: controller.login,
+                        register: controller.login,
+                      );
+                    },
+                    icon: const Icon(Icons.person),
+                  )
+                : Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.notifications),
+                      ),
+                      CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        foregroundImage: CachedNetworkImageProvider(
+                          Applist.currentUser.value!.avatar!.mediaURL.normalURL
+                              .value,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.menu),
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/media.dart';
 import 'package:aramizdakioyuncucom/app/data/models/user.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
@@ -22,7 +23,26 @@ class HomeController extends GetxController {
       password: userpassController.value.text,
     );
 
-    Applist.currentUser = User(userID: 1);
-    log(response['icerik']);
+    if (response['durum'] == 0) {
+      return;
+    }
+    log(response['icerik'].toString());
+
+    Applist.currentUser.value = User(
+      userID: response['icerik']['playerID'],
+      displayName: Rx<String>(response['icerik']['displayName']),
+      avatar: Media(
+        mediaID: response['icerik']['avatar']['media_ID'],
+        mediaURL: MediaURL(
+          bigURL: Rx<String>(response['icerik']['avatar']['media_bigURL']),
+          normalURL: Rx<String>(response['icerik']['avatar']['media_URL']),
+          minURL: Rx<String>(response['icerik']['avatar']['media_minURL']),
+        ),
+      ),
+    );
+
+    Applist.currentUser.refresh();
+
+    Get.back();
   }
 }
