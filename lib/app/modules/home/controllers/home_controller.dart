@@ -1,48 +1,31 @@
-import 'dart:developer';
-
-import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/media.dart';
 import 'package:aramizdakioyuncucom/app/data/models/user.dart';
-import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
+import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  var usernameController = TextEditingController().obs;
-  var userpassController = TextEditingController().obs;
-
   @override
   void onInit() {
     super.onInit();
-  }
-
-  login() async {
-    Map<String, dynamic> response =
-        await ARMOYU.service.authServices.previuslogin(
-      username: usernameController.value.text,
-      password: userpassController.value.text,
-    );
-
-    if (response['durum'] == 0) {
-      return;
+    if (Functions.box.read('currentUser') != null) {
+      Applist.currentUser.value =
+          User.fromJson(Functions.box.read('currentUser'));
     }
-    log(response['icerik'].toString());
 
-    Applist.currentUser.value = User(
-      userID: response['icerik']['playerID'],
-      displayName: Rx<String>(response['icerik']['displayName']),
-      avatar: Media(
-        mediaID: response['icerik']['avatar']['media_ID'],
-        mediaURL: MediaURL(
-          bigURL: Rx<String>(response['icerik']['avatar']['media_bigURL']),
-          normalURL: Rx<String>(response['icerik']['avatar']['media_URL']),
-          minURL: Rx<String>(response['icerik']['avatar']['media_minURL']),
-        ),
-      ),
-    );
+    if (Applist.currentUser.value == null) {
+      Functions.box.remove('userTOKEN');
+    }
 
-    Applist.currentUser.refresh();
-
-    Get.back();
+    if (Functions.box.read('username') != null &&
+        Functions.box.read('userTOKEN') != null) {
+      Functions.login(
+        username: Functions.box.read('username'),
+        password: Functions.box.read('userTOKEN'),
+      );
+    } else {
+      Applist.currentUser.value = null;
+      Functions.box.remove('userTOKEN');
+      Functions.box.remove('currentUser');
+    }
   }
 }

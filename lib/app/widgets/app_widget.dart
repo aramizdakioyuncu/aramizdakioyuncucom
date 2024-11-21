@@ -1,14 +1,13 @@
+import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AppWidget {
-  static void loginModal(
-    context, {
-    required TextEditingController username,
-    required TextEditingController userpassword,
-    required Function login,
-    required Function register,
-  }) {
+  static void loginModal(context) {
+    var username = TextEditingController().obs;
+    var userpassword = TextEditingController().obs;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -37,7 +36,7 @@ class AppWidget {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextField(
-                                  controller: username,
+                                  controller: username.value,
                                   decoration: const InputDecoration(
                                     labelText: "Kullanıcı Adı",
                                     border: OutlineInputBorder(),
@@ -47,7 +46,7 @@ class AppWidget {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextField(
-                                  controller: userpassword,
+                                  controller: userpassword.value,
                                   decoration: const InputDecoration(
                                     labelText: "Şifre",
                                     border: OutlineInputBorder(),
@@ -106,7 +105,10 @@ class AppWidget {
                                     ),
                                   ),
                                   onPressed: () {
-                                    login();
+                                    Functions.login(
+                                      username: username.value.text,
+                                      password: userpassword.value.text,
+                                    );
                                   },
                                   child: const Text("Giriş YAP"),
                                 ),
@@ -147,9 +149,7 @@ class AppWidget {
                                     ),
                                   ),
                                 ),
-                                onPressed: () {
-                                  register();
-                                },
+                                onPressed: () {},
                                 child: const Text("KAYIT OL"),
                               ),
                             ],

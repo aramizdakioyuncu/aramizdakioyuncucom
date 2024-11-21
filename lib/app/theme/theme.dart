@@ -11,17 +11,26 @@ final ThemeData appThemeData = ThemeData(
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: WidgetStateProperty.all(const Color(0xFF3C4CBD)),
+      backgroundColor:
+          WidgetStateProperty.all(const Color.fromARGB(255, 66, 133, 244)),
       foregroundColor: WidgetStateProperty.all(Colors.white),
+      shape: const WidgetStatePropertyAll(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(2),
+          ), // Köşeleri sıfırla
+        ),
+      ),
     ),
   ),
   buttonTheme: const ButtonThemeData(
     buttonColor: Colors.red,
   ),
   textButtonTheme: TextButtonThemeData(
-      style: ButtonStyle(
-    foregroundColor: WidgetStateProperty.all(Colors.white),
-  )),
+    style: ButtonStyle(
+      foregroundColor: WidgetStateProperty.all(Colors.white),
+    ),
+  ),
   snackBarTheme: const SnackBarThemeData(
     backgroundColor: Color(0xFF3C4CBD),
     contentTextStyle: TextStyle(
