@@ -1,14 +1,12 @@
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class FooterWidget {
   static Widget custom() {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        width: Get.width,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -31,11 +29,9 @@ class FooterWidget {
           children: [
             Row(
               children: [
-                const Spacer(),
-                SizedBox(
-                  width: Get.width / 4,
-                  height: 300,
-                  child: const Padding(
+                const Expanded(
+                  flex: 3,
+                  child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Column(
                       children: [
@@ -59,10 +55,9 @@ class FooterWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: Get.width / 4,
-                  height: 300,
-                  child: const Padding(
+                const Expanded(
+                  flex: 3,
+                  child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Column(
                       children: [
@@ -86,152 +81,155 @@ class FooterWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: Get.width / 4,
-                  height: 300,
+                Expanded(
+                  flex: 3,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(
+                    child: SizedBox(
+                      height: 300,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            const Text(
+                              "Haberler",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl:
+                                      "https://aramizdakioyuncu.com/galeri/yazi/1posterminnak1715776167.jpg",
+                                  width: 170,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                                const Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Fatsa'da Türk Halk Müziği konseri yapıldı.",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Konserde çok güzel eğlenildi ödülleri verildif akls fjklsg jklsgf kdsjdsks ljlık...",
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            const Divider(
+                              color: Colors.red,
+                              thickness: 0.5,
+                            ),
+                            Row(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl:
+                                      "https://aramizdakioyuncu.com/galeri/yazi/417haberlerminnak1675644437.jpg",
+                                  width: 170,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                                const Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "The Witcher 3 Patch 4.01 Güncellemesi",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Konserde çok güzel eğlenildi ödülleri verildif akls fjklsg jklsgf kdsjdsks ljlık...",
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 300,
                       child: Column(
                         children: [
                           const Text(
-                            "Haberler",
+                            "Sosyal Bağlantılar",
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Row(
-                            children: [
-                              CachedNetworkImage(
-                                imageUrl:
-                                    "https://aramizdakioyuncu.com/galeri/yazi/1posterminnak1715776167.jpg",
-                                width: 170,
-                                height: 100,
-                                fit: BoxFit.cover,
+                          Expanded(
+                            child: GridView.builder(
+                              itemCount: Applist.footersocailnetwork.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 1.4,
                               ),
-                              const Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        "Fatsa'da Türk Halk Müziği konseri yapıldı.",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Konserde çok güzel eğlenildi ödülleri verildif akls fjklsg jklsgf kdsjdsks ljlık...",
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
+                              itemBuilder: (context, index) {
+                                return CachedNetworkImage(
+                                  imageUrl: Applist.footersocailnetwork[index],
+                                  height: 40,
+                                  width: 40,
+                                );
+                              },
+                            ),
                           ),
-                          const Divider(
-                            color: Colors.red,
-                            thickness: 0.5,
+                          CachedNetworkImage(
+                            imageUrl:
+                                "https://aramizdakioyuncu.com/galeri/ana-yapi/etbis.png",
+                            height: 60,
+                            width: 60,
                           ),
-                          Row(
-                            children: [
-                              CachedNetworkImage(
-                                imageUrl:
-                                    "https://aramizdakioyuncu.com/galeri/yazi/417haberlerminnak1675644437.jpg",
-                                width: 170,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
-                              const Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        "The Witcher 3 Patch 4.01 Güncellemesi",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Konserde çok güzel eğlenildi ödülleri verildif akls fjklsg jklsgf kdsjdsks ljlık...",
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
+                          const Text(
+                            "Bu site ETBİS'e kayıtlıdır",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: Get.width / 4,
-                  height: 300,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        const Text(
-                          "Sosyal Bağlantılar",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Expanded(
-                          child: GridView.builder(
-                            itemCount: Applist.footersocailnetwork.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: 1.4,
-                            ),
-                            itemBuilder: (context, index) {
-                              return CachedNetworkImage(
-                                imageUrl: Applist.footersocailnetwork[index],
-                                height: 40,
-                                width: 40,
-                              );
-                            },
-                          ),
-                        ),
-                        CachedNetworkImage(
-                          imageUrl:
-                              "https://aramizdakioyuncu.com/galeri/ana-yapi/etbis.png",
-                          height: 60,
-                          width: 60,
-                        ),
-                        const Text(
-                          "Bu site ETBİS'e kayıtlıdır",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const Spacer(),
               ],
             ),
             const Row(

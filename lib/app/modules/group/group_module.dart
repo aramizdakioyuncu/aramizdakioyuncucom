@@ -1,4 +1,5 @@
 import 'package:aramizdakioyuncucom/app/modules/group/_main/views/group_view.dart';
+import 'package:aramizdakioyuncucom/app/modules/group/groupdetail/views/groupdetail_view.dart';
 import 'package:get/get.dart';
 
 class GroupModule {
@@ -11,7 +12,7 @@ class GroupModule {
     ),
     GetPage(
       name: "$route/detail",
-      page: () => const GroupView(),
+      page: () => const GroupdetailView(),
     ),
   ];
 }

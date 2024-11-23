@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:aramizdakioyuncucom/app/appinfo.dart';
 import 'package:aramizdakioyuncucom/app/routes/routes.dart';
 import 'package:aramizdakioyuncucom/app/theme/theme.dart';
@@ -15,6 +17,12 @@ class App extends StatelessWidget {
       theme: appThemeData,
       initialRoute: AppPages.initial,
       getPages: AppPages.routes,
+      enableLog: true,
+      popGesture: true,
+      routingCallback: (routing) {
+        log('Current route: ${routing?.current}');
+        log('Previous route: ${routing?.previous}');
+      },
     );
   }
 }

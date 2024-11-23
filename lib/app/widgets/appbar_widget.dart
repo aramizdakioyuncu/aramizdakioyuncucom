@@ -24,7 +24,11 @@ class AppbarWidget {
           ),
         ),
         actions: [
-          TextButton(onPressed: () {}, child: const Text("Gruplar")),
+          TextButton(
+              onPressed: () {
+                Get.toNamed("/gruplar");
+              },
+              child: const Text("Gruplar")),
           TextButton(onPressed: () {}, child: const Text("Galeriler")),
           TextButton(onPressed: () {}, child: const Text("Haberler")),
           TextButton(onPressed: () {}, child: const Text("Ekibimiz")),

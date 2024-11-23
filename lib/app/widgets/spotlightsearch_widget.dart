@@ -19,7 +19,7 @@ class SpotlightSearchWidget {
       time: const Duration(milliseconds: 500),
     );
 
-    void _onSearch(String query) {
+    void onSearch(String query) {
       searchQuery.value = query;
 
       filteredItems.value = allItems
@@ -54,7 +54,8 @@ class SpotlightSearchWidget {
                 children: [
                   // Sabit TextField
                   TextField(
-                    onChanged: _onSearch,
+                    autofocus: true,
+                    onChanged: onSearch,
                     decoration: InputDecoration(
                       hintText: "Ara...",
                       prefixIcon: const Icon(Icons.search),

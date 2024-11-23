@@ -10,6 +10,8 @@ import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/team.dart';
 import 'package:aramizdakioyuncucom/app/data/models/Chat/chat.dart';
 import 'package:aramizdakioyuncucom/app/data/models/Social/post.dart';
 import 'package:aramizdakioyuncucom/app/data/models/Story/storylist.dart';
+import 'package:aramizdakioyuncucom/app/data/models/game.dart';
+import 'package:aramizdakioyuncucom/app/data/models/socialaccounts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,7 +30,7 @@ class User {
 
   Rx<Country>? country;
   Rx<Province>? province;
-  String? registerDate = "";
+  Rxn<String>? registerDate;
   Job? job;
   Role? role;
 
@@ -72,6 +74,10 @@ class User {
   RxList<Post>? widgetPosts;
   RxList<StoryList>? widgetStoriescard;
 
+  Rxn<Socialaccounts>? socialaccounts;
+
+  RxList<Game>? popularGames;
+
   User({
     this.userID,
     this.userName,
@@ -112,6 +118,8 @@ class User {
     this.myStations,
     this.widgetPosts,
     this.widgetStoriescard,
+    this.socialaccounts,
+    this.popularGames,
   });
 
   // JSON'dan User nesnesine dönüşüm

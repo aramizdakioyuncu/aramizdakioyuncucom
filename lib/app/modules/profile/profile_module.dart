@@ -6,7 +6,7 @@ class ProfileModule {
 
   static final List<GetPage> routes = [
     GetPage(
-      name: route,
+      name: "$route/:username",
       page: () => const ProfileView(),
     ),
   ];

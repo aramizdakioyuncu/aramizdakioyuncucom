@@ -6,9 +6,38 @@ import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 class Functions {
   static final box = GetStorage();
+
+  static void openUrlWeb(String url) {
+    html.window.open(url, '_blank'); // Yeni sekmede açar
+  }
+
+  static void cookiesetup() {
+    if (Functions.box.read('currentUser') != null) {
+      Applist.currentUser.value =
+          User.fromJson(Functions.box.read('currentUser'));
+    }
+
+    if (Applist.currentUser.value == null) {
+      Functions.box.remove('userTOKEN');
+    }
+
+    if (Functions.box.read('username') != null &&
+        Functions.box.read('userTOKEN') != null) {
+      Functions.login(
+        username: Functions.box.read('username'),
+        password: Functions.box.read('userTOKEN'),
+      );
+    } else {
+      Applist.currentUser.value = null;
+      Functions.box.remove('userTOKEN');
+      Functions.box.remove('currentUser');
+    }
+  }
 
   static void performSearch(String query, RxList list) async {
     if (query.isEmpty) {
@@ -67,6 +96,10 @@ class Functions {
     );
 
     if (response['durum'] == 0) {
+      return;
+    }
+
+    if (response['aciklama'] == "Oyuncu bilgileri yanlış!") {
       box.remove('userTOKEN');
       return;
     }
