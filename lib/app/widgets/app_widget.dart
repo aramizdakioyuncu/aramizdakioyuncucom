@@ -104,11 +104,16 @@ class AppWidget {
                                       ),
                                     ),
                                   ),
-                                  onPressed: () {
-                                    Functions.login(
+                                  onPressed: () async {
+                                    bool islogin = await Functions.login(
                                       username: username.value.text,
                                       password: userpassword.value.text,
                                     );
+
+                                    if (islogin) {
+                                      // Get.back();
+                                      Functions.reloadPage();
+                                    }
                                   },
                                   child: const Text("Giriş YAP"),
                                 ),

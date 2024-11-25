@@ -11,11 +11,21 @@ import 'dart:html' as html;
 
 class Functions {
   static final box = GetStorage();
+//WEB
 
-  static void openUrlWeb(String url) {
+  static void openUrlWebBlank(String url) {
     html.window.open(url, '_blank'); // Yeni sekmede açar
   }
 
+  static void openUrlWeb(String url) {
+    html.window.location.href = url;
+  }
+
+  static void reloadPage() {
+    html.window.location.reload();
+  }
+
+//WEB
   static void cookiesetup() {
     if (Functions.box.read('currentUser') != null) {
       Applist.currentUser.value =
@@ -88,7 +98,8 @@ class Functions {
     }
   }
 
-  static login({required String username, required String password}) async {
+  static Future<bool> login(
+      {required String username, required String password}) async {
     Map<String, dynamic> response =
         await ARMOYU.service.authServices.previuslogin(
       username: username,
@@ -96,12 +107,12 @@ class Functions {
     );
 
     if (response['durum'] == 0) {
-      return;
+      return false;
     }
 
     if (response['aciklama'] == "Oyuncu bilgileri yanlış!") {
       box.remove('userTOKEN');
-      return;
+      return false;
     }
 
     Applist.currentUser.value = User(
@@ -131,6 +142,6 @@ class Functions {
     box.write('userTOKEN', password);
     box.write('currentUser', Applist.currentUser.toJson());
 
-    Get.back();
+    return true;
   }
 }

@@ -181,7 +181,8 @@ class ProfileView extends StatelessWidget {
                                                   ? Container()
                                                   : IconButton(
                                                       onPressed: () {
-                                                        Functions.openUrlWeb(
+                                                        Functions
+                                                            .openUrlWebBlank(
                                                           controller
                                                               .profileInfo
                                                               .value!
@@ -199,7 +200,7 @@ class ProfileView extends StatelessWidget {
                                             ),
                                             IconButton(
                                               onPressed: () {
-                                                Functions.openUrlWeb(
+                                                Functions.openUrlWebBlank(
                                                   controller
                                                       .profileInfo
                                                       .value!
@@ -216,7 +217,7 @@ class ProfileView extends StatelessWidget {
                                             ),
                                             IconButton(
                                               onPressed: () {
-                                                Functions.openUrlWeb(
+                                                Functions.openUrlWebBlank(
                                                   controller
                                                       .profileInfo
                                                       .value!
@@ -233,7 +234,7 @@ class ProfileView extends StatelessWidget {
                                             ),
                                             IconButton(
                                               onPressed: () {
-                                                Functions.openUrlWeb(
+                                                Functions.openUrlWebBlank(
                                                   controller
                                                       .profileInfo
                                                       .value!
@@ -250,7 +251,7 @@ class ProfileView extends StatelessWidget {
                                             ),
                                             IconButton(
                                               onPressed: () {
-                                                Functions.openUrlWeb(
+                                                Functions.openUrlWebBlank(
                                                   controller
                                                       .profileInfo
                                                       .value!
@@ -267,7 +268,7 @@ class ProfileView extends StatelessWidget {
                                             ),
                                             IconButton(
                                               onPressed: () {
-                                                Functions.openUrlWeb(
+                                                Functions.openUrlWebBlank(
                                                   controller
                                                       .profileInfo
                                                       .value!
@@ -284,7 +285,7 @@ class ProfileView extends StatelessWidget {
                                             ),
                                             IconButton(
                                               onPressed: () {
-                                                Functions.openUrlWeb(
+                                                Functions.openUrlWebBlank(
                                                   controller
                                                       .profileInfo
                                                       .value!
@@ -301,7 +302,7 @@ class ProfileView extends StatelessWidget {
                                             ),
                                             IconButton(
                                               onPressed: () {
-                                                Functions.openUrlWeb(
+                                                Functions.openUrlWebBlank(
                                                   controller
                                                       .profileInfo
                                                       .value!
@@ -318,7 +319,7 @@ class ProfileView extends StatelessWidget {
                                             ),
                                             IconButton(
                                               onPressed: () {
-                                                Functions.openUrlWeb(
+                                                Functions.openUrlWebBlank(
                                                   controller
                                                       .profileInfo
                                                       .value!

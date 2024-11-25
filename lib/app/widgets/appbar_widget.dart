@@ -16,7 +16,8 @@ class AppbarWidget {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
-            onTap: () => Get.toNamed("/home"),
+            // onTap: () => Get.toNamed("/home"),
+            onTap: () => Functions.openUrlWeb("/home"),
             child: CachedNetworkImage(
               imageUrl:
                   "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu64.png",
@@ -25,12 +26,26 @@ class AppbarWidget {
         ),
         actions: [
           TextButton(
-              onPressed: () {
-                Get.toNamed("/gruplar");
-              },
-              child: const Text("Gruplar")),
-          TextButton(onPressed: () {}, child: const Text("Galeriler")),
-          TextButton(onPressed: () {}, child: const Text("Haberler")),
+            onPressed: () {
+              // Get.toNamed("/gruplar");
+              Functions.openUrlWeb("/gruplar");
+            },
+            child: const Text("Gruplar"),
+          ),
+          TextButton(
+            onPressed: () {
+              // Get.toNamed("/galeriler");
+              Functions.openUrlWeb("/galeriler");
+            },
+            child: const Text("Galeriler"),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.toNamed("/haberler");
+              Functions.openUrlWeb("/haberler");
+            },
+            child: const Text("Haberler"),
+          ),
           TextButton(onPressed: () {}, child: const Text("Ekibimiz")),
           TextButton(onPressed: () {}, child: const Text("Çekilişler")),
           TextButton(onPressed: () {}, child: const Text("Forum")),
@@ -78,9 +93,7 @@ class AppbarWidget {
             () => Applist.currentUser.value == null
                 ? IconButton(
                     onPressed: () {
-                      AppWidget.loginModal(
-                        Get.context!,
-                      );
+                      AppWidget.loginModal(Get.context!);
                     },
                     icon: const Icon(Icons.person),
                   )
@@ -327,7 +340,9 @@ class AppbarWidget {
                                                       ),
                                                     ),
                                                     onPressed: () {
-                                                      Get.toNamed("/oyuncular");
+                                                      // Get.toNamed("/oyuncular");
+                                                      Functions.openUrlWeb(
+                                                          "/oyuncular/${Applist.currentUser.value!.userName!.value}");
                                                     },
                                                     child: const Padding(
                                                       padding: EdgeInsets.all(
@@ -358,7 +373,8 @@ class AppbarWidget {
                                                           .remove('userTOKEN');
                                                       Functions.box.remove(
                                                           'currentUser');
-                                                      Get.back();
+                                                      // Get.back();
+                                                      Functions.reloadPage();
                                                     },
                                                     child: const Padding(
                                                       padding:
