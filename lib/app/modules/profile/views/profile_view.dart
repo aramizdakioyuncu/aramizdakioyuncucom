@@ -15,9 +15,7 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
 
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-    return BodyWidget.custom1(context, scaffoldKey,
+    return BodyWidget.custom1(context,
         bgImage:
             "https://aramizdakioyuncu.com/galeri/profilresimleri/1profilsayfaresim1664972413.jpg",
         body: [

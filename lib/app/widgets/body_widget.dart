@@ -7,9 +7,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class BodyWidget {
-  static Widget custom1(context, scaffoldKey,
+  static Widget custom1(context,
       {String? bgImage, required List<Widget> body}) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppbarWidget.costum1(context, scaffoldKey),
       endDrawer: Obx(
         () => Applist.currentUser.value == null

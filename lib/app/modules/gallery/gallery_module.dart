@@ -14,5 +14,9 @@ class GalleryModule {
       name: "$route/:gallery",
       page: () => const GalleryDetailView(),
     ),
+    GetPage(
+      name: "$route/:gallery/:page",
+      page: () => const GalleryDetailView(),
+    ),
   ];
 }

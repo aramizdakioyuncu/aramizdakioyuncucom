@@ -3,13 +3,15 @@ import 'dart:developer';
 import 'package:get/get.dart';
 
 class GalleryDetailController extends GetxController {
-  final gallery = Get.parameters['gallery'];
+  var gallery = Get.parameters['gallery'];
+  var page = Get.parameters['page'];
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
 
     log(gallery.toString());
+
+    page ??= "1";
   }
 }

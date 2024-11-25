@@ -6,11 +6,8 @@ class NewsdetailView extends StatelessWidget {
 
   @override
   Widget build(Object context) {
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
     return BodyWidget.custom1(
       context,
-      scaffoldKey,
       body: [],
     );
   }

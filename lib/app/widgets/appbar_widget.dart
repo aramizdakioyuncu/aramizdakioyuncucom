@@ -25,62 +25,226 @@ class AppbarWidget {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () {
-              // Get.toNamed("/gruplar");
-              Functions.openUrlWeb("/gruplar");
+          PopupMenuButton<String>(
+            icon: const Row(
+              children: [
+                Text('Gruplar', style: TextStyle(color: Colors.white)),
+                Icon(Icons.arrow_drop_down_outlined),
+              ],
+            ),
+            color: const Color.fromARGB(255, 33, 37, 41),
+
+            offset: const Offset(0, 48), // Menü aşağıda açılır
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'e-spor',
+                child: Row(
+                  children: [
+                    Icon(Icons.sports_esports, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      'E-Spor',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'spor',
+                child: Row(
+                  children: [
+                    Icon(Icons.sports, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      'Spor',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'yazilim-gelistirme',
+                child: Row(
+                  children: [
+                    Icon(Icons.engineering, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      'Yazılım & Geliştirme',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            onSelected: (value) {
+              // Get.toNamed("/gruplar/$value");
+              Functions.openUrlWeb("/gruplar/$value");
             },
-            child: const Text("Gruplar"),
+          ),
+          PopupMenuButton<String>(
+            icon: const Row(
+              children: [
+                Text(
+                  'Galeriler',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                Icon(Icons.arrow_drop_down_outlined),
+              ],
+            ),
+            color: const Color.fromARGB(255, 33, 37, 41),
+            offset: const Offset(0, 48), // Menü aşağıda açılır
+
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'american-truck-simulator',
+                child: Row(
+                  children: [
+                    Icon(Icons.sports_esports, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      'American Truck Simulator',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'assetto-Corsa',
+                child: Row(
+                  children: [
+                    Icon(Icons.sports_esports, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      'Assetto Corsa',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'euro-truck-simulator-2',
+                child: Row(
+                  children: [
+                    Icon(Icons.sports_esports, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      'Euro Truck Simulator 2',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            onSelected: (value) {
+              // Get.toNamed("/galeriler/$value");
+              Functions.openUrlWeb("/galeriler/$value");
+            },
           ),
           TextButton(
             onPressed: () {
-              // Get.toNamed("/galeriler");
-              Functions.openUrlWeb("/galeriler");
-            },
-            child: const Text("Galeriler"),
-          ),
-          TextButton(
-            onPressed: () {
-              Get.toNamed("/haberler");
+              // Get.toNamed("/haberler");
               Functions.openUrlWeb("/haberler");
             },
             child: const Text("Haberler"),
           ),
-          TextButton(onPressed: () {}, child: const Text("Ekibimiz")),
-          TextButton(onPressed: () {}, child: const Text("Çekilişler")),
-          TextButton(onPressed: () {}, child: const Text("Forum")),
-          TextButton(onPressed: () {}, child: const Text("Modlar")),
-          TextButton(onPressed: () {}, child: const Text("Mağaza")),
-          TextButton(onPressed: () {}, child: const Text("Projeler")),
-          // Obx(
-          //   () => AnimatedSize(
-          //     duration: const Duration(milliseconds: 300),
-          //     curve: Curves.easeInOut,
-          //     child: isTextFieldVisible.value
-          //         ? SizedBox(
-          //             width: 100,
-          //             child: TextField(
-          //               controller: searchController.value,
-          //               style: const TextStyle(
-          //                 color: Colors.white,
-          //               ),
-          //               onChanged: (value) {
-          //                 searchText.value = value;
-          //                 log(value);
-          //               },
-          //               decoration: const InputDecoration(
-          //                 hintText: "Ara...",
-          //                 border: InputBorder.none, // Sınırları kaldır
-          //                 focusedBorder:
-          //                     OutlineInputBorder(), // Odaklanmış sınır yok
-          //                 isCollapsed: true, // İçeriği daralt, kaymayı önler
-          //               ),
-          //             ),
-          //           )
-          //         : const SizedBox.shrink(),
-          //   ),
-          // ),
+          PopupMenuButton<String>(
+            icon: const Row(
+              children: [
+                Text(
+                  'Ekibimiz',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                Icon(Icons.arrow_drop_down_outlined),
+              ],
+            ),
+            color: const Color.fromARGB(255, 33, 37, 41),
+            offset: const Offset(0, 48), // Menü aşağıda açılır
 
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'ekibimiz-ile-tanisin',
+                child: Row(
+                  children: [
+                    Icon(Icons.business_rounded, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      'Ekibimiz',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'okul-temsilcileri',
+                child: Row(
+                  children: [
+                    Icon(Icons.school_rounded, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      'Okul Temsilcileri',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'kurallarımız',
+                child: Row(
+                  children: [
+                    Icon(Icons.rule_rounded, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      'Kurallarımız',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            onSelected: (value) {
+              // Get.toNamed("/$value");
+              Functions.openUrlWeb("/$value");
+            },
+          ),
+          TextButton(
+            onPressed: () {
+              // Get.toNamed("/cekilisler");
+              Functions.openUrlWeb("/cekilisler");
+            },
+            child: const Text("Çekilişler"),
+          ),
+          TextButton(
+            onPressed: () {
+              // Get.toNamed("/forum");
+              Functions.openUrlWeb("/forum");
+            },
+            child: const Text("Forum"),
+          ),
+          TextButton(
+            onPressed: () {
+              // Get.toNamed("/modlar");
+              Functions.openUrlWeb("/modlar");
+            },
+            child: const Text("Modlar"),
+          ),
+          TextButton(
+            onPressed: () {
+              // Get.toNamed("/magaza");
+              Functions.openUrlWeb("/magaza");
+            },
+            child: const Text("Mağaza"),
+          ),
+          TextButton(
+            onPressed: () {
+              // Get.toNamed("/projeler");
+              Functions.openUrlWeb("/projeler");
+            },
+            child: const Text("Projeler"),
+          ),
           IconButton(
             onPressed: () {
               isTextFieldVisible.value = !isTextFieldVisible.value;

@@ -3,7 +3,7 @@ import 'package:aramizdakioyuncucom/app/modules/splash/views/splash_view.dart';
 import 'package:get/get.dart';
 
 class SplashModule {
-  static const route = '/';
+  static const route = '/splash';
 
   static final List<GetPage> routes = [
     GetPage(

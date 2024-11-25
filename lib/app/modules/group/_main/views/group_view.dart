@@ -12,9 +12,7 @@ class GroupView extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put(GroupController());
 
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-    return BodyWidget.custom1(context, scaffoldKey, body: [
+    return BodyWidget.custom1(context, body: [
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 80.0),
         child: Wrap(

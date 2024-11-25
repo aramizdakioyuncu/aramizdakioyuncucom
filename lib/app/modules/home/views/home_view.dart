@@ -14,10 +14,9 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(HomeController());
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     log((Applist.currentUser.value == null).toString());
 
-    return BodyWidget.custom1(context, scaffoldKey, body: [
+    return BodyWidget.custom1(context, body: [
       CarouselSlider.builder(
         options: CarouselOptions(
           height: 700,

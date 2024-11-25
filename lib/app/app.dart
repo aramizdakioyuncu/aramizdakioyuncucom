@@ -16,6 +16,7 @@ class App extends StatelessWidget {
       title: AppInfo.appName,
       theme: appThemeData,
       initialRoute: AppPages.initial,
+      unknownRoute: AppPages.notFound404page.first,
       getPages: AppPages.routes,
       enableLog: true,
       popGesture: true,

@@ -3,18 +3,14 @@ import 'package:aramizdakioyuncucom/app/widgets/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 
 class NewsView extends StatelessWidget {
   const NewsView({super.key});
 
   @override
   Widget build(Object context) {
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
     return BodyWidget.custom1(
       context,
-      scaffoldKey,
       body: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 80.0),
