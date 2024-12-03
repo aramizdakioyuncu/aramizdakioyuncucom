@@ -7,7 +7,8 @@ import 'package:aramizdakioyuncucom/app/data/models/game.dart';
 import 'package:aramizdakioyuncucom/app/data/models/socialaccounts.dart';
 import 'package:aramizdakioyuncucom/app/data/models/user.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
-import 'package:aramizdakioyuncucom/app/services/functions.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/login&register&password/login.dart';
+import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:get/get.dart';
 
 class ProfileController extends GetxController {
@@ -17,108 +18,114 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    Functions.cookiesetup();
 
     fetchuser(profileUsername);
   }
 
   fetchuser(username) async {
-    Map<String, dynamic> response =
-        await ARMOYU.service.utilsServices.lookProfilewithusername(
-      username: "deneme",
-      password: "deneme",
-      userusername: username,
-    );
-    if (response['durum'] == 0) {
+    LookProfilewithUsernameResponse response = await ARMOYU
+        .service.utilsServices
+        .lookProfilewithusername(userusername: username);
+
+    log(response.result.status.toString());
+
+    if (!response.result.status ||
+        response.result.description == "Oyuncu bilgileri yanlış!") {
       return;
     }
 
+    log(response.response!.toJson().toString());
+
     List<Game> populargamelist = [];
-    for (var game in response['icerik']['popularGames']) {
-      populargamelist.add(
-        Game(
-          gameID: 0,
-          name: "name",
-          logo: Media(
-            mediaID: game['game_logo']['media_ID'],
-            mediaURL: MediaURL(
-              bigURL: Rx(game['game_logo']['media_bigURL']),
-              normalURL: Rx(game['game_logo']['media_URL']),
-              minURL: Rx(game['game_logo']['media_minURL']),
+
+    if (response.response!.popularGames != null) {
+      for (PopularGame game in response.response!.popularGames!) {
+        populargamelist.add(
+          Game(
+            gameID: game.gameID!,
+            name: game.gameName!,
+            logo: Media(
+              mediaID: game.gameLogo!.mediaID,
+              mediaURL: MediaURL(
+                bigURL: Rx(game.gameLogo!.mediaURL.bigURL),
+                normalURL: Rx(game.gameLogo!.mediaURL.normalURL),
+                minURL: Rx(game.gameLogo!.mediaURL.minURL),
+              ),
             ),
+            gameURL: game.gameURL!,
           ),
-          gameURL: game['game_URL'],
-        ),
-      );
+        );
+      }
     }
 
     profileInfo.value = User(
-      displayName: Rx<String>(response['icerik']['displayName']),
-      xp: Rx<String>(response['icerik']['levelXP']),
-      aboutme: Rx(response['icerik']['detailInfo']['about']),
-      registerDate: Rxn(response['icerik']['registeredDateV2']),
-      burc: Rx(response['icerik']['burc']),
+      displayName: Rx<String>(response.response!.displayName!),
+      xp: Rx<String>(response.response!.levelXP!),
+      aboutme: Rx(response.response!.detailInfo!.about!),
+      registerDate: Rxn(response.response!.registeredDate),
+      burc: Rx(response.response!.burc!),
       popularGames: RxList<Game>(populargamelist),
-      country: response['icerik']['detailInfo']['country'] == null
+      country: response.response!.detailInfo!.country == null
           ? null
           : Rx(
               Country(
-                countryID: response['icerik']['detailInfo']['country']
-                    ['country_ID'],
-                name: response['icerik']['detailInfo']['country']
-                    ['country_name'],
-                countryCode: response['icerik']['detailInfo']['country']
-                    ['country_code'],
-                phoneCode: response['icerik']['detailInfo']['country']
-                    ['country_phoneCode'],
+                countryID: response.response!.detailInfo!.country!.countryID,
+                name: response.response!.detailInfo!.country!.name,
+                countryCode: response.response!.detailInfo!.country!.code,
+                phoneCode: response.response!.detailInfo!.country!.phonecode,
               ),
             ),
-      province: response['icerik']['detailInfo']['province'] == null
+      province: response.response!.detailInfo!.province == null
           ? null
           : Rx(
               Province(
-                provinceID: response['icerik']['detailInfo']['province']
-                    ['province_ID'],
-                name: response['icerik']['detailInfo']['province']
-                    ['province_name'],
-                plateCode: response['icerik']['detailInfo']['province']
-                    ['province_plateCode'],
-                phoneCode: response['icerik']['detailInfo']['province']
-                    ['province_phoneCode'],
+                provinceID: response.response!.detailInfo!.province!.provinceID,
+                name: response.response!.detailInfo!.province!.name,
+                plateCode: response.response!.detailInfo!.province!.platecode,
+                phoneCode: response.response!.detailInfo!.province!.phonecode,
               ),
             ),
-      socialaccounts: Rxn<Socialaccounts>(
-        Socialaccounts(
-          facebook:
-              Rxn<String>(response['icerik']['socailAccounts']['facebook']),
-          github: Rxn<String>(response['icerik']['socailAccounts']['github']),
-          instagram:
-              Rxn<String>(response['icerik']['socailAccounts']['instagram']),
-          linkedin:
-              Rxn<String>(response['icerik']['socailAccounts']['linkedin']),
-          reddit: Rxn<String>(response['icerik']['socailAccounts']['reddit']),
-          steam: Rxn<String>(response['icerik']['socailAccounts']['steam']),
-          twitch: Rxn<String>(response['icerik']['socailAccounts']['twitch']),
-          youtube: Rxn<String>(response['icerik']['socailAccounts']['youtube']),
-          discord: null,
-        ),
-      ),
-      avatar: Media(
-        mediaID: response['icerik']['avatar']['media_ID'],
-        mediaURL: MediaURL(
-          bigURL: Rx<String>(response['icerik']['avatar']['media_bigURL']),
-          normalURL: Rx<String>(response['icerik']['avatar']['media_URL']),
-          minURL: Rx<String>(response['icerik']['avatar']['media_minURL']),
-        ),
-      ),
-      banner: Media(
-        mediaID: response['icerik']['banner']['media_ID'],
-        mediaURL: MediaURL(
-          bigURL: Rx<String>(response['icerik']['banner']['media_bigURL']),
-          normalURL: Rx<String>(response['icerik']['banner']['media_URL']),
-          minURL: Rx<String>(response['icerik']['banner']['media_minURL']),
-        ),
-      ),
+      socialaccounts: response.response!.socailAccounts == null
+          ? null
+          : Rxn<Socialaccounts>(
+              Socialaccounts(
+                facebook:
+                    Rxn<String>(response.response!.socailAccounts!.facebook),
+                github: Rxn<String>(response.response!.socailAccounts!.github),
+                instagram:
+                    Rxn<String>(response.response!.socailAccounts!.instagram),
+                linkedin:
+                    Rxn<String>(response.response!.socailAccounts!.linkedin),
+                reddit: Rxn<String>(response.response!.socailAccounts!.reddit),
+                steam: Rxn<String>(response.response!.socailAccounts!.steam),
+                twitch: Rxn<String>(response.response!.socailAccounts!.twitch),
+                youtube:
+                    Rxn<String>(response.response!.socailAccounts!.youtube),
+                discord: null,
+              ),
+            ),
+      avatar: response.response!.avatar == null
+          ? null
+          : Media(
+              mediaID: response.response!.avatar!.mediaID,
+              mediaURL: MediaURL(
+                bigURL: Rx<String>(response.response!.avatar!.mediaURL.bigURL),
+                normalURL:
+                    Rx<String>(response.response!.avatar!.mediaURL.normalURL),
+                minURL: Rx<String>(response.response!.avatar!.mediaURL.minURL),
+              ),
+            ),
+      banner: response.response!.banner == null
+          ? null
+          : Media(
+              mediaID: response.response!.banner!.mediaID,
+              mediaURL: MediaURL(
+                bigURL: Rx<String>(response.response!.banner!.mediaURL.bigURL),
+                normalURL:
+                    Rx<String>(response.response!.banner!.mediaURL.normalURL),
+                minURL: Rx<String>(response.response!.banner!.mediaURL.minURL),
+              ),
+            ),
     );
 
     log(profileInfo.value!.banner!.mediaURL.minURL.value);

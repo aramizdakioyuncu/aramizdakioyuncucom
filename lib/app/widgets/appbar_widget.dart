@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 class AppbarWidget {
   static costum1(context, GlobalKey<ScaffoldState> drawer) {
     var isTextFieldVisible = false.obs;
+    Functions.cookiesetup();
 
     return PreferredSize(
       preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -253,341 +254,330 @@ class AppbarWidget {
             },
             icon: const Icon(Icons.search),
           ),
-          Obx(
-            () => Applist.currentUser.value == null
-                ? IconButton(
-                    onPressed: () {
-                      AppWidget.loginModal(Get.context!);
-                    },
-                    icon: const Icon(Icons.person),
-                  )
-                : Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Stack(
-                                children: [
-                                  Positioned(
-                                    top: 50,
-                                    right: 0,
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: Container(
-                                        width: 500,
-                                        height: 300,
-                                        decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                            255,
-                                            33,
-                                            33,
-                                            33,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.black.withOpacity(0.2),
-                                              blurRadius: 10,
-                                              offset: const Offset(0, 5),
-                                            ),
-                                          ],
+          Applist.currentUser.value == null
+              ? IconButton(
+                  onPressed: () {
+                    AppWidget.loginModal(Get.context!);
+                  },
+                  icon: const Icon(Icons.person),
+                )
+              : Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Stack(
+                              children: [
+                                Positioned(
+                                  top: 50,
+                                  right: 0,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: Container(
+                                      width: 500,
+                                      height: 300,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                          255,
+                                          33,
+                                          33,
+                                          33,
                                         ),
-                                        child: SingleChildScrollView(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              ...List.generate(
-                                                15,
-                                                (index) {
-                                                  return Material(
-                                                    color: Colors.transparent,
-                                                    child: ListTile(
-                                                      contentPadding:
-                                                          const EdgeInsets.all(
-                                                              0),
-                                                      leading: const Padding(
-                                                        padding:
-                                                            EdgeInsets.all(4.0),
-                                                        child: CircleAvatar(
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                          foregroundImage:
-                                                              CachedNetworkImageProvider(
-                                                            "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png",
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      title: const Text(
-                                                        "Test Kullanıcı",
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                      subtitle: Column(
-                                                        children: [
-                                                          const Align(
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            child: Text(
-                                                              "Test Kullanıcı Arkadaşın Olmak istiyor",
-                                                              style: TextStyle(
-                                                                color:
-                                                                    Colors.red,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Align(
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
-                                                              children: [
-                                                                ElevatedButton(
-                                                                  onPressed:
-                                                                      () {},
-                                                                  child:
-                                                                      const Text(
-                                                                    "KABUL Et",
-                                                                  ),
-                                                                ),
-                                                                const SizedBox(
-                                                                    width: 10),
-                                                                ElevatedButton(
-                                                                  style:
-                                                                      const ButtonStyle(
-                                                                    backgroundColor:
-                                                                        WidgetStatePropertyAll(
-                                                                      Colors
-                                                                          .red,
-                                                                    ),
-                                                                  ),
-                                                                  onPressed:
-                                                                      () {},
-                                                                  child:
-                                                                      const Text(
-                                                                    "REDDET",
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      onTap: () {},
-                                                    ),
-                                                  );
-                                                },
-                                              )
-                                            ],
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 5),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.notifications),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Stack(
-                                children: [
-                                  Positioned(
-                                    top: 50,
-                                    right: 0,
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: Container(
-                                        width: 300,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.black.withOpacity(0.2),
-                                              blurRadius: 10,
-                                              offset: const Offset(0, 5),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(18.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Obx(
-                                                    () => CircleAvatar(
-                                                      foregroundImage:
-                                                          CachedNetworkImageProvider(
-                                                        Applist
-                                                            .currentUser
-                                                            .value!
-                                                            .avatar!
-                                                            .mediaURL
-                                                            .minURL
-                                                            .value,
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            ...List.generate(
+                                              15,
+                                              (index) {
+                                                return Material(
+                                                  color: Colors.transparent,
+                                                  child: ListTile(
+                                                    contentPadding:
+                                                        const EdgeInsets.all(0),
+                                                    leading: const Padding(
+                                                      padding:
+                                                          EdgeInsets.all(4.0),
+                                                      child: CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                        foregroundImage:
+                                                            CachedNetworkImageProvider(
+                                                          "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png",
+                                                        ),
                                                       ),
-                                                      radius: 32,
                                                     ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Column(
+                                                    title: const Text(
+                                                      "Test Kullanıcı",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                    subtitle: Column(
                                                       children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: Align(
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            child: Obx(
-                                                              () => Text(
-                                                                Applist
-                                                                    .currentUser
-                                                                    .value!
-                                                                    .displayName!
-                                                                    .value,
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
+                                                        const Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            "Test Kullanıcı Arkadaşın Olmak istiyor",
+                                                            style: TextStyle(
+                                                              color: Colors.red,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              ElevatedButton(
+                                                                onPressed:
+                                                                    () {},
+                                                                child:
+                                                                    const Text(
+                                                                  "KABUL Et",
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        const Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  8.0),
-                                                          child: Align(
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            child: Text(
-                                                              "Oturum Saati: 0 Saniye",
-                                                              style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
+                                                              const SizedBox(
+                                                                  width: 10),
+                                                              ElevatedButton(
+                                                                style:
+                                                                    const ButtonStyle(
+                                                                  backgroundColor:
+                                                                      WidgetStatePropertyAll(
+                                                                    Colors.red,
+                                                                  ),
+                                                                ),
+                                                                onPressed:
+                                                                    () {},
+                                                                child:
+                                                                    const Text(
+                                                                  "REDDET",
+                                                                ),
                                                               ),
-                                                            ),
+                                                            ],
                                                           ),
-                                                        ),
+                                                        )
                                                       ],
                                                     ),
+                                                    onTap: () {},
                                                   ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 10),
-                                              Row(
-                                                children: [
-                                                  const Spacer(),
-                                                  ElevatedButton(
-                                                    style: const ButtonStyle(
-                                                      padding:
-                                                          WidgetStatePropertyAll(
-                                                        EdgeInsets.zero,
-                                                      ),
-                                                    ),
-                                                    onPressed: () {
-                                                      // Get.toNamed("/oyuncular");
-                                                      Functions.openUrlWeb(
-                                                          "/oyuncular/${Applist.currentUser.value!.userName!.value}");
-                                                    },
-                                                    child: const Padding(
-                                                      padding: EdgeInsets.all(
-                                                        8.0,
-                                                      ),
-                                                      child: Text(
-                                                        'PROFİLE GİT',
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 10,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                  ElevatedButton(
-                                                    style: const ButtonStyle(
-                                                      padding:
-                                                          WidgetStatePropertyAll(
-                                                        EdgeInsets.zero,
-                                                      ),
-                                                    ),
-                                                    onPressed: () {
-                                                      Applist.currentUser
-                                                          .value = null;
-                                                      Functions.box
-                                                          .remove('userTOKEN');
-                                                      Functions.box.remove(
-                                                          'currentUser');
-                                                      // Get.back();
-                                                      Functions.reloadPage();
-                                                    },
-                                                    child: const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(8.0),
-                                                      child: Text(
-                                                        'OTURUMU KAPAT',
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 10,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
+                                                );
+                                              },
+                                            )
+                                          ],
                                         ),
                                       ),
                                     ),
                                   ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          foregroundImage: CachedNetworkImageProvider(
-                            Applist.currentUser.value!.avatar!.mediaURL
-                                .normalURL.value,
-                          ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      icon: const Icon(Icons.notifications),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Stack(
+                              children: [
+                                Positioned(
+                                  top: 50,
+                                  right: 0,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: Container(
+                                      width: 300,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 5),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(18.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                CircleAvatar(
+                                                  foregroundImage:
+                                                      CachedNetworkImageProvider(
+                                                    Applist
+                                                        .currentUser
+                                                        .value!
+                                                        .avatar!
+                                                        .mediaURL
+                                                        .minURL
+                                                        .value,
+                                                  ),
+                                                  radius: 32,
+                                                ),
+                                                Expanded(
+                                                  child: Column(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            Applist
+                                                                .currentUser
+                                                                .value!
+                                                                .displayName!
+                                                                .value,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        child: Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            "Oturum Saati: 0 Saniye",
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Row(
+                                              children: [
+                                                const Spacer(),
+                                                ElevatedButton(
+                                                  style: const ButtonStyle(
+                                                    padding:
+                                                        WidgetStatePropertyAll(
+                                                      EdgeInsets.zero,
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    // Get.toNamed("/oyuncular");
+                                                    Functions.openUrlWeb(
+                                                        "/oyuncular/${Applist.currentUser.value!.userName!.value}");
+                                                  },
+                                                  child: const Padding(
+                                                    padding: EdgeInsets.all(
+                                                      8.0,
+                                                    ),
+                                                    child: Text(
+                                                      'PROFİLE GİT',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 10,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const Spacer(),
+                                                ElevatedButton(
+                                                  style: const ButtonStyle(
+                                                    padding:
+                                                        WidgetStatePropertyAll(
+                                                      EdgeInsets.zero,
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    Applist.currentUser.value =
+                                                        null;
+                                                    Functions.box
+                                                        .remove('userTOKEN');
+                                                    Functions.box
+                                                        .remove('currentUser');
+                                                    // Get.back();
+                                                    Functions.reloadPage();
+                                                  },
+                                                  child: const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Text(
+                                                      'OTURUMU KAPAT',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 10,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const Spacer(),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        foregroundImage: CachedNetworkImageProvider(
+                          Applist.currentUser.value!.avatar!.mediaURL.normalURL
+                              .value,
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {
-                          drawer.currentState?.openDrawer();
-                          drawer.currentState?.openEndDrawer();
-                        },
-                        icon: const Icon(
-                          Icons.menu,
-                          size: 40,
-                        ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        drawer.currentState?.openDrawer();
+                        drawer.currentState?.openEndDrawer();
+                      },
+                      icon: const Icon(
+                        Icons.menu,
+                        size: 40,
                       ),
-                    ],
-                  ),
-          ),
+                    ),
+                  ],
+                ),
         ],
       ),
     );

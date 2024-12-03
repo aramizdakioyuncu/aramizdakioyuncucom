@@ -5,9 +5,25 @@ final ThemeData appThemeData = ThemeData(
   primarySwatch: Colors.blue,
   visualDensity: VisualDensity.adaptivePlatformDensity,
   scaffoldBackgroundColor: Colors.white,
+  canvasColor: Colors.grey.shade900,
   appBarTheme: const AppBarTheme(
     color: Colors.black,
     foregroundColor: Colors.white,
+  ),
+  searchBarTheme: SearchBarThemeData(
+    backgroundColor: WidgetStatePropertyAll(Colors.grey.shade900),
+    shape: const WidgetStatePropertyAll(LinearBorder.none),
+    textStyle: const WidgetStatePropertyAll(
+      TextStyle(color: Colors.amber),
+    ),
+  ),
+  searchViewTheme: SearchViewThemeData(
+    elevation: 0,
+    backgroundColor: Colors.grey.shade900,
+    dividerColor: Colors.amber,
+    surfaceTintColor: Colors.white,
+    headerTextStyle: const TextStyle(color: Colors.amber),
+    headerHintStyle: const TextStyle(color: Color.fromARGB(131, 255, 193, 7)),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
@@ -18,7 +34,7 @@ final ThemeData appThemeData = ThemeData(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(2),
-          ), // Köşeleri sıfırla
+          ),
         ),
       ),
     ),
@@ -43,33 +59,32 @@ final ThemeData appThemeData = ThemeData(
   ),
   textTheme: const TextTheme(
     titleLarge: TextStyle(
-      color: Colors.black,
+      color: Colors.white,
     ),
     titleMedium: TextStyle(
-      color: Colors.black,
+      color: Colors.white,
     ),
     titleSmall: TextStyle(
-      color: Colors.black,
+      color: Colors.white,
     ),
     bodyLarge: TextStyle(
-      color: Colors.black,
+      color: Colors.white,
     ),
     bodyMedium: TextStyle(
-      color: Colors.black,
+      color: Colors.white,
     ),
     bodySmall: TextStyle(
-      color: Colors.black,
+      color: Colors.white,
     ),
   ),
   dividerTheme: const DividerThemeData(
-    color: Colors.black,
+    color: Colors.white,
     thickness: 3,
   ),
   listTileTheme: const ListTileThemeData(
-      // // tileColor: Color(0xFF3C4CBD),
-      // textColor: Colors.white,
-      // iconColor: Colors.white,
-      ),
+    textColor: Colors.white,
+    iconColor: Colors.white,
+  ),
   checkboxTheme: CheckboxThemeData(
     checkColor: const WidgetStatePropertyAll(Colors.white),
     fillColor: WidgetStatePropertyAll(Colors.black.withOpacity(0.2)),

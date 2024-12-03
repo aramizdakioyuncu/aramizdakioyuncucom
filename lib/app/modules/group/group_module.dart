@@ -11,6 +11,10 @@ class GroupModule {
       page: () => const GroupView(),
     ),
     GetPage(
+      name: "$route/:category",
+      page: () => const GroupView(),
+    ),
+    GetPage(
       name: "$route/detail",
       page: () => const GroupdetailView(),
     ),
