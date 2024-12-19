@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 
 class NewsController extends GetxController {
   @override
+  // ignore: unnecessary_overrides
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
   }
 

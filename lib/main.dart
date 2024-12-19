@@ -8,12 +8,12 @@ import 'package:get_storage/get_storage.dart';
 main() async {
   usePathUrlStrategy();
   await GetStorage.init();
-  await ARMOYU.service.setup();
+  ARMOYU.service.setup();
 
   String? barrierToken = Functions.box.read('userTOKEN');
 
   if (barrierToken != null) {
-    await ARMOYU.service.authServices.loginwithbarriertoken(
+    ARMOYU.service.authServices.setbarriertoken(
       barriertoken: barrierToken,
     );
   }

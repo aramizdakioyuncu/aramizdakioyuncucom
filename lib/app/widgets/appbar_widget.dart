@@ -403,18 +403,16 @@ class AppbarWidget {
                                   top: 50,
                                   right: 0,
                                   child: Material(
-                                    color: Colors.transparent,
                                     child: Container(
                                       width: 300,
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
                                         boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.2),
-                                            blurRadius: 10,
-                                            offset: const Offset(0, 5),
-                                          ),
+                                          // BoxShadow(
+                                          //   color:
+                                          //       Colors.black.withOpacity(0.2),
+                                          //   blurRadius: 10,
+                                          //   offset: const Offset(0, 5),
+                                          // ),
                                         ],
                                       ),
                                       child: Padding(
@@ -425,6 +423,8 @@ class AppbarWidget {
                                             Row(
                                               children: [
                                                 CircleAvatar(
+                                                  backgroundColor:
+                                                      Colors.transparent,
                                                   foregroundImage:
                                                       CachedNetworkImageProvider(
                                                     Applist

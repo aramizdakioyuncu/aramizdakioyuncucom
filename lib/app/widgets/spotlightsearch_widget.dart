@@ -22,14 +22,7 @@ class SpotlightSearchWidget {
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                // color: Colors.black87,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 10,
-                  ),
-                ],
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -39,11 +32,11 @@ class SpotlightSearchWidget {
                     filteredItems: filteredItemsv2,
                     searchController: search.value,
                     autofocus: true,
-                    itemSelected: (id, val) {
+                    itemSelected: (id, val, username) {
                       log(id.toString());
                       log(val.toString());
                       // Get.toNamed("/home"),
-                      Functions.openUrlWeb("/oyuncular/{$val}");
+                      Functions.openUrlWeb("/oyuncular/$username");
                     },
                   ),
                 ],

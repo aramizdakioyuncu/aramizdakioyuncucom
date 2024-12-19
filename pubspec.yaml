@@ -16,6 +16,9 @@ dependencies:
     sdk: flutter
 
   html: ^0.15.5
+  armoyu_services: ^1.0.0+23
+  armoyu_widgets: ^1.0.0+3
+  
   get: ^4.6.6
   get_storage: ^2.1.1
   cached_network_image: ^3.4.1
@@ -25,7 +28,6 @@ dependencies:
   like_button: ^2.0.5
   font_awesome_flutter: ^10.8.0
 
-  armoyu_services: ^1.0.0+21
   image_picker: ^1.1.2
   country_flags: ^3.0.0
 

@@ -34,10 +34,7 @@ class ProfileController extends GetxController {
       return;
     }
 
-    log(response.response!.toJson().toString());
-
     List<Game> populargamelist = [];
-
     if (response.response!.popularGames != null) {
       for (PopularGame game in response.response!.popularGames!) {
         populargamelist.add(
@@ -53,6 +50,25 @@ class ProfileController extends GetxController {
               ),
             ),
             gameURL: game.gameURL!,
+          ),
+        );
+      }
+    }
+
+    List<User> friendsList = [];
+    if (response.response!.arkadasliste != null) {
+      for (Friend friend in response.response!.arkadasliste!) {
+        friendsList.add(
+          User(
+            displayName: Rx(friend.oyuncuKullaniciAdi),
+            avatar: Media(
+              mediaID: 0,
+              mediaURL: MediaURL(
+                bigURL: Rx(friend.oyuncuMinnakAvatar.bigURL),
+                normalURL: Rx(friend.oyuncuMinnakAvatar.normalURL),
+                minURL: Rx(friend.oyuncuMinnakAvatar.minURL),
+              ),
+            ),
           ),
         );
       }
@@ -126,6 +142,20 @@ class ProfileController extends GetxController {
                 minURL: Rx<String>(response.response!.banner!.mediaURL.minURL),
               ),
             ),
+      wallpaper: response.response!.banner == null
+          ? null
+          : Media(
+              mediaID: response.response!.banner!.mediaID,
+              mediaURL: MediaURL(
+                bigURL: Rx<String>(response.response!.banner!.mediaURL.bigURL),
+                normalURL:
+                    Rx<String>(response.response!.banner!.mediaURL.normalURL),
+                minURL: Rx<String>(response.response!.banner!.mediaURL.minURL),
+              ),
+            ),
+      myFriends: response.response!.ortakarkadasliste == null
+          ? null
+          : RxList(friendsList),
     );
 
     log(profileInfo.value!.banner!.mediaURL.minURL.value);

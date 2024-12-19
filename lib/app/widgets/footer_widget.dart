@@ -19,7 +19,7 @@ class FooterWidget {
               Colors.black,
               Colors.black,
               Colors.black,
-              Colors.red,
+              Color.fromARGB(255, 255, 17, 0),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -33,25 +33,32 @@ class FooterWidget {
                   flex: 3,
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          "Mevcut Oyuncu Sayımız",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                    child: SizedBox(
+                      height: 300,
+                      child: Column(
+                        children: [
+                          Text(
+                            "Mevcut Oyuncu Sayımız",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "1684",
-                          style: TextStyle(
-                            fontSize: 60,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                "1684",
+                                style: TextStyle(
+                                  fontSize: 50,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -59,25 +66,29 @@ class FooterWidget {
                   flex: 3,
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          "Çevrimiçi Üyelerimiz",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                    child: SizedBox(
+                      height: 300,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Çevrimiçi Üyelerimiz",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "Açık Kimse Yok",
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            "Açık Kimse Yok",
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -100,17 +111,23 @@ class FooterWidget {
                             ),
                             Row(
                               children: [
-                                CachedNetworkImage(
-                                  imageUrl:
-                                      "https://aramizdakioyuncu.com/galeri/yazi/1posterminnak1715776167.jpg",
-                                  width: 170,
-                                  height: 100,
-                                  fit: BoxFit.cover,
+                                Expanded(
+                                  flex: 2,
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        "https://aramizdakioyuncu.com/galeri/yazi/1posterminnak1715776167.jpg",
+                                    width: double.infinity,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                                 const Expanded(
+                                  flex: 2, // Genişliğin 2 birimi
                                   child: Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .start, // Sol hizalama
                                       children: [
                                         Text(
                                           "Fatsa'da Türk Halk Müziği konseri yapıldı.",
@@ -131,7 +148,7 @@ class FooterWidget {
                                       ],
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                             const Divider(
@@ -140,14 +157,18 @@ class FooterWidget {
                             ),
                             Row(
                               children: [
-                                CachedNetworkImage(
-                                  imageUrl:
-                                      "https://aramizdakioyuncu.com/galeri/yazi/417haberlerminnak1675644437.jpg",
-                                  width: 170,
-                                  height: 100,
-                                  fit: BoxFit.cover,
+                                Expanded(
+                                  flex: 2,
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        "https://aramizdakioyuncu.com/galeri/yazi/417haberlerminnak1675644437.jpg",
+                                    width: double.infinity,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                                 const Expanded(
+                                  flex: 2,
                                   child: Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: Column(
@@ -196,34 +217,55 @@ class FooterWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Expanded(
-                            child: GridView.builder(
-                              itemCount: Applist.footersocailnetwork.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                childAspectRatio: 1.4,
+                          Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(
+                                  3,
+                                  (index) {
+                                    return InkWell(
+                                      onTap: () {},
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: CachedNetworkImage(
+                                          imageUrl: Applist
+                                              .footersocailnetwork[index],
+                                          height: 60,
+                                          width: 60,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                              itemBuilder: (context, index) {
-                                return CachedNetworkImage(
-                                  imageUrl: Applist.footersocailnetwork[index],
-                                  height: 40,
-                                  width: 40,
-                                );
-                              },
-                            ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(
+                                  3,
+                                  (index) {
+                                    return InkWell(
+                                      onTap: () {},
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: CachedNetworkImage(
+                                          imageUrl: Applist
+                                              .footersocailnetwork[index + 3],
+                                          height: 60,
+                                          width: 60,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                           CachedNetworkImage(
                             imageUrl:
                                 "https://aramizdakioyuncu.com/galeri/ana-yapi/etbis.png",
                             height: 60,
                             width: 60,
-                          ),
-                          const Text(
-                            "Bu site ETBİS'e kayıtlıdır",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
                           ),
                         ],
                       ),
@@ -240,6 +282,8 @@ class FooterWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -251,12 +295,15 @@ class FooterWidget {
                       Icon(
                         Icons.mail,
                         color: Colors.white,
+                        size: 16,
                       ),
                       Text(
                         "yonetimekibi@aramizdakioyuncu.com",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -270,12 +317,15 @@ class FooterWidget {
                       Icon(
                         Icons.phone,
                         color: Colors.white,
+                        size: 16,
                       ),
                       Text(
                         "+905370585150",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],

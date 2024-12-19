@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ class AppWidget {
   static void loginModal(context) {
     var username = TextEditingController().obs;
     var userpassword = TextEditingController().obs;
-
+    var loginStatus = false.obs;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -35,24 +36,28 @@ class AppWidget {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: TextField(
+                                child: ARMOYU.widget.textField.costum3(
+                                  title: "Kullanıcı Adı",
                                   controller: username.value,
-                                  decoration: const InputDecoration(
-                                    labelText: "Kullanıcı Adı",
-                                    border: OutlineInputBorder(),
-                                  ),
+                                  onChanged: (val) {},
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: TextField(
+                                child: ARMOYU.widget.textField.costum3(
+                                  title: "Şifre",
                                   controller: userpassword.value,
-                                  decoration: const InputDecoration(
-                                    labelText: "Şifre",
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  obscureText: true,
+                                  isPassword: true,
+                                  onChanged: (val) {},
                                 ),
+                                // child: TextField(
+                                //   controller: userpassword.value,
+                                //   decoration: const InputDecoration(
+                                //     labelText: "Şifre",
+                                //     border: OutlineInputBorder(),
+                                //   ),
+                                //   obscureText: true,
+                                // ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -96,26 +101,23 @@ class AppWidget {
                               ),
                               SizedBox(
                                 width: 500,
-                                child: ElevatedButton(
-                                  style: const ButtonStyle(
-                                    shape: WidgetStatePropertyAll(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    bool islogin = await Functions.login(
-                                      username: username.value.text,
-                                      password: userpassword.value.text,
-                                    );
+                                child: Obx(
+                                  () => ARMOYU.widget.elevatedButton.costum1(
+                                    text: "Giriş YAP",
+                                    onPressed: () async {
+                                      loginStatus.value = true;
+                                      bool islogin = await Functions.login(
+                                        username: username.value.text,
+                                        password: userpassword.value.text,
+                                      );
+                                      loginStatus.value = false;
 
-                                    if (islogin) {
-                                      // Get.back();
-                                      Functions.reloadPage();
-                                    }
-                                  },
-                                  child: const Text("Giriş YAP"),
+                                      if (islogin) {
+                                        Functions.reloadPage();
+                                      }
+                                    },
+                                    loadingStatus: loginStatus.value,
+                                  ),
                                 ),
                               ),
                               const Spacer(),

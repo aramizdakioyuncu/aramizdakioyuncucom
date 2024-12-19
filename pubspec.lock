@@ -13,10 +13,18 @@ packages:
     dependency: "direct main"
     description:
       name: armoyu_services
-      sha256: "197360e4cb27f3a358bcaed95b8199a4fcc62c7c96fe1fd045d97fd96ad89f0a"
+      sha256: a7a5b99bd1bea0d3628cbf251b181fba97d71e6b6aa1194aee72edae818359c5
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+21"
+    version: "1.0.0+23"
+  armoyu_widgets:
+    dependency: "direct main"
+    description:
+      name: armoyu_widgets
+      sha256: "5a206c6116c8ff8c46ab387901f9750e1d81c472ead13713c3df413b01507bd6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0+3"
   async:
     dependency: transitive
     description:
@@ -817,10 +825,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_ios
-      sha256: e43b677296fadce447e987a2f519dcf5f6d1e527dc35d01ffab4fff5b8a7063e
+      sha256: "16a513b6c12bb419304e72ea0ae2ab4fed569920d1c7cb850263fe3acc824626"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.1"
+    version: "6.3.2"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -833,10 +841,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_macos
-      sha256: "769549c999acdb42b8bcfa7c43d72bf79a382ca7441ab18a808e101149daf672"
+      sha256: "17ba2000b847f334f16626a574c702b196723af2a289e7a93ffcb79acff855c2"
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.1"
+    version: "3.2.2"
   url_launcher_platform_interface:
     dependency: transitive
     description:

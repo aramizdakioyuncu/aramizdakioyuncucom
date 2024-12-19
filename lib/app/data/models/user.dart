@@ -25,6 +25,7 @@ class User {
   Rx<String>? displayName = "".obs;
   Media? avatar;
   Media? banner;
+  Media? wallpaper;
 
   Rx<String>? userMail = "".obs;
 
@@ -87,6 +88,7 @@ class User {
     this.displayName,
     this.avatar,
     this.banner,
+    this.wallpaper,
     this.userMail,
     this.country,
     this.province,
@@ -183,6 +185,16 @@ class User {
                 minURL: Rx<String>(json['banner']['media_minURL']),
               ),
             ),
+      wallpaper: json['wallpaper'] == null
+          ? null
+          : Media(
+              mediaID: json['wallpaper']['media_ID'],
+              mediaURL: MediaURL(
+                bigURL: Rx<String>(json['wallpaper']['media_bigURL']),
+                normalURL: Rx<String>(json['wallpaper']['media_normalURL']),
+                minURL: Rx<String>(json['wallpaper']['media_minURL']),
+              ),
+            ),
       myFriends: json['myfriends'] == null
           ? null
           : (json['myfriends'] as List<dynamic>?)
@@ -267,6 +279,14 @@ class User {
               'media_minURL': banner!.mediaURL.minURL.value,
             }
           : null,
+      'wallpaper': wallpaper != null
+          ? {
+              'media_ID': wallpaper!.mediaID,
+              'media_bigURL': wallpaper!.mediaURL.bigURL.value,
+              'media_normalURL': wallpaper!.mediaURL.normalURL.value,
+              'media_minURL': wallpaper!.mediaURL.minURL.value,
+            }
+          : null,
       'myfriends': myFriends?.map((friend) => friend.toJson()).toList(),
       'chatlist': chatlist?.map((chat) => chat.toJson()).toList(),
       'myGroups': myGroups?.map((myGroups) => myGroups.toJson()).toList(),
@@ -292,6 +312,7 @@ class User {
     }
     if (avatar != null) targetUser.avatar = avatar;
     if (banner != null) targetUser.banner = banner;
+    if (wallpaper != null) targetUser.wallpaper = wallpaper;
     if (userMail != null) targetUser.userMail = userMail;
     if (country != null) targetUser.country = country;
     if (province != null) targetUser.province = province;

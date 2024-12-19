@@ -19,11 +19,12 @@ class BodyWidget {
             ? const Drawer()
             : Drawer(
                 shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.zero),
+                  borderRadius: BorderRadius.zero,
+                ),
                 backgroundColor: Colors.black,
                 child: ListView(
                   padding: EdgeInsets.zero,
-                  children: <Widget>[
+                  children: [
                     DrawerHeader(
                       margin: const EdgeInsets.all(0),
                       decoration: BoxDecoration(
@@ -35,43 +36,47 @@ class BodyWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      child: const Text('Drawer Header'),
+                      child: const Text(''),
                     ),
-                    const ListTile(
-                      leading: FaIcon(
+                    ListTile(
+                      leading: const FaIcon(
                         FontAwesomeIcons.pencil,
                         color: Colors.white,
                       ),
-                      title: Text('Yazılarım'),
+                      title: const Text('Yazılarım'),
                       tileColor: Colors.black,
                       textColor: Colors.white,
+                      onTap: () {},
                     ),
-                    const ListTile(
-                      leading: FaIcon(
+                    ListTile(
+                      leading: const FaIcon(
                         FontAwesomeIcons.lifeRing,
                         color: Colors.white,
                       ),
-                      title: Text('Bildirimlerim'),
+                      title: const Text('Bildirimlerim'),
                       tileColor: Colors.black,
                       textColor: Colors.white,
+                      onTap: () {},
                     ),
-                    const ListTile(
-                      leading: FaIcon(
+                    ListTile(
+                      leading: const FaIcon(
                         FontAwesomeIcons.comment,
                         color: Colors.white,
                       ),
-                      title: Text('Yorumum'),
+                      title: const Text('Yorumum'),
                       tileColor: Colors.black,
                       textColor: Colors.white,
+                      onTap: () {},
                     ),
-                    const ListTile(
-                      leading: FaIcon(
+                    ListTile(
+                      leading: const FaIcon(
                         FontAwesomeIcons.chartSimple,
                         color: Colors.white,
                       ),
-                      title: Text('Anketler'),
+                      title: const Text('Anketler'),
                       tileColor: Colors.black,
                       textColor: Colors.white,
+                      onTap: () {},
                     ),
                     ListTile(
                       leading: const FaIcon(
@@ -85,23 +90,25 @@ class BodyWidget {
                         Get.toNamed("/gruplar");
                       },
                     ),
-                    const ListTile(
-                      leading: FaIcon(
+                    ListTile(
+                      leading: const FaIcon(
                         FontAwesomeIcons.ticket,
                         color: Colors.white,
                       ),
-                      title: Text('Çekiliş'),
+                      title: const Text('Çekiliş'),
                       tileColor: Colors.black,
                       textColor: Colors.white,
+                      onTap: () {},
                     ),
-                    const ListTile(
-                      leading: FaIcon(
+                    ListTile(
+                      leading: const FaIcon(
                         FontAwesomeIcons.graduationCap,
                         color: Colors.white,
                       ),
-                      title: Text('Eğitim'),
+                      title: const Text('Eğitim'),
                       tileColor: Colors.black,
                       textColor: Colors.white,
+                      onTap: () {},
                     ),
                   ],
                 ),
