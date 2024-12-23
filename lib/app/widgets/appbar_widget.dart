@@ -79,7 +79,7 @@ class AppbarWidget {
             ],
             onSelected: (value) {
               // Get.toNamed("/gruplar/$value");
-              Functions.openUrlWeb("/gruplar/$value");
+              Functions.openUrlWeb("/gruplar/search/$value");
             },
           ),
           PopupMenuButton<String>(
@@ -405,7 +405,7 @@ class AppbarWidget {
                                   child: Material(
                                     child: Container(
                                       width: 300,
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                         boxShadow: [
                                           // BoxShadow(
                                           //   color:

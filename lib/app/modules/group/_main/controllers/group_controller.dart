@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 class GroupController extends GetxController {
   var groupsfetchStatus = false.obs;
   var groupList = <APIGroupListDetail>[].obs;
-  final groupscategory = Get.parameters['category'];
+  final groupscategory = Get.parameters['search'];
 
   @override
   void onInit() {
@@ -20,14 +20,17 @@ class GroupController extends GetxController {
 
   fetchgroups() async {
     int? categoryID;
-    if (groupscategory!.toLowerCase() == "e-spor") {
-      categoryID = 3;
-    }
-    if (groupscategory!.toLowerCase() == "spor") {
-      categoryID = 4;
-    }
-    if (groupscategory!.toLowerCase() == "yazilim-gelistirme") {
-      categoryID = 5;
+
+    if (groupscategory != null) {
+      if (groupscategory!.toLowerCase() == "e-spor") {
+        categoryID = 3;
+      }
+      if (groupscategory!.toLowerCase() == "spor") {
+        categoryID = 4;
+      }
+      if (groupscategory!.toLowerCase() == "yazilim-gelistirme") {
+        categoryID = 5;
+      }
     }
     groupsfetchStatus.value = true;
     GroupListResponse response = await ARMOYU.service.groupServices.groupList(

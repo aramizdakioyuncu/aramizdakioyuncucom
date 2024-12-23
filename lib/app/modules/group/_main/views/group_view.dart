@@ -34,17 +34,19 @@ class GroupView extends StatelessWidget {
                             width: double.infinity,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                    groupInfo.banner.mediaURL.minURL,
-                                  ),
-                                  fit: BoxFit.cover),
+                                image: CachedNetworkImageProvider(
+                                  groupInfo.banner.mediaURL.minURL,
+                                ),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    Get.toNamed("/gruplar/detail");
+                                    Get.toNamed(
+                                        "/gruplar/${groupInfo.groupURL}");
                                   },
                                   child: CircleAvatar(
                                     foregroundImage: CachedNetworkImageProvider(

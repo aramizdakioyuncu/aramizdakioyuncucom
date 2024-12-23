@@ -1,5 +1,7 @@
+import 'package:aramizdakioyuncucom/app/modules/group/groupdetail/controllers/groupdetail_controller.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +10,7 @@ class GroupdetailView extends StatelessWidget {
 
   @override
   Widget build(Object context) {
+    final controller = Get.put(GroupdetailController());
     return BodyWidget.custom1(
       context,
       body: [
@@ -19,15 +22,20 @@ class GroupdetailView extends StatelessWidget {
               children: [
                 Stack(
                   children: [
-                    Container(
-                      height: 380,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: CachedNetworkImageProvider(
-                            "https://aramizdakioyuncu.com/galeri/gruplar/1gruplarbanner1661124266.png",
-                          ),
-                          fit: BoxFit.cover,
+                    Obx(
+                      () => Container(
+                        height: 380,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          image: controller.groupInfo.value == null
+                              ? null
+                              : DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                    controller.groupInfo.value!.groupLogo!
+                                        .mediaURL.minURL.value,
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       ),
                     ),
@@ -36,21 +44,27 @@ class GroupdetailView extends StatelessWidget {
                       left: 45,
                       child: Column(
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle, // Dairesel şekil
-                              border: Border.all(
-                                color: Colors.blue, // Şerit rengi
-                                width: 3, // Şerit genişliği
+                          Obx(
+                            () => Container(
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                shape: BoxShape.circle, // Dairesel şekil
+                                border: Border.all(
+                                  color: Colors.blue, // Şerit rengi
+                                  width: 3, // Şerit genişliği
+                                ),
                               ),
-                            ),
-                            child: const CircleAvatar(
-                              foregroundColor: Colors.transparent,
-                              foregroundImage: CachedNetworkImageProvider(
-                                "https://aramizdakioyuncu.com/galeri/gruplar/116gruplarlogoufaklik1664915337.png",
-                              ),
-                              radius: 60,
+                              child: controller.groupInfo.value == null
+                                  ? const CupertinoActivityIndicator()
+                                  : CircleAvatar(
+                                      foregroundColor: Colors.transparent,
+                                      foregroundImage:
+                                          CachedNetworkImageProvider(
+                                        controller.groupInfo.value!.groupLogo!
+                                            .mediaURL.minURL.value,
+                                      ),
+                                      radius: 60,
+                                    ),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -59,13 +73,17 @@ class GroupdetailView extends StatelessWidget {
                               color: Colors.black45,
                               borderRadius: BorderRadius.circular(5),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(4.0),
-                              child: Text(
-                                "RIHTIM",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
+                            child: Obx(
+                              () => Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: controller.groupInfo.value == null
+                                    ? const CupertinoActivityIndicator()
+                                    : Text(
+                                        controller.groupInfo.value!.groupName!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
                               ),
                             ),
                           ),
@@ -74,82 +92,108 @@ class GroupdetailView extends StatelessWidget {
                     ),
                   ],
                 ),
-                Wrap(
-                  children: [
-                    ...List.generate(
-                      14,
-                      (index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: InkWell(
-                            onTap: () {},
-                            child: Material(
-                              color: Colors.transparent,
-                              child: Wrap(
-                                children: [
-                                  Container(
-                                    height: 350,
-                                    width: 300,
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Colors.blue,
-                                          Color.fromARGB(255, 7, 103, 151),
-                                          Color.fromARGB(255, 3, 41, 107),
-                                          Colors.black,
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                Obx(
+                  () => controller.groupusers.value == null
+                      ? const CupertinoActivityIndicator()
+                      : Wrap(
+                          children: [
+                            ...List.generate(
+                              controller.groupusers.value!.length,
+                              (index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () {},
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: Wrap(
                                         children: [
-                                          InkWell(
-                                            onTap: () {
-                                              Get.toNamed("/oyuncular/detail");
-                                            },
-                                            child: const CircleAvatar(
-                                              foregroundImage:
-                                                  CachedNetworkImageProvider(
-                                                "https://aramizdakioyuncu.com/galeri/profilresimleri/1profilresimufaklik1722033975.jpg",
-                                              ),
-                                              radius: 80,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          const Padding(
-                                            padding: EdgeInsets.all(4.0),
-                                            child: Text(
-                                              "Berkay TİKENOĞLU",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
+                                          Container(
+                                            height: 350,
+                                            width: 300,
+                                            decoration: const BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Colors.blue,
+                                                  Color.fromARGB(
+                                                      255, 7, 103, 151),
+                                                  Color.fromARGB(
+                                                      255, 3, 41, 107),
+                                                  Colors.black,
+                                                ],
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
                                               ),
                                             ),
-                                          ),
-                                          const Text(
-                                            "Köy Muhtarı",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  InkWell(
+                                                    onTap: () {
+                                                      Get.toNamed(
+                                                          "/oyuncular/${controller.groupusers.value![index].userName}");
+                                                    },
+                                                    child: CircleAvatar(
+                                                      foregroundImage:
+                                                          CachedNetworkImageProvider(
+                                                        controller
+                                                            .groupusers
+                                                            .value![index]
+                                                            .avatar!
+                                                            .mediaURL
+                                                            .minURL
+                                                            .value,
+                                                      ),
+                                                      radius: 80,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Text(
+                                                      controller
+                                                          .groupusers
+                                                          .value![index]
+                                                          .displayName!
+                                                          .value,
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    controller
+                                                        .groupusers
+                                                        .value![index]
+                                                        .role!
+                                                        .name,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  ],
+                                );
+                              },
+                            )
+                          ],
+                        ),
                 )
               ],
             ),

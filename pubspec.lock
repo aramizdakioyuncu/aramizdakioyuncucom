@@ -13,10 +13,10 @@ packages:
     dependency: "direct main"
     description:
       name: armoyu_services
-      sha256: a7a5b99bd1bea0d3628cbf251b181fba97d71e6b6aa1194aee72edae818359c5
+      sha256: ba42f2495a40a5fe55aaae3840639ca6bc7722f2be22f62342517042fce400cd
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+23"
+    version: "1.0.0+35"
   armoyu_widgets:
     dependency: "direct main"
     description:
@@ -901,6 +901,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  webview_flutter_platform_interface:
+    dependency: "direct main"
+    description:
+      name: webview_flutter_platform_interface
+      sha256: d937581d6e558908d7ae3dc1989c4f87b786891ab47bb9df7de548a151779d8d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.10.0"
+  webview_flutter_web:
+    dependency: "direct main"
+    description:
+      name: webview_flutter_web
+      sha256: "18a7ccc1c31dd9a5c759a1b7217a2a1e04bd8f65712714a4070bfac19a23ca9e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.3+4"
   win32:
     dependency: transitive
     description:
