@@ -14,10 +14,10 @@ class AppbarWidget {
     return PreferredSize(
       preferredSize: const Size.fromHeight(kToolbarHeight),
       child: AppBar(
+        forceMaterialTransparency: true,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
-            // onTap: () => Get.toNamed("/home"),
             onTap: () => Functions.openUrlWeb("/home"),
             child: CachedNetworkImage(
               imageUrl:

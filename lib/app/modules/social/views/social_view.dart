@@ -3,6 +3,7 @@ import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -97,62 +98,72 @@ class SocialView extends StatelessWidget {
                                   visible: controller.xppopselected.value,
                                   child: SizedBox(
                                     height: 500,
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        children: List.generate(
-                                          controller.xpList.value == null
-                                              ? 0
-                                              : controller.xpList.value!.length,
-                                          (index) {
-                                            return ListTile(
-                                              onTap: () {
-                                                Get.toNamed(
-                                                  "/oyuncular/${controller.xpList.value![index].userName}",
-                                                );
-                                              },
-                                              contentPadding:
-                                                  const EdgeInsets.all(0),
-                                              leading: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  SizedBox(
-                                                    width: 25,
-                                                    child: Text(
-                                                      "${(index + 1).toString()}.",
+                                    child: controller.xpList.value == null
+                                        ? const Center(
+                                            child: CupertinoActivityIndicator(),
+                                          )
+                                        : SingleChildScrollView(
+                                            child: Column(
+                                              children: List.generate(
+                                                controller.xpList.value == null
+                                                    ? 0
+                                                    : controller
+                                                        .xpList.value!.length,
+                                                (index) {
+                                                  return ListTile(
+                                                    onTap: () {
+                                                      Get.toNamed(
+                                                        "/oyuncular/${controller.xpList.value![index].userName}",
+                                                      );
+                                                    },
+                                                    contentPadding:
+                                                        const EdgeInsets.all(0),
+                                                    leading: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 25,
+                                                          child: Text(
+                                                            "${(index + 1).toString()}.",
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        CircleAvatar(
+                                                          foregroundImage:
+                                                              CachedNetworkImageProvider(
+                                                            controller
+                                                                .xpList
+                                                                .value![index]
+                                                                .avatar!
+                                                                .mediaURL
+                                                                .minURL
+                                                                .value,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    title: Text(
+                                                      "${controller.xpList.value![index].displayName}  ${controller.xpList.value![index].xp} XP",
                                                       style: const TextStyle(
-                                                        fontSize: 16,
                                                         color: Colors.black,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
                                                     ),
-                                                  ),
-                                                  CircleAvatar(
-                                                    foregroundImage:
-                                                        CachedNetworkImageProvider(
-                                                      controller
-                                                          .xpList
-                                                          .value![index]
-                                                          .avatar!
-                                                          .mediaURL
-                                                          .minURL
-                                                          .value,
-                                                    ),
-                                                  ),
-                                                ],
+                                                  );
+                                                },
                                               ),
-                                              title: Text(
-                                                "${controller.xpList.value![index].displayName}  ${controller.xpList.value![index].xp} XP",
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
+                                            ),
+                                          ),
                                   ),
                                 ),
                               ),
@@ -161,63 +172,70 @@ class SocialView extends StatelessWidget {
                                   visible: !controller.xppopselected.value,
                                   child: SizedBox(
                                     height: 500,
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        children: List.generate(
-                                          controller.xpList.value == null
-                                              ? 0
-                                              : controller
-                                                  .popList.value!.length,
-                                          (index) {
-                                            return ListTile(
-                                              onTap: () {
-                                                Get.toNamed(
-                                                  "/oyuncular/${controller.popList.value![index].userName}",
-                                                );
-                                              },
-                                              contentPadding:
-                                                  const EdgeInsets.all(0),
-                                              leading: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  SizedBox(
-                                                    width: 25,
-                                                    child: Text(
-                                                      "${(index + 1).toString()}.",
+                                    child: controller.popList.value == null
+                                        ? const CupertinoActivityIndicator()
+                                        : SingleChildScrollView(
+                                            child: Column(
+                                              children: List.generate(
+                                                controller.xpList.value == null
+                                                    ? 0
+                                                    : controller
+                                                        .popList.value!.length,
+                                                (index) {
+                                                  return ListTile(
+                                                    onTap: () {
+                                                      Get.toNamed(
+                                                        "/oyuncular/${controller.popList.value![index].userName}",
+                                                      );
+                                                    },
+                                                    contentPadding:
+                                                        const EdgeInsets.all(0),
+                                                    leading: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 25,
+                                                          child: Text(
+                                                            "${(index + 1).toString()}.",
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        CircleAvatar(
+                                                          foregroundImage:
+                                                              CachedNetworkImageProvider(
+                                                            controller
+                                                                .popList
+                                                                .value![index]
+                                                                .avatar!
+                                                                .mediaURL
+                                                                .minURL
+                                                                .value,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    title: Text(
+                                                      "${controller.popList.value![index].displayName}  ${controller.popList.value![index].xp} POP",
                                                       style: const TextStyle(
-                                                        fontSize: 16,
                                                         color: Colors.black,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
                                                     ),
-                                                  ),
-                                                  CircleAvatar(
-                                                    foregroundImage:
-                                                        CachedNetworkImageProvider(
-                                                      controller
-                                                          .popList
-                                                          .value![index]
-                                                          .avatar!
-                                                          .mediaURL
-                                                          .minURL
-                                                          .value,
-                                                    ),
-                                                  ),
-                                                ],
+                                                  );
+                                                },
                                               ),
-                                              title: Text(
-                                                "${controller.popList.value![index].displayName}  ${controller.popList.value![index].xp} POP",
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
+                                            ),
+                                          ),
                                   ),
                                 ),
                               ),
@@ -726,23 +744,33 @@ class SocialView extends StatelessWidget {
                     Container(
                       height: 300,
                       color: colorbg,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: List.generate(
-                            10,
-                            (index) {
-                              return const ListTile(
-                                contentPadding: EdgeInsets.all(0),
-                                title: Text(
-                                  "#Sivas (72)",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Obx(
+                          () => controller.hashtagList.value == null
+                              ? const Center(
+                                  child: CupertinoActivityIndicator(),
+                                )
+                              : SingleChildScrollView(
+                                  child: Column(
+                                    children: List.generate(
+                                      controller.hashtagList.value!.length,
+                                      (index) {
+                                        return ListTile(
+                                          contentPadding:
+                                              const EdgeInsets.all(0),
+                                          title: Text(
+                                            "#${controller.hashtagList.value![index].value} ${controller.hashtagList.value![index].numberofuses}",
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
-                              );
-                            },
-                          ),
                         ),
                       ),
                     ),
@@ -750,47 +778,50 @@ class SocialView extends StatelessWidget {
                     Container(
                       height: 300,
                       color: colorbg,
-                      child: SingleChildScrollView(
-                        child: Column(children: [
-                          const Text("Aramıza Hoşgeldiniz"),
-                          ...List.generate(
-                            10,
-                            (index) {
-                              return ListTile(
-                                contentPadding: const EdgeInsets.all(0),
-                                leading: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SizedBox(
-                                      width: 25,
-                                      child: Text(
-                                        "${(index + 1).toString()}.",
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SingleChildScrollView(
+                          child: Column(children: [
+                            const Text("Aramıza Hoşgeldiniz"),
+                            ...List.generate(
+                              10,
+                              (index) {
+                                return ListTile(
+                                  contentPadding: const EdgeInsets.all(0),
+                                  leading: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                        width: 25,
+                                        child: Text(
+                                          "${(index + 1).toString()}.",
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    const CircleAvatar(
-                                      foregroundImage:
-                                          CachedNetworkImageProvider(
-                                        "https://aramizdakioyuncu.com/galeri/profilresimleri/11663profilresimminnak1734429129.jpg",
+                                      const CircleAvatar(
+                                        foregroundImage:
+                                            CachedNetworkImageProvider(
+                                          "https://aramizdakioyuncu.com/galeri/profilresimleri/11663profilresimminnak1734429129.jpg",
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                title: const Text(
-                                  "Mel Cobain +82779 TP",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                                    ],
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ]),
+                                  title: const Text(
+                                    "Mel Cobain +82779 TP",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ]),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -1001,7 +1032,8 @@ class SocialView extends StatelessWidget {
                       width: double.infinity,
                       child: PlatformWebViewWidget(
                         PlatformWebViewWidgetCreationParams(
-                            controller: controller.controller),
+                          controller: controller.discordiframe,
+                        ),
                       ).build(context),
                     )
                   ],
