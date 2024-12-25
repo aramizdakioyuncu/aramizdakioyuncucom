@@ -1,5 +1,6 @@
 import 'package:aramizdakioyuncucom/app/modules/social/controllers/social_controller.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
+import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -36,7 +37,7 @@ class SocialView extends StatelessWidget {
                       Container(
                         color: colorbg,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(2.0),
                           child: Center(
                             child: ARMOYU.widget.elevatedButton.costum2(
                               background: Colors.blueGrey,
@@ -269,41 +270,55 @@ class SocialView extends StatelessWidget {
                         color: colorbg,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              ...List.generate(
-                                5,
-                                (index) {
-                                  return const ListTile(
-                                    leading: CircleAvatar(
-                                      foregroundImage:
-                                          CachedNetworkImageProvider(
-                                        "https://aramizdakioyuncu.com/galeri/ana-yapi/altin.png",
-                                      ),
-                                    ),
-                                    title: Row(
+                          child: Obx(
+                            () => controller.currentmoneyList.value == null
+                                ? const Center(
+                                    child: CupertinoActivityIndicator(),
+                                  )
+                                : SingleChildScrollView(
+                                    child: Column(
                                       children: [
-                                        Text(
-                                          "XAU",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          "300.26",
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                        ...List.generate(
+                                          controller
+                                              .currentmoneyList.value!.length,
+                                          (index) {
+                                            return ListTile(
+                                              leading: CircleAvatar(
+                                                foregroundImage:
+                                                    CachedNetworkImageProvider(
+                                                  controller.currentmoneyList
+                                                      .value![index].image,
+                                                ),
+                                              ),
+                                              title: Row(
+                                                children: [
+                                                  Text(
+                                                    controller.currentmoneyList
+                                                        .value![index].name,
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  Text(
+                                                    controller.currentmoneyList
+                                                        .value![index].value,
+                                                    style: const TextStyle(
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ],
                                     ),
-                                  );
-                                },
-                              ),
-                            ],
+                                  ),
                           ),
                         ),
                       ),
@@ -312,62 +327,45 @@ class SocialView extends StatelessWidget {
                         color: colorbg,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Table(
-                                columnWidths: const {
-                                  0: FlexColumnWidth(4),
-                                  1: FixedColumnWidth(25),
-                                  2: FixedColumnWidth(25),
-                                },
-                                children: [
-                                  const TableRow(
+                          child: Obx(
+                            () => controller.teamList.value == null
+                                ? const Center(
+                                    child: CupertinoActivityIndicator(),
+                                  )
+                                : Column(
                                     children: [
-                                      Text(
-                                        "Takım",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        "OM",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        "A",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        "P",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  ...List.generate(
-                                    5,
-                                    (index) {
-                                      return const TableRow(
+                                      Table(
+                                        columnWidths: const {
+                                          0: FlexColumnWidth(4),
+                                          1: FixedColumnWidth(25),
+                                          2: FixedColumnWidth(25),
+                                        },
                                         children: [
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
+                                          const TableRow(
                                             children: [
-                                              CircleAvatar(
-                                                foregroundImage:
-                                                    CachedNetworkImageProvider(
-                                                        "https://upload.wikimedia.org/wikipedia/tr/8/80/Sivasspor.png"),
+                                              Text(
+                                                "Takım",
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                               Text(
-                                                "EMS Yapı Sivasspor",
+                                                "OM",
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                "A",
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                "P",
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold,
@@ -375,34 +373,65 @@ class SocialView extends StatelessWidget {
                                               ),
                                             ],
                                           ),
-                                          Text(
-                                            "10",
-                                            style: TextStyle(
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            "10",
-                                            style: TextStyle(
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            "2",
-                                            style: TextStyle(
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          ...List.generate(
+                                            controller.teamList.value!.length,
+                                            (index) {
+                                              return TableRow(
+                                                children: [
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      const CircleAvatar(
+                                                        foregroundImage:
+                                                            CachedNetworkImageProvider(
+                                                                "https://upload.wikimedia.org/wikipedia/tr/8/80/Sivasspor.png"),
+                                                      ),
+                                                      Text(
+                                                        controller
+                                                            .teamList
+                                                            .value![index]
+                                                            .teamname,
+                                                        style: const TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const Text(
+                                                    "10",
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  const Text(
+                                                    "10",
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  const Text(
+                                                    "2",
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
                                           ),
                                         ],
-                                      );
-                                    },
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ],
                           ),
                         ),
                       ),
@@ -781,46 +810,72 @@ class SocialView extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SingleChildScrollView(
-                          child: Column(children: [
-                            const Text("Aramıza Hoşgeldiniz"),
-                            ...List.generate(
-                              10,
-                              (index) {
-                                return ListTile(
-                                  contentPadding: const EdgeInsets.all(0),
-                                  leading: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SizedBox(
-                                        width: 25,
-                                        child: Text(
-                                          "${(index + 1).toString()}.",
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
+                          child: Column(
+                            children: [
+                              const Text("Aramıza Hoşgeldiniz"),
+                              Obx(
+                                () => controller.newregisteredList.value == null
+                                    ? const Center(
+                                        child: CupertinoActivityIndicator(),
+                                      )
+                                    : SingleChildScrollView(
+                                        child: Column(
+                                          children: List.generate(
+                                            controller.newregisteredList.value!
+                                                .length,
+                                            (index) {
+                                              return ListTile(
+                                                onTap: () {
+                                                  Functions.openUrlWeb(
+                                                      "${controller.newregisteredList.value![index].userName}");
+                                                },
+                                                contentPadding:
+                                                    const EdgeInsets.all(0),
+                                                leading: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 25,
+                                                      child: Text(
+                                                        "${(index + 1).toString()}.",
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    CircleAvatar(
+                                                      foregroundImage:
+                                                          CachedNetworkImageProvider(
+                                                        controller
+                                                            .newregisteredList
+                                                            .value![index]
+                                                            .avatar!
+                                                            .mediaURL
+                                                            .minURL
+                                                            .value,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                title: Text(
+                                                  "${controller.newregisteredList.value![index].displayName!} ${controller.newregisteredList.value![index].xp!}",
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                           ),
                                         ),
                                       ),
-                                      const CircleAvatar(
-                                        foregroundImage:
-                                            CachedNetworkImageProvider(
-                                          "https://aramizdakioyuncu.com/galeri/profilresimleri/11663profilresimminnak1734429129.jpg",
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  title: const Text(
-                                    "Mel Cobain +82779 TP",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ]),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -830,59 +885,70 @@ class SocialView extends StatelessWidget {
                       color: Colors.black.withOpacity(0.5),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              const Text("Minecraft İstatistik"),
-                              Table(
-                                columnWidths: const {
-                                  0: FixedColumnWidth(20),
-                                  1: FlexColumnWidth(3),
-                                  2: FlexColumnWidth(1),
-                                },
-                                children: [
-                                  const TableRow(
+                        child: Obx(
+                          () => controller.minecraftList.value == null
+                              ? const Center(
+                                  child: CupertinoActivityIndicator(),
+                                )
+                              : SingleChildScrollView(
+                                  child: Column(
                                     children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Text("#"),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Text("Oyuncu Adı"),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Text("Leş"),
+                                      const Text("Minecraft İstatistik"),
+                                      Table(
+                                        columnWidths: const {
+                                          0: FixedColumnWidth(20),
+                                          1: FlexColumnWidth(3),
+                                          2: FlexColumnWidth(1),
+                                        },
+                                        children: [
+                                          const TableRow(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text("#"),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text("Oyuncu Adı"),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text("Leş"),
+                                              ),
+                                            ],
+                                          ),
+                                          ...List.generate(
+                                            5,
+                                            (index) {
+                                              return TableRow(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                        (index + 1).toString()),
+                                                  ),
+                                                  const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Text(
+                                                        "[ARMOYU] Berkay TIKENOGLU"),
+                                                  ),
+                                                  const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Text("45"),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                  ...List.generate(
-                                    5,
-                                    (index) {
-                                      return TableRow(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text((index + 1).toString()),
-                                          ),
-                                          const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Text(
-                                                "[ARMOYU] Berkay TIKENOGLU"),
-                                          ),
-                                          const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Text("45"),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                ),
                         ),
                       ),
                     ),

@@ -128,9 +128,9 @@ class BodyWidget {
           ),
           WebSmoothScroll(
             controller: scrollController.value,
-            scrollOffset: 200,
-            animationDuration: 200,
-            curve: Curves.linear,
+            // scrollOffset: 200,
+            // animationDuration: 200,
+            curve: Curves.easeInOutCirc,
             child: SingleChildScrollView(
               physics: const NeverScrollableScrollPhysics(),
               controller: scrollController.value,

@@ -167,7 +167,7 @@ class AppbarWidget {
 
             itemBuilder: (context) => [
               const PopupMenuItem(
-                value: 'ekibimiz-ile-tanisin',
+                value: 'ekibimiz',
                 child: Row(
                   children: [
                     Icon(Icons.business_rounded, color: Colors.white),

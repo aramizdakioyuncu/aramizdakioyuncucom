@@ -1,0 +1,11 @@
+import 'package:aramizdakioyuncucom/app/widgets/body_widget.dart';
+import 'package:flutter/material.dart';
+
+class EmployeeView extends StatelessWidget {
+  const EmployeeView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BodyWidget.custom1(context, body: []);
+  }
+}
