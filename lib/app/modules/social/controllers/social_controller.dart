@@ -2,13 +2,25 @@ import 'dart:developer';
 import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/media.dart';
 import 'package:aramizdakioyuncucom/app/data/models/user.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
+import 'package:aramizdakioyuncucom/app/translations/app_translation.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/post/post_detail.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/search/search_hashtaglist.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/story/story_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/foreign_currency_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/minecraft_statistics.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/new_registered_users.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/super_lig.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
+import 'package:armoyu_widgets/data/models/Social/comment.dart';
+import 'package:armoyu_widgets/data/models/Social/like.dart';
+import 'package:armoyu_widgets/data/models/Social/post.dart';
+import 'package:armoyu_widgets/data/models/Story/story.dart';
+import 'package:armoyu_widgets/data/models/Story/storylist.dart';
+import 'package:armoyu_widgets/data/models/user.dart' as widgetuser;
+import 'package:armoyu_widgets/data/models/ARMOYU/media.dart' as widgetmedia;
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
@@ -33,6 +45,9 @@ class SocialController extends GetxController {
   Rxn<List<ForeignCurrencyList>> currentmoneyList =
       Rxn<List<ForeignCurrencyList>>(null);
 
+  Rxn<List<Widget>> postsList = Rxn<List<Widget>>(null);
+  Rxn<List<StoryList>> content = Rxn<List<StoryList>>(null);
+
   var poplistcount = 1.obs;
   var xplistcount = 1.obs;
   var teamcount = 1.obs;
@@ -40,6 +55,7 @@ class SocialController extends GetxController {
   var newregisteredcount = 1.obs;
   var minecraftcount = 1.obs;
   var currentmoneycount = 1.obs;
+  var postscount = 1.obs;
 
   var poplistProccess = false.obs;
   var xplistProccess = false.obs;
@@ -48,6 +64,8 @@ class SocialController extends GetxController {
   var newregisteredlistProccess = false.obs;
   var minecraftlistProccess = false.obs;
   var currentmoneyProccess = false.obs;
+  var postsProccess = false.obs;
+  var proccess = false.obs;
 
   var xppopselected = true.obs;
 
@@ -62,6 +80,190 @@ class SocialController extends GetxController {
     fetchnewregisteredusers();
     fetchminecraft();
     fetchcurrentmoney();
+    fetchsocailposts();
+    fetchsocailstory();
+  }
+
+  Future<void> fetchsocailstory() async {
+    if (proccess.value) {
+      return;
+    }
+
+    proccess.value = true;
+    StoryFetchListResponse response =
+        await ARMOYU.service.storyServices.stories(page: 1);
+    if (!response.result.status) {
+      proccess.value = false;
+      return;
+    }
+
+    content.value ??= [];
+
+    if (response.response!.isEmpty) {
+      content.value!.add(
+        StoryList(
+          owner: widgetuser.User(
+            userID: ARMOYU.widget.accountController.currentUserAccounts.value
+                .user.value.userID,
+            userName: (SocialKeys.socialStory.tr).obs,
+            avatar: ARMOYU.widget.accountController.currentUserAccounts.value
+                .user.value.avatar,
+          ),
+          story: null,
+          isView: true,
+        ),
+      );
+    }
+    for (APIStoryList element in response.response!) {
+      content.value!.add(
+        StoryList(
+          owner: widgetuser.User(
+              userID: element.oyuncuId,
+              userName: Rx(element.oyuncuKadi),
+              displayName: Rx(element.oyuncuAdSoyad),
+              avatar: widgetmedia.Media(
+                mediaID: 0,
+                mediaURL: widgetmedia.MediaURL(
+                  bigURL: Rx(element.oyuncuAvatar.bigURL),
+                  normalURL: Rx(element.oyuncuAvatar.normalURL),
+                  minURL: Rx(
+                    element.oyuncuAvatar.minURL,
+                  ),
+                ),
+              )),
+          story: element.hikayeIcerik
+              .map(
+                (e) => Story(
+                  storyID: e.hikayeId,
+                  ownerID: e.hikayeSahip,
+                  ownerusername: element.oyuncuAdSoyad,
+                  owneravatar: element.oyuncuAvatar.minURL,
+                  time: e.hikayeZaman,
+                  media: e.hikayeMedya,
+                  isLike: e.hikayeBenBegeni,
+                  isView: e.hikayeBenGoruntulenme,
+                ),
+              )
+              .toList(),
+          isView: false,
+        ),
+      );
+    }
+
+    content.refresh();
+    proccess.value = false;
+
+    log(content.value!.length.toString());
+  }
+
+  Future<void> fetchsocailposts() async {
+    if (postsProccess.value) {
+      return;
+    }
+    postsProccess.value = true;
+
+    PostFetchListResponse response =
+        await ARMOYU.service.postsServices.getPosts(page: postscount.value);
+
+    if (!response.result.status) {
+      postsProccess.value = false;
+      return;
+    }
+
+    postsList.value ??= [];
+    for (APIPostList element in response.response!) {
+      postsList.value!.add(
+        ARMOYU.widget.social.postWidget(
+          Get.context!,
+          post: Post(
+            postID: element.postID,
+            content: element.content,
+            postDate: element.date,
+            sharedDevice: element.postdevice,
+            likesCount: element.likeCount,
+            isLikeme: element.didilikeit == 1 ? true : false,
+            commentsCount: element.commentCount,
+            iscommentMe: element.didicommentit == 1 ? true : false,
+            owner: widgetuser.User(
+              userID: element.postOwner.ownerID,
+              displayName: Rx(element.postOwner.displayName),
+              userName: Rx(element.postOwner.displayName),
+              avatar: widgetmedia.Media(
+                mediaID: 0,
+                mediaURL: widgetmedia.MediaURL(
+                  bigURL: Rx(element.postOwner.avatar.bigURL),
+                  normalURL: Rx(element.postOwner.avatar.normalURL),
+                  minURL: Rx(element.postOwner.avatar.minURL),
+                ),
+              ),
+            ),
+            media: element.media!
+                .map(
+                  (e) => widgetmedia.Media(
+                    mediaID: 0,
+                    mediaURL: widgetmedia.MediaURL(
+                      bigURL: Rx(e.mediaURL.bigURL),
+                      normalURL: Rx(e.mediaURL.normalURL),
+                      minURL: Rx(e.mediaURL.minURL),
+                    ),
+                    mediaType: e.mediaType,
+                  ),
+                )
+                .toList(),
+            firstthreecomment: element.firstcomments!
+                .map(
+                  (e) => Comment(
+                    postID: e.postID,
+                    commentID: e.commentID,
+                    content: e.commentContent,
+                    date: e.commentTime,
+                    didIlike: e.isLikedByMe,
+                    likeCount: e.likeCount,
+                    user: widgetuser.User(
+                      userID: e.postcommenter.userID,
+                      userName: Rx(e.postcommenter.mention),
+                      displayName: Rx(e.postcommenter.displayname),
+                      avatar: widgetmedia.Media(
+                        mediaID: 0,
+                        mediaURL: widgetmedia.MediaURL(
+                          bigURL: Rx(e.postcommenter.avatar.bigURL),
+                          normalURL: Rx(e.postcommenter.avatar.normalURL),
+                          minURL: Rx(e.postcommenter.avatar.minURL),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+            firstthreelike: element.firstlikers!
+                .map(
+                  (e) => Like(
+                    likeID: e.postlikeID,
+                    date: e.likedate,
+                    user: widgetuser.User(
+                      userID: e.likerID,
+                      userName: Rx(e.likerusername),
+                      displayName: Rx(e.likerdisplayname),
+                      avatar: widgetmedia.Media(
+                        mediaID: 0,
+                        mediaURL: widgetmedia.MediaURL(
+                          bigURL: Rx(e.likeravatar.bigURL),
+                          normalURL: Rx(e.likeravatar.normalURL),
+                          minURL: Rx(e.likeravatar.minURL),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+            location: element.location,
+          ),
+          isPostdetail: false,
+        ),
+      );
+    }
+    postsList.refresh();
+    postsProccess.value = false;
   }
 
   Future<void> fetchhashtags() async {

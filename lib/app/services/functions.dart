@@ -2,9 +2,13 @@ import 'dart:developer';
 
 import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/media.dart';
 import 'package:aramizdakioyuncucom/app/data/models/user.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/media.dart' as widgetmedia;
+import 'package:armoyu_widgets/data/models/user.dart' as widgetuser;
+
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
+import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 // ignore: avoid_web_libraries_in_flutter
@@ -28,9 +32,35 @@ class Functions {
 
 //WEB
   static void cookiesetup() {
-    if (Functions.box.read('currentUser') != null) {
-      Applist.currentUser.value =
-          User.fromJson(Functions.box.read('currentUser'));
+    if (Functions.box.read('currentUser') != null &&
+        Functions.box.read('userTOKEN') != null) {
+      Applist.currentUser.value = User.fromJson(
+        Functions.box.read('currentUser'),
+      );
+
+      String userToken = Functions.box.read('userTOKEN');
+      ARMOYU.widget.accountController.changeUser(
+        UserAccounts(
+          user: widgetuser.User(
+            userID: 1,
+            displayName: Rx("User Display Name"),
+            userName: Rx("User Display Name"),
+            avatar: widgetmedia.Media(
+              mediaID: 0,
+              mediaURL: widgetmedia.MediaURL(
+                bigURL: Rx(
+                    "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
+                normalURL: Rx(
+                    "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
+                minURL: Rx(
+                    "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
+              ),
+            ),
+          ).obs,
+          sessionTOKEN: userToken.obs,
+          language: "language".obs,
+        ),
+      );
     }
 
     if (Applist.currentUser.value == null) {

@@ -3,6 +3,7 @@ import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body_widget.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -597,171 +598,23 @@ class SocialView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      ...List.generate(
-                        5,
-                        (index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: Container(
-                              color: colorbg,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Column(
-                                  children: [
-                                    ListTile(
-                                      contentPadding: const EdgeInsets.all(0),
-                                      leading: const CircleAvatar(
-                                        foregroundImage:
-                                            CachedNetworkImageProvider(
-                                          "https://aramizdakioyuncu.com/galeri/profilresimleri/10915profilresimminnak1734874771.jpg",
-                                        ),
-                                      ),
-                                      title: const Row(
-                                        children: [
-                                          Text(
-                                            "Engin Kuşkovan",
-                                            style: TextStyle(color: Colors.red),
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "CÜ Öğrenci",
-                                            style: TextStyle(
-                                              color: Colors.blueAccent,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      subtitle: Text(
-                                        "16:41 , 22 Aralık 2024 📱",
-                                        style: TextStyle(color: colortxt),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "aç karnımız doydu afiyet olsun @berkaytikenoglu #sivas",
-                                        style: TextStyle(
-                                          color: colortxt,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 760,
-                                      width: double.infinity,
-                                      color: Colors.black,
-                                      child: CachedNetworkImage(
-                                        fit: BoxFit.contain,
-                                        imageUrl:
-                                            "https://aramizdakioyuncu.com/galeri/images/10915ufaklik17348748991.jpg",
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Spacer(),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              onPressed: () {},
-                                              icon: const FaIcon(
-                                                FontAwesomeIcons.heart,
-                                                color: Colors.red,
-                                              ),
-                                            ),
-                                            Text(
-                                              "0",
-                                              style: TextStyle(
-                                                color: colortxt,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        const Spacer(),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              onPressed: () {},
-                                              icon: const FaIcon(
-                                                FontAwesomeIcons.comment,
-                                                color: Colors.blueAccent,
-                                              ),
-                                            ),
-                                            Text(
-                                              "0",
-                                              style: TextStyle(
-                                                color: colortxt,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        const Spacer(),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              onPressed: () {},
-                                              icon: const FaIcon(
-                                                FontAwesomeIcons.retweet,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            Text(
-                                              "0",
-                                              style: TextStyle(
-                                                color: colortxt,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        const Spacer(),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              onPressed: () {},
-                                              icon: const FaIcon(
-                                                FontAwesomeIcons.flag,
-                                                color: Colors.pink,
-                                              ),
-                                            ),
-                                            Text(
-                                              "0",
-                                              style: TextStyle(
-                                                color: colortxt,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        const Spacer(),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const CircleAvatar(
-                                          radius: 10,
-                                          foregroundImage:
-                                              CachedNetworkImageProvider(
-                                            "https://aramizdakioyuncu.com/galeri/profilresimleri/1profilresimminnak1734874339.jpg",
-                                          ),
-                                        ),
-                                        Text(
-                                          "Berkay Tikenoğlu Beğendi",
-                                          style: TextStyle(
-                                            color: colortxt,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                      Obx(
+                        () => controller.content.value == null
+                            ? Container()
+                            : ARMOYU.widget.social.widgetStorycircle(
+                                content: controller.content.value!),
+                      ),
+                      Obx(
+                        () => controller.postsList.value == null
+                            ? Container()
+                            : Column(
+                                children: List.generate(
+                                  controller.postsList.value!.length,
+                                  (index) {
+                                    return controller.postsList.value![index];
+                                  },
                                 ),
                               ),
-                            ),
-                          );
-                        },
                       ),
                     ],
                   ),
