@@ -598,23 +598,14 @@ class SocialView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      Obx(
-                        () => controller.content.value == null
-                            ? Container()
-                            : ARMOYU.widget.social.widgetStorycircle(
-                                content: controller.content.value!),
-                      ),
-                      Obx(
-                        () => controller.postsList.value == null
-                            ? Container()
-                            : Column(
-                                children: List.generate(
-                                  controller.postsList.value!.length,
-                                  (index) {
-                                    return controller.postsList.value![index];
-                                  },
-                                ),
-                              ),
+                      ARMOYU.widget.social.widgetStorycircle(),
+                      ARMOYU.widget.social.posts(
+                        context: context,
+                        scrollController: ScrollController(),
+                        isPostdetail: false,
+                        profileFunction: (userID, username) {
+                          Get.toNamed("/oyuncular/$username");
+                        },
                       ),
                     ],
                   ),
@@ -679,7 +670,7 @@ class SocialView extends StatelessWidget {
                                             (index) {
                                               return ListTile(
                                                 onTap: () {
-                                                  Functions.openUrlWeb(
+                                                  Functions.gotoPage(
                                                       "${controller.newregisteredList.value![index].userName}");
                                                 },
                                                 contentPadding:
@@ -951,7 +942,7 @@ class SocialView extends StatelessWidget {
                       width: double.infinity,
                       child: PlatformWebViewWidget(
                         PlatformWebViewWidgetCreationParams(
-                          controller: controller.discordiframe,
+                          controller: controller.discordiframe.value,
                         ),
                       ).build(context),
                     )

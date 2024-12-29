@@ -51,8 +51,7 @@ class GalleryView extends StatelessWidget {
                             child: InkWell(
                               onTap: () {
                                 // Get.toNamed("/galeriler/assetto-corsa");
-                                Functions.openUrlWeb(
-                                    "/galeriler/assetto-corsa");
+                                Functions.gotoPage("/galeriler/assetto-corsa");
                               },
                               child: const Padding(
                                 padding: EdgeInsets.all(3.0),

@@ -24,7 +24,7 @@ class NewsView extends StatelessWidget {
                     child: InkWell(
                       onTap: () {
                         // Get.toNamed("/haberler/witcher");
-                        Functions.openUrlWeb("/haberler/witcher");
+                        Functions.gotoPage("/haberler/witcher");
                       },
                       child: Stack(
                         children: [

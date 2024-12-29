@@ -18,8 +18,9 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
-    fetchuser(profileUsername);
+    if (profileUsername != null) {
+      fetchuser(profileUsername);
+    }
   }
 
   fetchuser(username) async {

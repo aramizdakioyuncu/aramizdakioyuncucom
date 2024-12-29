@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:aramizdakioyuncucom/app/appinfo.dart';
 import 'package:aramizdakioyuncucom/app/routes/routes.dart';
 import 'package:aramizdakioyuncucom/app/theme/theme.dart';
+import 'package:armoyu_widgets/translations/app_translation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,6 +18,9 @@ class App extends StatelessWidget {
       theme: appLightThemeData,
       darkTheme: appDarkThemeData,
       themeMode: ThemeMode.dark,
+      translationsKeys: AppTranslation.translationKeys,
+      locale: Get.deviceLocale,
+      fallbackLocale: const Locale('en', 'US'),
       initialRoute: AppPages.initial,
       unknownRoute: AppPages.notFound404page.first,
       getPages: AppPages.routes,

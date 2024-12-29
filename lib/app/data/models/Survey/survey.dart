@@ -1,7 +1,7 @@
 import 'package:aramizdakioyuncucom/app/data/models/Survey/answer.dart';
 import 'package:aramizdakioyuncucom/app/data/models/Survey/question.dart';
 import 'package:aramizdakioyuncucom/app/data/models/user.dart';
-import 'package:aramizdakioyuncucom/app/translations/app_translation.dart';
+import 'package:armoyu_widgets/translations/app_translation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

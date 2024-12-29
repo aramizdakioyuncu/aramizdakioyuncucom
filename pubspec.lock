@@ -21,10 +21,10 @@ packages:
     dependency: "direct main"
     description:
       name: armoyu_widgets
-      sha256: "3bdca9110d675570d09e59d37ccd6da57eae2b20a0e7a173f01b718c77fb6c6c"
+      sha256: "7e419c1f6b3d22a302c7a67271476930e5f05dbbbb3490e1e2b36b60f5954f8d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+5"
+    version: "1.0.0+10"
   async:
     dependency: transitive
     description:
@@ -784,6 +784,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.2"
+  photo_manager:
+    dependency: transitive
+    description:
+      name: photo_manager
+      sha256: dc26184676b26d722d656073ca8fe29203d7631ec613aed1a9679de3aa1f52c2
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.6.3"
   photo_view:
     dependency: "direct main"
     description:

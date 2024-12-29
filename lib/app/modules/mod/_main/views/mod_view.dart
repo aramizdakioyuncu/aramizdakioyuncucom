@@ -62,7 +62,7 @@ class ModView extends StatelessWidget {
                     DataRow(
                       onSelectChanged: (value) {
                         // Get.toNamed("/modlar/$value");
-                        Functions.openUrlWeb("/modlar/$value");
+                        Functions.gotoPage("/modlar/$value");
                       },
                       cells: [
                         DataCell(

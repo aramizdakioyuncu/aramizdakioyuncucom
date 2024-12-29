@@ -67,7 +67,7 @@ class GalleryDetailView extends StatelessWidget {
                         (index) {
                           return InkWell(
                             onTap: () {
-                              Functions.openUrlWeb(
+                              Functions.gotoPage(
                                   "/galeriler/${controller.gallery}/${index + 1}");
                             },
                             child: Container(

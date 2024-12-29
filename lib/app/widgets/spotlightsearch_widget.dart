@@ -36,7 +36,7 @@ class SpotlightSearchWidget {
                       log(id.toString());
                       log(val.toString());
                       // Get.toNamed("/home"),
-                      Functions.openUrlWeb("/oyuncular/$username");
+                      Functions.gotoPage("/oyuncular/$username");
                     },
                   ),
                 ],

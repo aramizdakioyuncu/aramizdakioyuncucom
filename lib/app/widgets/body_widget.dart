@@ -5,7 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 class BodyWidget {
   static Widget custom1(context,
@@ -126,22 +125,22 @@ class BodyWidget {
             width: Get.width,
             height: Get.height,
           ),
-          WebSmoothScroll(
+          // WebSmoothScroll(
+          // controller: scrollController.value,
+          // scrollOffset: 200,
+          // animationDuration: 200,
+          // curve: Curves.easeInOutCirc,
+          SingleChildScrollView(
+            // physics: const NeverScrollableScrollPhysics(),
             controller: scrollController.value,
-            // scrollOffset: 200,
-            // animationDuration: 200,
-            curve: Curves.easeInOutCirc,
-            child: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: scrollController.value,
-              child: Column(
-                children: [
-                  ...body,
-                  FooterWidget.custom(),
-                ],
-              ),
+            child: Column(
+              children: [
+                ...body,
+                FooterWidget.custom(),
+              ],
             ),
           ),
+          // ),
         ],
       ),
     );

@@ -10,6 +10,11 @@ import 'package:aramizdakioyuncucom/app/modules/profile/profile_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/raffle/raffle_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/splash/splash_modules.dart';
 
+class Routes {
+  // ignore: constant_identifier_names
+  static const PROFILE = "/oyuncular";
+}
+
 class AppPages {
   static const initial = HomeModule.route;
 

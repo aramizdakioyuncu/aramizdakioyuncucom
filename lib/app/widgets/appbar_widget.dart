@@ -18,7 +18,7 @@ class AppbarWidget {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
-            onTap: () => Functions.openUrlWeb("/home"),
+            onTap: () => Functions.gotoPage("/home"),
             child: CachedNetworkImage(
               imageUrl:
                   "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu64.png",
@@ -79,7 +79,7 @@ class AppbarWidget {
             ],
             onSelected: (value) {
               // Get.toNamed("/gruplar/$value");
-              Functions.openUrlWeb("/gruplar/search/$value");
+              Functions.gotoPage("/gruplar/search/$value");
             },
           ),
           PopupMenuButton<String>(
@@ -140,13 +140,13 @@ class AppbarWidget {
             ],
             onSelected: (value) {
               // Get.toNamed("/galeriler/$value");
-              Functions.openUrlWeb("/galeriler/$value");
+              Functions.gotoPage("/galeriler/$value");
             },
           ),
           TextButton(
             onPressed: () {
               // Get.toNamed("/haberler");
-              Functions.openUrlWeb("/haberler");
+              Functions.gotoPage("/haberler");
             },
             child: const Text("Haberler"),
           ),
@@ -208,41 +208,41 @@ class AppbarWidget {
             ],
             onSelected: (value) {
               // Get.toNamed("/$value");
-              Functions.openUrlWeb("/$value");
+              Functions.gotoPage("/$value");
             },
           ),
           TextButton(
             onPressed: () {
               // Get.toNamed("/cekilisler");
-              Functions.openUrlWeb("/cekilisler");
+              Functions.gotoPage("/cekilisler");
             },
             child: const Text("Çekilişler"),
           ),
           TextButton(
             onPressed: () {
               // Get.toNamed("/forum");
-              Functions.openUrlWeb("/forum");
+              Functions.gotoPage("/forum");
             },
             child: const Text("Forum"),
           ),
           TextButton(
             onPressed: () {
               // Get.toNamed("/modlar");
-              Functions.openUrlWeb("/modlar");
+              Functions.gotoPage("/modlar");
             },
             child: const Text("Modlar"),
           ),
           TextButton(
             onPressed: () {
               // Get.toNamed("/magaza");
-              Functions.openUrlWeb("/magaza");
+              Functions.gotoPage("/magaza");
             },
             child: const Text("Mağaza"),
           ),
           TextButton(
             onPressed: () {
               // Get.toNamed("/projeler");
-              Functions.openUrlWeb("/projeler");
+              Functions.gotoPage("/projeler");
             },
             child: const Text("Projeler"),
           ),
@@ -495,8 +495,9 @@ class AppbarWidget {
                                                     ),
                                                   ),
                                                   onPressed: () {
-                                                    // Get.toNamed("/oyuncular");
-                                                    Functions.openUrlWeb(
+                                                    // Functions.gotoPage(
+                                                    //     "/oyuncular/${Applist.currentUser.value!.userName!.value}");
+                                                    Get.toNamed(
                                                         "/oyuncular/${Applist.currentUser.value!.userName!.value}");
                                                   },
                                                   child: const Padding(

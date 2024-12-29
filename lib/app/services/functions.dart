@@ -18,12 +18,18 @@ class Functions {
   static final box = GetStorage();
 //WEB
 
-  static void openUrlWebBlank(String url) {
-    html.window.open(url, '_blank'); // Yeni sekmede açar
-  }
-
-  static void openUrlWeb(String url) {
+  static void gotoPage(String url,
+      {bool newTab = false, bool getnavgiate = false}) {
+    if (newTab) {
+      html.window.open(url, '_blank');
+      return;
+    }
+    if (getnavgiate) {
+      Get.toNamed(url);
+      return;
+    }
     html.window.location.href = url;
+    return;
   }
 
   static void reloadPage() {
@@ -42,18 +48,29 @@ class Functions {
       ARMOYU.widget.accountController.changeUser(
         UserAccounts(
           user: widgetuser.User(
-            userID: 1,
-            displayName: Rx("User Display Name"),
-            userName: Rx("User Display Name"),
+            userID: Applist.currentUser.value!.userID,
+            displayName: Rx(Applist.currentUser.value!.displayName!.value),
+            userName: Rx(Applist.currentUser.value!.userName!.value),
             avatar: widgetmedia.Media(
-              mediaID: 0,
+              mediaID: Applist.currentUser.value!.avatar!.mediaID,
               mediaURL: widgetmedia.MediaURL(
                 bigURL: Rx(
-                    "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
-                normalURL: Rx(
-                    "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
+                    Applist.currentUser.value!.avatar!.mediaURL.bigURL.value),
+                normalURL: Rx(Applist
+                    .currentUser.value!.avatar!.mediaURL.normalURL.value),
                 minURL: Rx(
-                    "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
+                    Applist.currentUser.value!.avatar!.mediaURL.minURL.value),
+              ),
+            ),
+            banner: widgetmedia.Media(
+              mediaID: Applist.currentUser.value!.banner!.mediaID,
+              mediaURL: widgetmedia.MediaURL(
+                bigURL: Rx(
+                    Applist.currentUser.value!.banner!.mediaURL.bigURL.value),
+                normalURL: Rx(Applist
+                    .currentUser.value!.banner!.mediaURL.normalURL.value),
+                minURL: Rx(
+                    Applist.currentUser.value!.banner!.mediaURL.minURL.value),
               ),
             ),
           ).obs,

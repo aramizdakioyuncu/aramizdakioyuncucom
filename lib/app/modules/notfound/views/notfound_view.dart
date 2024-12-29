@@ -22,7 +22,7 @@ class NotfoundView extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Get.offAllNamed('/'); // Ana sayfaya yönlendir
-                Functions.openUrlWeb("/");
+                Functions.gotoPage("/");
               },
               child: const Text("Ana Sayfaya Git"),
             ),
