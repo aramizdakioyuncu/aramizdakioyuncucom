@@ -1,9 +1,10 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/widget.dart';
 
 class ARMOYU {
   static ARMOYUServices service = ARMOYUServices(
-    apiKey: "bda0b6f27fc1a6a87e8ba8cd9ab339ca",
+    apiKey: APIConstants.apiKEY,
     usePreviousAPI: true,
   );
 

@@ -20,7 +20,7 @@ dependencies:
   web_smooth_scroll: ^1.1.0
 
   armoyu_services: ^1.0.0+37
-  armoyu_widgets: ^1.0.0+10
+  armoyu_widgets: ^1.0.0+15
 
   get: ^4.6.6
   get_storage: ^2.1.1
@@ -42,3 +42,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/sounds/

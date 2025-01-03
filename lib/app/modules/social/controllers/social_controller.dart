@@ -127,7 +127,6 @@ class SocialController extends GetxController {
 
     popList.value ??= [];
     for (APIPlayerPop element in response.response!) {
-      log("pop ->${element.oyuncuAdSoyad} ${element.oyuncuSeviyeXP}");
       popList.value!.add(
         User(
           displayName: Rx(element.oyuncuAdSoyad),
@@ -168,7 +167,6 @@ class SocialController extends GetxController {
 
     teamList.value ??= [];
     for (SuperLigAPI element in response.response!) {
-      log("team ->${element.teamname} ${element.point}");
       teamList.value!.add(element);
     }
 
@@ -194,8 +192,6 @@ class SocialController extends GetxController {
 
     xpList.value ??= [];
     for (APIPlayerPop element in response.response!) {
-      log("xp ->${element.oyuncuAdSoyad} ${element.oyuncuSeviyeXP}");
-
       xpList.value!.add(
         User(
           displayName: Rx(element.oyuncuAdSoyad),
@@ -235,7 +231,6 @@ class SocialController extends GetxController {
 
     newregisteredList.value ??= [];
     for (NewRegisteredUsersAPI element in response.response!) {
-      log("nuser -> ${element.displayname} ${element.level} ${element.xp} ");
       newregisteredList.value!.add(
         User(
           displayName: Rx(element.displayname),
@@ -276,7 +271,6 @@ class SocialController extends GetxController {
 
     minecraftList.value ??= [];
     for (MinecraftStatisticsAPI element in response.response!) {
-      log("minecraftuser -> ${element.playername} ${element.clanname} ${element.point}  ");
       minecraftList.value!.add(
         User(
           displayName: Rx(element.playername),
@@ -306,7 +300,6 @@ class SocialController extends GetxController {
 
     currentmoneyList.value ??= [];
     for (ForeignCurrencyList element in response.response!) {
-      log("money -> ${element.image} ${element.name} ${element.value}  ");
       currentmoneyList.value!.add(element);
     }
     newregisteredList.refresh();

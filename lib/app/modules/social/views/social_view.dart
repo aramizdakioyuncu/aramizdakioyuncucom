@@ -25,7 +25,7 @@ class SocialView extends StatelessWidget {
       context,
       body: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 180.0),
+          padding: const EdgeInsets.symmetric(horizontal: 100.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
