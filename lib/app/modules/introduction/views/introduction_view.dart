@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
-import 'package:aramizdakioyuncucom/app/widgets/body_widget.dart';
+import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';

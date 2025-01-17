@@ -1,26 +1,61 @@
 import 'dart:developer';
 
-import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/country.dart';
-import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/media.dart';
-import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/province.dart';
-import 'package:aramizdakioyuncucom/app/data/models/game.dart';
-import 'package:aramizdakioyuncucom/app/data/models/socialaccounts.dart';
-import 'package:aramizdakioyuncucom/app/data/models/user.dart';
+import 'package:aramizdakioyuncucom/app/models/game.dart';
+import 'package:aramizdakioyuncucom/app/models/socailaccounts.dart';
+import 'package:aramizdakioyuncucom/app/models/user.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/country.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/province.dart';
+
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/login&register&password/login.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ProfileController extends GetxController {
+class ProfileController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final profileUsername = Get.parameters['username'];
   Rxn<User> profileInfo = Rxn<User>();
+  Rxn<TabController> tabController = Rxn<TabController>();
+
+  Rxn<Widget> widget = Rxn();
+  Rxn<Widget> widget2 = Rxn();
+  Rxn<Widget> widget3 = Rxn();
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
+
+    tabController.value = TabController(
+      initialIndex: 0,
+      length: 3,
+      vsync: this,
+    );
+
     if (profileUsername != null) {
-      fetchuser(profileUsername);
+      await fetchuser(profileUsername);
     }
+    widget.value = ARMOYU.widget.social.posts(
+      context: Get.context!,
+      shrinkWrap: true,
+      userID: profileInfo.value!.userID,
+      profileFunction: (userID, username) {},
+    );
+
+    widget2.value = ARMOYU.widget.gallery.mediaGallery(
+      context: Get.context!,
+      userID: profileInfo.value!.userID,
+    );
+
+    widget3.value = ARMOYU.widget.social.posts(
+      context: Get.context!,
+      shrinkWrap: true,
+      userID: profileInfo.value!.userID,
+      category: "etiketlenmis",
+      profileFunction: (userID, username) {},
+    );
   }
 
   fetchuser(username) async {
@@ -76,6 +111,8 @@ class ProfileController extends GetxController {
     }
 
     profileInfo.value = User(
+      userID: response.response!.playerID,
+      userName: Rx(response.response!.username!),
       displayName: Rx<String>(response.response!.displayName!),
       xp: Rx<String>(response.response!.levelXP!),
       aboutme: Rx(response.response!.detailInfo!.about!),
@@ -158,7 +195,5 @@ class ProfileController extends GetxController {
           ? null
           : RxList(friendsList),
     );
-
-    log(profileInfo.value!.banner!.mediaURL.minURL.value);
   }
 }

@@ -1,13 +1,13 @@
 import 'dart:developer';
 
-import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/group.dart';
-import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/media.dart';
-import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/role.dart';
-import 'package:aramizdakioyuncucom/app/data/models/user.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_services/core/models/ARMOYU/user.dart' as armoyuuser;
+import 'package:armoyu_widgets/data/models/ARMOYU/group.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/role.dart';
+import 'package:armoyu_widgets/data/models/user.dart';
 
 import 'package:get/get.dart';
 

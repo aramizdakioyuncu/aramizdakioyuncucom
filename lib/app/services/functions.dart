@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/media.dart';
-import 'package:aramizdakioyuncucom/app/data/models/user.dart';
+import 'package:aramizdakioyuncucom/app/models/user.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart' as widgetmedia;
+import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/user.dart' as widgetuser;
 
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
@@ -75,7 +75,7 @@ class Functions {
             ),
           ).obs,
           sessionTOKEN: userToken.obs,
-          language: "language".obs,
+          language: Rxn("tr TR"),
         ),
       );
     }

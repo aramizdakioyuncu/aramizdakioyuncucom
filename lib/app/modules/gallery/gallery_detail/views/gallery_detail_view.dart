@@ -1,6 +1,6 @@
 import 'package:aramizdakioyuncucom/app/modules/gallery/gallery_detail/controllers/gallery_detail_controller.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
-import 'package:aramizdakioyuncucom/app/widgets/body_widget.dart';
+import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

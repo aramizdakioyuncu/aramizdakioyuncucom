@@ -1,5 +1,5 @@
 import 'package:aramizdakioyuncucom/app/modules/group/_main/controllers/group_controller.dart';
-import 'package:aramizdakioyuncucom/app/widgets/body_widget.dart';
+import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/group/group_list.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';

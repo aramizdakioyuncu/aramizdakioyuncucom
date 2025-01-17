@@ -1,8 +1,8 @@
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:aramizdakioyuncucom/app/widgets/appbar_widget.dart';
-import 'package:aramizdakioyuncucom/app/widgets/chat_widget.dart';
+import 'package:aramizdakioyuncucom/app/widgets/body/controllers/body_controller.dart';
+import 'package:aramizdakioyuncucom/app/widgets/cookie_widget.dart';
 import 'package:aramizdakioyuncucom/app/widgets/footer_widget.dart';
-import 'package:armoyu_widgets/data/models/Chat/chat.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,12 +12,9 @@ class BodyWidget {
   static Widget custom1(context,
       {String? bgImage, required List<Widget> body}) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+    final controller = Get.put(BodyController());
 
     var scrollController = ScrollController().obs;
-
-    // ChatWidget chat = ChatWidget();
-
-    var chatdetails = <Rxn<Chat>>[].obs;
 
     return Scaffold(
       key: scaffoldKey,
@@ -130,12 +127,12 @@ class BodyWidget {
                 children: [
                   CachedNetworkImage(
                     imageUrl: bgImage ??
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/anaarkaplan.jpg",
+                        // "https://aramizdakioyuncu.com/galeri/ana-yapi/anaarkaplan.jpg",
+                        "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp",
                     fit: BoxFit.cover,
                     width: Get.width,
                     height: Get.height,
                   ),
-
                   SingleChildScrollView(
                     controller: scrollController.value,
                     child: Column(
@@ -145,11 +142,15 @@ class BodyWidget {
                       ],
                     ),
                   ),
-                  // ),
                 ],
               ),
-              ChatWidget.chatlistWidget(context, chatdetails),
-              ChatWidget.chatdetailWidgets(context, chatdetails),
+              controller.widgetchat.value!,
+              controller.widgetchatdetail.value!,
+              Obx(
+                () => !Applist.provicypolity.value
+                    ? CookieWidget.custom1()
+                    : Container(),
+              ),
             ],
           );
         },

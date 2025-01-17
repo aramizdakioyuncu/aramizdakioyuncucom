@@ -1,4 +1,4 @@
-import 'package:aramizdakioyuncucom/app/widgets/body_widget.dart';
+import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:flutter/material.dart';
 
 class ShopdetailView extends StatelessWidget {

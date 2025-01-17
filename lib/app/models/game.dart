@@ -1,4 +1,4 @@
-import 'package:aramizdakioyuncucom/app/data/models/ARMOYU/media.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 
 class Game {
   final int gameID;

@@ -1,6 +1,6 @@
 import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_widgets/widget.dart';
+import 'package:armoyu_widgets/armoyuwidgets.dart';
 
 class ARMOYU {
   static ARMOYUServices service = ARMOYUServices(
@@ -8,5 +8,5 @@ class ARMOYU {
     usePreviousAPI: true,
   );
 
-  static ARMOYUWidget widget = ARMOYUWidget(service: service);
+  static ARMOYUWidgets widget = ARMOYUWidgets(service: service);
 }

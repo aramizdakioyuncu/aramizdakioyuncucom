@@ -11,55 +11,61 @@ class ChatWidget {
   static Widget chatlistWidget(context, RxList<Rxn<Chat>> chatdetails) {
     var chatliststatus = false.obs;
 
-    return Obx(
-      () => Applist.currentUser.value == null
-          ? Container()
-          : Positioned(
-              right: 0,
-              bottom: 0,
-              child: Obx(
-                () => Container(
-                  height: chatliststatus.value ? 500 : null,
-                  width: 300,
-                  color: Colors.grey.shade800,
-                  child: Column(
-                    children: [
-                      AppBar(
-                        title: const Text('Sohbet'),
-                        actions: [
-                          IconButton(
-                            onPressed: () {
-                              chatliststatus.value = !chatliststatus.value;
-                            },
-                            icon: const Icon(Icons.arrow_drop_down_sharp),
-                          )
-                        ],
+    return Applist.currentUser.value == null
+        ? Container()
+        : Positioned(
+            right: 0,
+            bottom: 0,
+            child: Obx(
+              () => Container(
+                height: chatliststatus.value ? 500 : null,
+                width: 300,
+                color: Colors.grey.shade800,
+                child: Column(
+                  children: [
+                    Container(
+                      color: Colors.black,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            const Expanded(
+                              child: Text("Sohbet"),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                chatliststatus.value = !chatliststatus.value;
+                              },
+                              icon: const Icon(Icons.arrow_drop_down_sharp),
+                            ),
+                          ],
+                        ),
                       ),
-                      chatliststatus.value == true
-                          ? ARMOYU.widget.chat.chatmyfriendsNotes(context)
-                          : Container(),
-                      chatliststatus.value == true
-                          ? Expanded(
-                              child: ARMOYU.widget.chat.chatListWidget(
-                                context,
-                                scrollController: ScrollController(),
-                                onPressed: (chat) {
-                                  if (!chatdetails.any((detail) =>
-                                      detail.value?.user.userID ==
-                                      chat.user.userID)) {
-                                    chatdetails.add(Rxn<Chat>(chat));
-                                    chatdetails.refresh();
-                                  }
-                                },
-                              ),
-                            )
-                          : Container(),
-                    ],
-                  ),
+                    ),
+                    chatliststatus.value == true
+                        ? ARMOYU.widget.chat.chatmyfriendsNotes(context)
+                        : Container(),
+                    chatliststatus.value == true
+                        ? Expanded(
+                            child: ARMOYU.widget.chat.chatListWidget(
+                              context,
+                              scrollController: ScrollController(),
+                              onPressed: (chat) {
+                                if (!chatdetails.any((detail) =>
+                                    detail.value?.user.userID ==
+                                    chat.user.userID)) {
+                                  chatdetails.add(Rxn<Chat>(chat));
+                                  chatdetails.refresh();
+                                }
+                              },
+                            ),
+                          )
+                        : Container(),
+                  ],
                 ),
               ),
             ),
-    );
+          );
   }
 
   static Widget chatdetailWidgets(

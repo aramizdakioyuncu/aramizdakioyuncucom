@@ -1,9 +1,10 @@
-import 'package:aramizdakioyuncucom/app/data/models/user.dart';
+import 'package:aramizdakioyuncucom/app/models/user.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 class Applist {
   static Rxn<User?> currentUser = Rxn<User?>();
 
+  static Rx<bool> provicypolity = Rx(false);
   static List defaultslider = [
     "https://aramizdakioyuncu.com/galeri/slider/kulup.jpg",
     "https://aramizdakioyuncu.com/galeri/slider/clash-of-clans.jpg",

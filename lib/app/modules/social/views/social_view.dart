@@ -2,7 +2,7 @@ import 'package:aramizdakioyuncucom/app/modules/social/controllers/social_contro
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
-import 'package:aramizdakioyuncucom/app/widgets/body_widget.dart';
+import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -602,7 +602,7 @@ class SocialView extends StatelessWidget {
                       ARMOYU.widget.social.posts(
                         context: context,
                         scrollController: ScrollController(),
-                        isPostdetail: false,
+                        shrinkWrap: true,
                         profileFunction: (userID, username) {
                           Get.toNamed("/oyuncular/$username");
                         },

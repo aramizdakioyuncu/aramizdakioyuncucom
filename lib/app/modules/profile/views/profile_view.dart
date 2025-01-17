@@ -1,6 +1,6 @@
 import 'package:aramizdakioyuncucom/app/modules/profile/controllers/profile_controller.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
-import 'package:aramizdakioyuncucom/app/widgets/body_widget.dart';
+import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/cupertino.dart';
@@ -151,7 +151,7 @@ class ProfileView extends StatelessWidget {
                 ],
               ),
               Container(
-                color: Colors.white,
+                color: Get.theme.cardColor,
                 child: Obx(
                   () => controller.profileInfo.value == null
                       ? const Center(
@@ -393,6 +393,27 @@ class ProfileView extends StatelessWidget {
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
+                                          TabBar(
+                                            controller:
+                                                controller.tabController.value,
+                                            tabs: const [
+                                              Text("Paylaşımlar"),
+                                              Text("Medya"),
+                                              Text("Etiketlenmiş"),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 800,
+                                            child: TabBarView(
+                                              controller: controller
+                                                  .tabController.value,
+                                              children: [
+                                                controller.widget.value!,
+                                                controller.widget2.value!,
+                                                controller.widget3.value!,
+                                              ],
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ),
