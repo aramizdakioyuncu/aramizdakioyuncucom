@@ -18,7 +18,10 @@ class AppbarWidget {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
-            onTap: () => Functions.gotoPage("/home"),
+            onTap: () => Functions.gotoPage(
+              "/home",
+              getnavgiate: true,
+            ),
             child: CachedNetworkImage(
               imageUrl:
                   "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu64.png",
@@ -79,7 +82,10 @@ class AppbarWidget {
             ],
             onSelected: (value) {
               // Get.toNamed("/gruplar/$value");
-              Functions.gotoPage("/gruplar/search/$value");
+              Functions.gotoPage(
+                "/gruplar/search/$value",
+                getnavgiate: true,
+              );
             },
           ),
           PopupMenuButton<String>(
@@ -140,13 +146,19 @@ class AppbarWidget {
             ],
             onSelected: (value) {
               // Get.toNamed("/galeriler/$value");
-              Functions.gotoPage("/galeriler/$value");
+              Functions.gotoPage(
+                "/galeriler/$value",
+                getnavgiate: true,
+              );
             },
           ),
           TextButton(
             onPressed: () {
               // Get.toNamed("/haberler");
-              Functions.gotoPage("/haberler");
+              Functions.gotoPage(
+                "/haberler",
+                getnavgiate: true,
+              );
             },
             child: const Text("Haberler"),
           ),
@@ -208,41 +220,59 @@ class AppbarWidget {
             ],
             onSelected: (value) {
               // Get.toNamed("/$value");
-              Functions.gotoPage("/$value");
+              Functions.gotoPage(
+                "/$value",
+                getnavgiate: true,
+              );
             },
           ),
           TextButton(
             onPressed: () {
               // Get.toNamed("/cekilisler");
-              Functions.gotoPage("/cekilisler");
+              Functions.gotoPage(
+                "/cekilisler",
+                getnavgiate: true,
+              );
             },
             child: const Text("Çekilişler"),
           ),
           TextButton(
             onPressed: () {
               // Get.toNamed("/forum");
-              Functions.gotoPage("/forum");
+              Functions.gotoPage(
+                "/forum",
+                getnavgiate: true,
+              );
             },
             child: const Text("Forum"),
           ),
           TextButton(
             onPressed: () {
               // Get.toNamed("/modlar");
-              Functions.gotoPage("/modlar");
+              Functions.gotoPage(
+                "/modlar",
+                getnavgiate: true,
+              );
             },
             child: const Text("Modlar"),
           ),
           TextButton(
             onPressed: () {
               // Get.toNamed("/magaza");
-              Functions.gotoPage("/magaza");
+              Functions.gotoPage(
+                "/magaza",
+                getnavgiate: true,
+              );
             },
             child: const Text("Mağaza"),
           ),
           TextButton(
             onPressed: () {
               // Get.toNamed("/projeler");
-              Functions.gotoPage("/projeler");
+              Functions.gotoPage(
+                "/projeler",
+                getnavgiate: true,
+              );
             },
             child: const Text("Projeler"),
           ),
@@ -495,10 +525,10 @@ class AppbarWidget {
                                                     ),
                                                   ),
                                                   onPressed: () {
-                                                    // Functions.gotoPage(
-                                                    //     "/oyuncular/${Applist.currentUser.value!.userName!.value}");
-                                                    Get.toNamed(
-                                                        "/oyuncular/${Applist.currentUser.value!.userName!.value}");
+                                                    Functions.gotoPage(
+                                                      "/oyuncular/${Applist.currentUser.value!.userName!.value}",
+                                                      getnavgiate: true,
+                                                    );
                                                   },
                                                   child: const Padding(
                                                     padding: EdgeInsets.all(

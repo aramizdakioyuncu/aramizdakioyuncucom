@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:aramizdakioyuncucom/app/widgets/appbar_widget.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/controllers/body_controller.dart';
@@ -10,7 +11,18 @@ import 'package:get/get.dart';
 
 class BodyWidget {
   static Widget custom1(context,
-      {String? bgImage, required List<Widget> body}) {
+      {String? bgImage,
+      bool transparentBody = false,
+      bool fullWidth = false,
+      required List<Widget> body}) {
+    Rx<String> backgroundImage =
+        Rx("https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp");
+    // "https://aramizdakioyuncu.com/galeri/ana-yapi/anaarkaplan.jpg",
+    // "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp",
+
+    if (bgImage != null) {
+      backgroundImage.value = bgImage;
+    }
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final controller = Get.put(BodyController());
 
@@ -19,125 +31,141 @@ class BodyWidget {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppbarWidget.costum1(context, scaffoldKey),
-      endDrawer: Obx(
-        () => Applist.currentUser.value == null
-            ? const Drawer()
-            : Drawer(
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                ),
-                backgroundColor: Colors.black,
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    DrawerHeader(
-                      margin: const EdgeInsets.all(0),
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: CachedNetworkImageProvider(
-                            Applist.currentUser.value!.banner!.mediaURL.minURL
-                                .value,
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: const Text(''),
-                    ),
-                    ListTile(
-                      leading: const FaIcon(
-                        FontAwesomeIcons.pencil,
-                        color: Colors.white,
-                      ),
-                      title: const Text('Yazılarım'),
-                      tileColor: Colors.black,
-                      textColor: Colors.white,
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      leading: const FaIcon(
-                        FontAwesomeIcons.lifeRing,
-                        color: Colors.white,
-                      ),
-                      title: const Text('Bildirimlerim'),
-                      tileColor: Colors.black,
-                      textColor: Colors.white,
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      leading: const FaIcon(
-                        FontAwesomeIcons.comment,
-                        color: Colors.white,
-                      ),
-                      title: const Text('Yorumum'),
-                      tileColor: Colors.black,
-                      textColor: Colors.white,
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      leading: const FaIcon(
-                        FontAwesomeIcons.chartSimple,
-                        color: Colors.white,
-                      ),
-                      title: const Text('Anketler'),
-                      tileColor: Colors.black,
-                      textColor: Colors.white,
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      leading: const FaIcon(
-                        FontAwesomeIcons.peopleGroup,
-                        color: Colors.white,
-                      ),
-                      title: const Text('Gruplar'),
-                      tileColor: Colors.black,
-                      textColor: Colors.white,
-                      onTap: () {
-                        Get.toNamed("/gruplar");
-                      },
-                    ),
-                    ListTile(
-                      leading: const FaIcon(
-                        FontAwesomeIcons.ticket,
-                        color: Colors.white,
-                      ),
-                      title: const Text('Çekiliş'),
-                      tileColor: Colors.black,
-                      textColor: Colors.white,
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      leading: const FaIcon(
-                        FontAwesomeIcons.graduationCap,
-                        color: Colors.white,
-                      ),
-                      title: const Text('Eğitim'),
-                      tileColor: Colors.black,
-                      textColor: Colors.white,
-                      onTap: () {},
-                    ),
-                  ],
-                ),
+      endDrawer: Applist.currentUser.value == null
+          ? const Drawer()
+          : Drawer(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
               ),
-      ),
+              backgroundColor: Colors.black,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  DrawerHeader(
+                    margin: const EdgeInsets.all(0),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: CachedNetworkImageProvider(
+                          Applist
+                              .currentUser.value!.banner!.mediaURL.minURL.value,
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: const Text(''),
+                  ),
+                  ListTile(
+                    leading: const FaIcon(
+                      FontAwesomeIcons.pencil,
+                      color: Colors.white,
+                    ),
+                    title: const Text('Yazılarım'),
+                    tileColor: Colors.black,
+                    textColor: Colors.white,
+                    onTap: () {
+                      final username = Applist.currentUser.value!.userName!;
+                      Functions.gotoPage(
+                        "/oyuncular/$username/yazilarim",
+                        getnavgiate: true,
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const FaIcon(
+                      FontAwesomeIcons.lifeRing,
+                      color: Colors.white,
+                    ),
+                    title: const Text('Bildirimlerim'),
+                    tileColor: Colors.black,
+                    textColor: Colors.white,
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    leading: const FaIcon(
+                      FontAwesomeIcons.comment,
+                      color: Colors.white,
+                    ),
+                    title: const Text('Yorumum'),
+                    tileColor: Colors.black,
+                    textColor: Colors.white,
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    leading: const FaIcon(
+                      FontAwesomeIcons.chartSimple,
+                      color: Colors.white,
+                    ),
+                    title: const Text('Anketler'),
+                    tileColor: Colors.black,
+                    textColor: Colors.white,
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    leading: const FaIcon(
+                      FontAwesomeIcons.peopleGroup,
+                      color: Colors.white,
+                    ),
+                    title: const Text('Gruplar'),
+                    tileColor: Colors.black,
+                    textColor: Colors.white,
+                    onTap: () {
+                      Get.toNamed("/gruplar");
+                    },
+                  ),
+                  ListTile(
+                    leading: const FaIcon(
+                      FontAwesomeIcons.ticket,
+                      color: Colors.white,
+                    ),
+                    title: const Text('Çekiliş'),
+                    tileColor: Colors.black,
+                    textColor: Colors.white,
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    leading: const FaIcon(
+                      FontAwesomeIcons.graduationCap,
+                      color: Colors.white,
+                    ),
+                    title: const Text('Eğitim'),
+                    tileColor: Colors.black,
+                    textColor: Colors.white,
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Stack(
             children: [
               Stack(
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: bgImage ??
-                        // "https://aramizdakioyuncu.com/galeri/ana-yapi/anaarkaplan.jpg",
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp",
-                    fit: BoxFit.cover,
-                    width: Get.width,
-                    height: Get.height,
+                  Obx(
+                    () => CachedNetworkImage(
+                      imageUrl: backgroundImage.value,
+                      fit: BoxFit.cover,
+                      width: Get.width,
+                      height: Get.height,
+                    ),
                   ),
                   SingleChildScrollView(
                     controller: scrollController.value,
                     child: Column(
                       children: [
-                        ...body,
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: fullWidth ? 0.0 : 120.0,
+                          ),
+                          child: Container(
+                            color: transparentBody
+                                ? null
+                                : Get.theme.scaffoldBackgroundColor,
+                            child: Column(
+                              children: body,
+                            ),
+                          ),
+                        ),
                         FooterWidget.custom(),
                       ],
                     ),
