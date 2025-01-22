@@ -15,7 +15,7 @@ class IntroductionView extends StatelessWidget {
     // Get.put(HomeController());
     log((Applist.currentUser.value == null).toString());
 
-    return BodyWidget.custom1(context, body: [
+    return BodyWidget.custom1(context, fullWidth: true, body: [
       CarouselSlider.builder(
         options: CarouselOptions(
           height: 700,

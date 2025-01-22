@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ChatWidget {
-  static Widget chatlistWidget(context, RxList<Rxn<Chat>> chatdetails) {
+  static Widget chatlistWidget(context, Rxn<List<Chat>> chatdetails) {
     var chatliststatus = false.obs;
 
     return Applist.currentUser.value == null
@@ -51,10 +51,11 @@ class ChatWidget {
                               context,
                               scrollController: ScrollController(),
                               onPressed: (chat) {
-                                if (!chatdetails.any((detail) =>
-                                    detail.value?.user.userID ==
-                                    chat.user.userID)) {
-                                  chatdetails.add(Rxn<Chat>(chat));
+                                chatdetails.value ??= [];
+
+                                if (!chatdetails.value!.any((detail) =>
+                                    detail.user.userID == chat.user.userID)) {
+                                  chatdetails.value!.add(chat);
                                   chatdetails.refresh();
                                 }
                               },
@@ -69,60 +70,66 @@ class ChatWidget {
   }
 
   static Widget chatdetailWidgets(
-      BuildContext context, RxList<Rxn<Chat>> chatdetails) {
+      BuildContext context, Rxn<List<Chat>> chatdetails) {
     return Obx(
-      () => Align(
-        alignment: Alignment.bottomRight,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 300.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: List.generate(chatdetails.length, (index) {
-              var chatdetail = chatdetails[index];
-              log(chatdetails[index].value!.toJson().toString());
-              var chatcalling = chatdetails[index].value!.calling;
-              log(chatcalling.toString());
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                child: Container(
-                  height: 500,
-                  width: 300,
-                  color: Colors.grey.shade800,
-                  child: chatcalling!.value == true
-                      ? ARMOYU.widget.chat.chatcallWidget(
-                          context,
-                          chat: chatdetail.value!,
-                          onClose: (chat) {
-                            chatcalling.value = false;
-                          },
-                          speaker: (value) {
-                            log(value.toString());
-                          },
-                          videocall: (value) {
-                            log(value.toString());
-                          },
-                        )
-                      : ARMOYU.widget.chat.chatdetailWidget(
-                          context,
-                          chat: chatdetail.value!,
-                          chatcall: (chat) {
-                            log("ringing");
-                            chatcalling.value = true;
-                          },
-                          onClose: () {
-                            chatdetails.remove(chatdetail);
-                          },
-                          onPressedtoProfile: (userID, username) {
-                            Functions.gotoPage("oyuncular/$username");
-                          },
-                        ),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ),
+      () => Applist.currentUser.value == null
+          ? Container()
+          : Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 300.0),
+                child: chatdetails.value == null
+                    ? null
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children:
+                            List.generate(chatdetails.value!.length, (index) {
+                          var chatdetail = chatdetails.value![index];
+                          log(chatdetails.value![index].toJson().toString());
+                          var chatcalling = chatdetails.value![index].calling;
+                          log(chatcalling.toString());
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 2.0),
+                            child: Container(
+                              height: 500,
+                              width: 300,
+                              color: Colors.grey.shade800,
+                              child: chatcalling!.value == true
+                                  ? ARMOYU.widget.chat.chatcallWidget(
+                                      context,
+                                      chat: chatdetail,
+                                      onClose: (chat) {
+                                        chatcalling.value = false;
+                                      },
+                                      speaker: (value) {
+                                        log(value.toString());
+                                      },
+                                      videocall: (value) {
+                                        log(value.toString());
+                                      },
+                                    )
+                                  : ARMOYU.widget.chat.chatdetailWidget(
+                                      context,
+                                      chat: chatdetail,
+                                      chatcall: (chat) {
+                                        log("ringing");
+                                        chatcalling.value = true;
+                                      },
+                                      onClose: () {
+                                        chatdetails.value!.remove(chatdetail);
+                                      },
+                                      onPressedtoProfile: (userID, username) {
+                                        Functions.gotoPage(
+                                            "oyuncular/$username");
+                                      },
+                                    ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+              ),
+            ),
     );
   }
 }

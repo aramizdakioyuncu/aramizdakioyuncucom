@@ -78,7 +78,13 @@ class BodyWidget {
                     title: const Text('Bildirimlerim'),
                     tileColor: Colors.black,
                     textColor: Colors.white,
-                    onTap: () {},
+                    onTap: () {
+                      final username = Applist.currentUser.value!.userName!;
+                      Functions.gotoPage(
+                        "/oyuncular/$username/support",
+                        getnavgiate: true,
+                      );
+                    },
                   ),
                   ListTile(
                     leading: const FaIcon(
@@ -98,19 +104,49 @@ class BodyWidget {
                     title: const Text('Anketler'),
                     tileColor: Colors.black,
                     textColor: Colors.white,
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    leading: const FaIcon(
-                      FontAwesomeIcons.peopleGroup,
-                      color: Colors.white,
-                    ),
-                    title: const Text('Gruplar'),
-                    tileColor: Colors.black,
-                    textColor: Colors.white,
                     onTap: () {
-                      Get.toNamed("/gruplar");
+                      final username = Applist.currentUser.value!.userName!;
+                      Functions.gotoPage(
+                        "/oyuncular/$username/anketler",
+                        getnavgiate: true,
+                      );
                     },
+                  ),
+                  Obx(
+                    () => ExpansionTile(
+                      leading: const FaIcon(
+                        FontAwesomeIcons.peopleGroup,
+                        color: Colors.white,
+                      ),
+                      title: const Text('Gruplar'),
+                      children: controller.mygroups.value == null
+                          ? []
+                          : List.generate(
+                              controller.mygroups.value!.length,
+                              (index) {
+                                return ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    foregroundImage: CachedNetworkImageProvider(
+                                      controller.mygroups.value![index]
+                                          .groupLogo.mediaURL.normalURL,
+                                    ),
+                                  ),
+                                  title: Text(
+                                    controller.mygroups.value![index].groupName,
+                                  ),
+                                  tileColor: Colors.black,
+                                  textColor: Colors.white,
+                                  onTap: () {
+                                    Functions.gotoPage(
+                                      "/gruplar/${controller.mygroups.value![index].groupURL}",
+                                      getnavgiate: true,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                    ),
                   ),
                   ListTile(
                     leading: const FaIcon(
@@ -120,7 +156,9 @@ class BodyWidget {
                     title: const Text('Çekiliş'),
                     tileColor: Colors.black,
                     textColor: Colors.white,
-                    onTap: () {},
+                    onTap: () {
+                      Functions.gotoPage("/cekilisler", getnavgiate: true);
+                    },
                   ),
                   ListTile(
                     leading: const FaIcon(
@@ -130,7 +168,9 @@ class BodyWidget {
                     title: const Text('Eğitim'),
                     tileColor: Colors.black,
                     textColor: Colors.white,
-                    onTap: () {},
+                    onTap: () {
+                      Functions.gotoPage("/okullar/", getnavgiate: true);
+                    },
                   ),
                 ],
               ),
@@ -172,8 +212,9 @@ class BodyWidget {
                   ),
                 ],
               ),
-              controller.widgetchat.value!,
-              controller.widgetchatdetail.value!,
+              // controller.widgetchat.value ?? Container(),
+              // controller.widgetchatdetail.value ?? Container(),
+
               Obx(
                 () => !Applist.provicypolity.value
                     ? CookieWidget.custom1()

@@ -1,6 +1,8 @@
 import 'package:aramizdakioyuncucom/app/modules/profile/_main/views/profile_view.dart';
+import 'package:aramizdakioyuncucom/app/modules/profile/charts/views/charts_view.dart';
 import 'package:aramizdakioyuncucom/app/modules/profile/mywritings/_main/views/mywritings_view.dart';
 import 'package:aramizdakioyuncucom/app/modules/profile/mywritings/editwritings/views/editwritings_view.dart';
+import 'package:aramizdakioyuncucom/app/modules/profile/support/views/support_view.dart';
 import 'package:aramizdakioyuncucom/app/routes/routes.dart';
 import 'package:get/get.dart';
 
@@ -19,6 +21,18 @@ class ProfileModule {
     GetPage(
       name: "$route/:username/yazilarim/:newsID",
       page: () => const EditwritingsView(),
+    ),
+    GetPage(
+      name: "$route/:username/support",
+      page: () => const SupportView(),
+    ),
+    GetPage(
+      name: "$route/:username/support/:supportID",
+      page: () => const SupportView(),
+    ),
+    GetPage(
+      name: "$route/:username/anketler/",
+      page: () => const ChartsView(),
     ),
   ];
 }
