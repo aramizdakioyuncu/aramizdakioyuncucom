@@ -248,13 +248,21 @@ class AppbarWidget {
           ),
           TextButton(
             onPressed: () {
-              // Get.toNamed("/modlar");
               Functions.gotoPage(
                 "/modlar",
                 getnavgiate: true,
               );
             },
             child: const Text("Modlar"),
+          ),
+          TextButton(
+            onPressed: () {
+              Functions.gotoPage(
+                "/etkinlikler",
+                getnavgiate: true,
+              );
+            },
+            child: const Text("Etkinlikler"),
           ),
           TextButton(
             onPressed: () {

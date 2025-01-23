@@ -1,4 +1,5 @@
 import 'package:aramizdakioyuncucom/app/modules/employee/employee_module.dart';
+import 'package:aramizdakioyuncucom/app/modules/events/events_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/forum/forum_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/gallery/gallery_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/group/group_module.dart';
@@ -30,5 +31,6 @@ class AppPages {
     ...ForumModule.routes,
     ...ModModule.routes,
     ...EmployeeModule.routes,
+    ...EventsModule.routes,
   ];
 }

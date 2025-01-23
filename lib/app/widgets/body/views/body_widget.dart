@@ -212,6 +212,7 @@ class BodyWidget {
                   ),
                 ],
               ),
+
               // controller.widgetchat.value ?? Container(),
               // controller.widgetchatdetail.value ?? Container(),
 
