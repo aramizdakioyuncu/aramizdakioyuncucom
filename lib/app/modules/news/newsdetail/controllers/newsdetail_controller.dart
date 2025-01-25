@@ -11,12 +11,12 @@ class NewsdetailController extends GetxController {
 
   Rxn<List<APINewsDetail>> newsList = Rxn();
   var fetchnewsProccess = false.obs;
+  final news = Get.parameters['news'];
+  final category = Get.parameters['category'];
+
   @override
   void onInit() {
     super.onInit();
-
-    final category = Get.parameters['category'];
-    final news = Get.parameters['news'];
 
     log(category.toString());
     log(news.toString());
@@ -33,7 +33,7 @@ class NewsdetailController extends GetxController {
     fetchProccess.value = true;
 
     NewsFetchResponse response =
-        await ARMOYU.service.newsServices.fetchnews(newsID: 1);
+        await ARMOYU.service.newsServices.fetchdetail(newsURL: news);
 
     if (!response.result.status) {
       fetchProccess.value = false;

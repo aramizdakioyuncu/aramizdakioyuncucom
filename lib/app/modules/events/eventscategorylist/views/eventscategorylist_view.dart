@@ -51,27 +51,27 @@ class EventscategorylistView extends StatelessWidget {
               (index) {
                 return TableRow(
                   children: [
-                    TableCell(
+                    const TableCell(
                       child: Center(
                         child: Text("#"),
                       ),
                     ),
-                    TableCell(
+                    const TableCell(
                       child: Center(
                         child: Text("Konvoy ETkinliği"),
                       ),
                     ),
-                    TableCell(
+                    const TableCell(
                       child: Center(
                         child: Text("20/20"),
                       ),
                     ),
-                    TableCell(
+                    const TableCell(
                       child: Center(
                         child: Text("Berkay TİKENOĞLU"),
                       ),
                     ),
-                    TableCell(
+                    const TableCell(
                       child: Center(
                         child: Text("10.08.2022 21.00"),
                       ),

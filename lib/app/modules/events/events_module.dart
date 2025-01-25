@@ -16,7 +16,7 @@ class EventsModule {
       page: () => const EventscategorylistView(),
     ),
     GetPage(
-      name: "$route/:eventgame/:eventid",
+      name: "$route/:eventgame/:event",
       page: () => const EventsdetailView(),
     ),
   ];

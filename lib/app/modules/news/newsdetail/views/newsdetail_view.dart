@@ -13,7 +13,10 @@ class NewsdetailView extends StatelessWidget {
 
   @override
   Widget build(Object context) {
-    final controller = Get.put(NewsdetailController());
+    final controller = Get.put(
+      NewsdetailController(),
+      tag: Get.parameters['news'],
+    );
 
     return BodyWidget.custom1(
       bgImage: controller.newsInfo.value?.media.mediaURL.minURL,

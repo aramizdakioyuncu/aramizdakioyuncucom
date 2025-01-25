@@ -12,7 +12,10 @@ class EventsdetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(EventdetailController());
+    final controller = Get.put(
+      EventdetailController(),
+      tag: Get.parameters['event'],
+    );
     return BodyWidget.custom1(
       context,
       bgImage:
@@ -21,86 +24,89 @@ class EventsdetailView extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: CachedNetworkImage(
-                imageUrl:
-                    "https://aramizdakioyuncu.com/galeri/images/10632orijinal73025orijinal16648332426.jpg",
-                fit: BoxFit.cover,
+              child: Obx(
+                () => controller.eventDetail.value == null
+                    ? const CupertinoActivityIndicator()
+                    : CachedNetworkImage(
+                        imageUrl: controller.eventDetail.value!.event.foto,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text(
-                    "18.30",
-                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                  ),
-                  Text("19 Aralık Pazar"),
-                ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Obx(
+                () => controller.eventDetail.value == null
+                    ? const CupertinoActivityIndicator()
+                    : Column(
+                        children: [
+                          Text(
+                            controller.eventDetail.value!.event.date
+                                .split(" ")
+                                .last,
+                            style: const TextStyle(
+                                fontSize: 40, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            controller.eventDetail.value!.event.date
+                                .split(" ")
+                                .first,
+                          ),
+                        ],
+                      ),
               ),
             ),
             Expanded(
-              child: CachedNetworkImage(
-                imageUrl:
-                    "https://steamcdn-a.akamaihd.net/steam/apps/271590/header.jpg?t=1568751918",
-                fit: BoxFit.cover,
+              child: Obx(
+                () => controller.eventDetail.value == null
+                    ? const CupertinoActivityIndicator()
+                    : CachedNetworkImage(
+                        imageUrl:
+                            controller.eventDetail.value!.event.gameBanner,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
           ],
         ),
-        const Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Column(
-                children: [
-                  Text("Kurallar"),
-                  Text(
-                      """ 1) Etkinlik esnasında herhangi bir sıralama verilirse uy !
-              
-              2) Etlinlik başlamadan 10dk önce hazır bir şekilde discordda bulun !
-              
-              3) Oyun Yetkilisini ciddiye al !
-              
-              4) Etkinlikten zevk almaya bak kavga etme !
-              
-              5) Her etkinliğe katıldığınızda Oyuncu Değerlendirme Puanı (ODP) oluşmasında katkı sağlar !
-              
-              6) KATIL dedikten sonra eğer gelemiyorsanız etkinlik öncesinden cayma hakkın vardır son 1 saat VAZGEÇ yapamazsın !
-              
-              7) Büyüklerine saygılı küçüklerine sevgi dolu davran !
-              
-              8) 3.uyarıda kick atılır!(kurallara uyunuz)""")
-                ],
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: [
+                    const Text("Kurallar"),
+                    Obx(
+                      () => controller.eventDetail.value == null
+                          ? const CupertinoActivityIndicator()
+                          : Text(
+                              controller.eventDetail.value!.event.rules,
+                            ),
+                    )
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Column(
-                children: [
-                  Text("Etkinlik Notu"),
-                  Text(
-                    """ 1) Etkinlik esnasında herhangi bir sıralama verilirse uy !
-              
-              2) Etlinlik başlamadan 10dk önce hazır bir şekilde discordda bulun !
-              
-              3) Oyun Yetkilisini ciddiye al !
-              
-              4) Etkinlikten zevk almaya bak kavga etme !
-              
-              5) Her etkinliğe katıldığınızda Oyuncu Değerlendirme Puanı (ODP) oluşmasında katkı sağlar !
-              
-              6) KATIL dedikten sonra eğer gelemiyorsanız etkinlik öncesinden cayma hakkın vardır son 1 saat VAZGEÇ yapamazsın !
-              
-              7) Büyüklerine saygılı küçüklerine sevgi dolu davran !
-              
-              8) 3.uyarıda kick atılır!(kurallara uyunuz)""",
-                    textAlign: TextAlign.start,
-                  )
-                ],
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: [
+                    const Text("Etkinlik Notu"),
+                    Obx(
+                      () => controller.eventDetail.value == null
+                          ? const CupertinoActivityIndicator()
+                          : Text(
+                              controller.eventDetail.value!.event.description,
+                              textAlign: TextAlign.start,
+                            ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),

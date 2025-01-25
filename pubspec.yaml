@@ -19,7 +19,7 @@ dependencies:
   webview_flutter_web: ^0.2.3+4
   web_smooth_scroll: ^1.1.0
 
-  armoyu_services: ^1.0.0+40
+  armoyu_services: ^1.0.0+41
   armoyu_widgets: ^1.0.0+33
 
   get: ^4.6.6

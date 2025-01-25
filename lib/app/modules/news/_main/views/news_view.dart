@@ -13,7 +13,8 @@ class NewsView extends StatelessWidget {
 
   @override
   Widget build(Object context) {
-    final controller = Get.put(NewsController());
+    final controller =
+        Get.put(NewsController(), tag: DateTime.now().toString());
 
     return BodyWidget.custom1(
       context,
@@ -33,10 +34,9 @@ class NewsView extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: InkWell(
                             onTap: () {
-                              // Get.toNamed("/haberler/witcher");
-
                               Functions.gotoPage(
                                 newsINFO.newsURL.split(".com")[1],
+                                getnavgiate: true,
                               );
                             },
                             child: Stack(
