@@ -81,7 +81,7 @@ class BodyWidget {
                     onTap: () {
                       final username = Applist.currentUser.value!.userName!;
                       Functions.gotoPage(
-                        "/oyuncular/$username/support",
+                        "/oyuncular/$username/bildirilerim",
                         getnavgiate: true,
                       );
                     },
@@ -95,6 +95,22 @@ class BodyWidget {
                     tileColor: Colors.black,
                     textColor: Colors.white,
                     onTap: () {},
+                  ),
+                  ListTile(
+                    leading: const FaIcon(
+                      FontAwesomeIcons.userSecret,
+                      color: Colors.white,
+                    ),
+                    title: const Text('Yönetim Paneli'),
+                    tileColor: Colors.black,
+                    textColor: Colors.white,
+                    onTap: () {
+                      final username = Applist.currentUser.value!.userName!;
+                      Functions.gotoPage(
+                        "/oyuncular/$username/anketler",
+                        getnavgiate: true,
+                      );
+                    },
                   ),
                   ListTile(
                     leading: const FaIcon(
@@ -195,7 +211,7 @@ class BodyWidget {
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: fullWidth ? 0.0 : 120.0,
+                            horizontal: fullWidth ? 0.0 : Get.width * 0.080,
                           ),
                           child: Container(
                             color: transparentBody

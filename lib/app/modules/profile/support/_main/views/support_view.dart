@@ -1,4 +1,6 @@
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
+import 'package:aramizdakioyuncucom/app/services/functions.dart';
+import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -29,7 +31,14 @@ class SupportView extends StatelessWidget {
                       child: ARMOYU.widget.elevatedButton.costum1(
                         text: "Şikayet",
                         background: Colors.red,
-                        onPressed: () {},
+                        onPressed: () {
+                          final username = Applist.currentUser.value!.userName!;
+
+                          Functions.gotoPage(
+                            "/oyuncular/$username/bildirilerim/sikayetler",
+                            getnavgiate: true,
+                          );
+                        },
                         loadingStatus: false,
                       ),
                     ),
@@ -50,7 +59,14 @@ class SupportView extends StatelessWidget {
                       child: ARMOYU.widget.elevatedButton.costum1(
                         text: "Öneri",
                         background: Colors.amber,
-                        onPressed: () {},
+                        onPressed: () {
+                          final username = Applist.currentUser.value!.userName!;
+
+                          Functions.gotoPage(
+                            "/oyuncular/$username/bildirilerim/oneriler",
+                            getnavgiate: true,
+                          );
+                        },
                         loadingStatus: false,
                       ),
                     ),
@@ -71,7 +87,14 @@ class SupportView extends StatelessWidget {
                       child: ARMOYU.widget.elevatedButton.costum1(
                         text: "Toplantı",
                         background: Colors.blue,
-                        onPressed: () {},
+                        onPressed: () {
+                          final username = Applist.currentUser.value!.userName!;
+
+                          Functions.gotoPage(
+                            "/oyuncular/$username/bildirilerim/toplantilar",
+                            getnavgiate: true,
+                          );
+                        },
                         loadingStatus: false,
                       ),
                     ),
@@ -125,7 +148,7 @@ class SupportView extends StatelessWidget {
                     const TableCell(
                       verticalAlignment: TableCellVerticalAlignment.middle,
                       child: Center(
-                        child: Text("Barış Müftüoğlu"),
+                        child: Text("Test Kullanıcısı"),
                       ),
                     ),
                     const TableCell(
@@ -207,7 +230,7 @@ class SupportView extends StatelessWidget {
                     const TableCell(
                       verticalAlignment: TableCellVerticalAlignment.middle,
                       child: Center(
-                        child: Text("Barış Müftüoğlu"),
+                        child: Text("Test Kullanıcısı"),
                       ),
                     ),
                     const TableCell(
