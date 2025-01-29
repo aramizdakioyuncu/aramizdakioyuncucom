@@ -597,6 +597,17 @@ class SocialView extends StatelessWidget {
                         Get.toNamed("/oyuncular/$username");
                       },
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ARMOYU.widget.elevatedButton.costum1(
+                          text: "DEVAMINI GETİR",
+                          onPressed: () {},
+                          loadingStatus: false,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

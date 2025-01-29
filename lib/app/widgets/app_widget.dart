@@ -2,6 +2,7 @@ import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class AppWidget {
@@ -171,6 +172,140 @@ class AppWidget {
           ),
         );
       },
+    );
+  }
+
+  static Widget controlpanelMenu({
+    int? selectedIndex,
+    required Function(int index) onTap,
+  }) {
+    var selectedIndexobx = selectedIndex.obs;
+    return Obx(
+      () => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            onPressed: () {
+              onTap(0);
+              selectedIndexobx.value = 0;
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.house,
+              color: selectedIndexobx.value == 0 ? Colors.red : null,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              onTap(1);
+              selectedIndexobx.value = 1;
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.chair,
+              color: selectedIndexobx.value == 1 ? Colors.red : null,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              onTap(2);
+              selectedIndexobx.value = 2;
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.chartColumn,
+              color: selectedIndexobx.value == 2 ? Colors.red : null,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              onTap(3);
+              selectedIndexobx.value = 3;
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.userPlus,
+              color: selectedIndexobx.value == 3 ? Colors.red : null,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              onTap(4);
+              selectedIndexobx.value = 4;
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.users,
+              color: selectedIndexobx.value == 4 ? Colors.red : null,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              onTap(5);
+              selectedIndexobx.value = 5;
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.lifeRing,
+              color: selectedIndexobx.value == 5 ? Colors.red : null,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              onTap(6);
+              selectedIndexobx.value = 6;
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.pen,
+              color: selectedIndexobx.value == 6 ? Colors.red : null,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              onTap(7);
+              selectedIndexobx.value = 7;
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.calendarDays,
+              color: selectedIndexobx.value == 7 ? Colors.red : null,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              onTap(8);
+              selectedIndexobx.value = 8;
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.graduationCap,
+              color: selectedIndexobx.value == 8 ? Colors.red : null,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              onTap(9);
+              selectedIndexobx.value = 9;
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.ticket,
+              color: selectedIndexobx.value == 9 ? Colors.red : null,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              onTap(10);
+              selectedIndexobx.value = 10;
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.bullhorn,
+              color: selectedIndexobx.value == 10 ? Colors.red : null,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              onTap(11);
+              selectedIndexobx.value = 11;
+            },
+            icon: FaIcon(
+              FontAwesomeIcons.gear,
+              color: selectedIndexobx.value == 11 ? Colors.red : null,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

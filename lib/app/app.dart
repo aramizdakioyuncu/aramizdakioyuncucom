@@ -17,7 +17,7 @@ class App extends StatelessWidget {
       title: AppInfo.appName,
       theme: appLightThemeData,
       darkTheme: appDarkThemeData,
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
       translationsKeys: AppTranslation.translationKeys,
       locale: Get.deviceLocale,
       fallbackLocale: const Locale('en', 'US'),

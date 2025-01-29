@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:flutter/material.dart';
 
@@ -14,12 +15,19 @@ class CookieWidget {
             children: [
               const Text(
                 "Web sitemizde çerezler kullanılmaktadır. Daha fazla bilgi için Gizlilik Politikamızı inceleyebilirsiniz.",
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
-              ElevatedButton(
+              const SizedBox(width: 5),
+              ARMOYU.widget.elevatedButton.costum1(
+                background: Colors.grey.shade900,
+                text: "Tamam",
                 onPressed: () {
                   Applist.provicypolity.value = true;
                 },
-                child: const Text("Tamam"),
+                loadingStatus: false,
               ),
             ],
           ),

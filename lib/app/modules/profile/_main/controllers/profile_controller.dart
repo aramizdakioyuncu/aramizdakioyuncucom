@@ -19,6 +19,7 @@ class ProfileController extends GetxController
   final profileUsername = Get.parameters['username'];
   Rxn<User> profileInfo = Rxn<User>();
   Rxn<TabController> tabController = Rxn<TabController>();
+  Rx<int> tabControllerIndex = Rx<int>(0);
 
   Rxn<Widget> widget = Rxn();
   Rxn<Widget> widget2 = Rxn();
@@ -29,7 +30,7 @@ class ProfileController extends GetxController
     super.onInit();
 
     tabController.value = TabController(
-      initialIndex: 0,
+      initialIndex: tabControllerIndex.value,
       length: 3,
       vsync: this,
     );

@@ -77,7 +77,7 @@ final ThemeData appDarkThemeData = ThemeData.dark().copyWith(
   ),
   drawerTheme: const DrawerThemeData(
     backgroundColor: Colors.black,
-    scrimColor: Colors.black,
+    // scrimColor: Colors.black,
     shadowColor: Colors.black,
     surfaceTintColor: Colors.black,
   ),
@@ -143,8 +143,8 @@ final ThemeData appLightThemeData = ThemeData.light().copyWith(
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: WidgetStateProperty.all(Colors.grey.shade500),
-      foregroundColor: WidgetStateProperty.all(Colors.black),
+      backgroundColor: WidgetStateProperty.all(Colors.blue),
+      foregroundColor: WidgetStateProperty.all(Colors.white),
     ),
   ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -178,9 +178,9 @@ final ThemeData appLightThemeData = ThemeData.light().copyWith(
   iconTheme: const IconThemeData(
     color: Colors.black,
   ),
-  dialogTheme: DialogTheme(
-    backgroundColor: Colors.grey.shade900,
-    contentTextStyle: const TextStyle(
+  dialogTheme: const DialogTheme(
+    backgroundColor: Colors.white,
+    contentTextStyle: TextStyle(
       color: Colors.white,
     ),
   ),

@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:aramizdakioyuncucom/app/widgets/appbar_widget.dart';
@@ -105,9 +106,8 @@ class BodyWidget {
                     tileColor: Colors.black,
                     textColor: Colors.white,
                     onTap: () {
-                      final username = Applist.currentUser.value!.userName!;
                       Functions.gotoPage(
-                        "/oyuncular/$username/anketler",
+                        "/controlpanel",
                         getnavgiate: true,
                       );
                     },
@@ -134,7 +134,13 @@ class BodyWidget {
                         FontAwesomeIcons.peopleGroup,
                         color: Colors.white,
                       ),
-                      title: const Text('Gruplar'),
+                      title: const Text(
+                        'Gruplar',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      collapsedIconColor: Colors.white,
                       children: controller.mygroups.value == null
                           ? []
                           : List.generate(
@@ -187,6 +193,18 @@ class BodyWidget {
                     onTap: () {
                       Functions.gotoPage("/okullar/", getnavgiate: true);
                     },
+                  ),
+                  ARMOYU.widget.elevatedButton.costum2(
+                    icon: const Icon(
+                      Icons.dark_mode,
+                    ),
+                    onPressed: () {
+                      // ARMOYU.services.darkMode();
+                      Get.changeThemeMode(
+                        Get.isDarkMode ? ThemeMode.light : ThemeMode.dark,
+                      );
+                    },
+                    loadingStatus: false,
                   ),
                 ],
               ),

@@ -22,546 +22,546 @@ class ProfileView extends StatelessWidget {
           : controller.profileInfo.value!.wallpaper!.mediaURL.minURL.value,
       transparentBody: true,
       body: [
-        Column(
+        Stack(
           children: [
-            Stack(
-              children: [
-                Obx(
-                  () => controller.profileInfo.value == null
-                      ? const SizedBox(
-                          height: 380,
-                          width: double.infinity,
-                          child: CupertinoActivityIndicator(),
-                        )
-                      : Container(
-                          height: 380,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                controller.profileInfo.value!.banner!.mediaURL
-                                    .minURL.value,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
+            Obx(
+              () => controller.profileInfo.value == null
+                  ? const SizedBox(
+                      height: 380,
+                      width: double.infinity,
+                      child: CupertinoActivityIndicator(),
+                    )
+                  : Container(
+                      height: 380,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: CachedNetworkImageProvider(
+                            controller.profileInfo.value!.banner!.mediaURL
+                                .minURL.value,
                           ),
-                        ),
-                ),
-                Positioned(
-                  top: 0,
-                  left: 10,
-                  child: Obx(
-                    () => controller.profileInfo.value == null
-                        ? Container()
-                        : Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black
-                                      .withOpacity(0.3), // Gölgenin rengi
-                                  offset:
-                                      const Offset(4, 4), // Gölgenin kayması
-                                  blurRadius: 6, // Gölgenin bulanıklığı
-                                ),
-                              ],
-                            ),
-                            child: RotatedBox(
-                              quarterTurns: 1,
-                              child: CountryFlag.fromCountryCode(
-                                controller.profileInfo.value!.country!.value
-                                    .countryCode,
-                                width: 60,
-                                height: 40,
-                              ),
-                            ),
-                          ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 30,
-                  left: 45,
-                  child: Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle, // Dairesel şekil
-                          border: Border.all(
-                            color: Colors.blue, // Şerit rengi
-                            width: 3, // Şerit genişliği
-                          ),
-                        ),
-                        child: Obx(
-                          () => controller.profileInfo.value == null
-                              ? const CircleAvatar(
-                                  radius: 60,
-                                  child: CupertinoActivityIndicator(),
-                                )
-                              : CircleAvatar(
-                                  foregroundColor: Colors.transparent,
-                                  foregroundImage: CachedNetworkImageProvider(
-                                    controller.profileInfo.value!.avatar!
-                                        .mediaURL.minURL.value,
-                                  ),
-                                  radius: 60,
-                                ),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black45,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Obx(
-                            () => controller.profileInfo.value == null
-                                ? const Text("data")
-                                : Text(
-                                    controller
-                                        .profileInfo.value!.displayName!.value,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white54,
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: Text(
-                        "1242141 XP",
-                        style: TextStyle(
-                          color: Colors.white,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                  ),
-                )
-              ],
             ),
-            Container(
-              color: Get.theme.cardColor,
+            Positioned(
+              top: 0,
+              left: 10,
               child: Obx(
                 () => controller.profileInfo.value == null
-                    ? const Center(
-                        heightFactor: 20,
-                        child: CupertinoActivityIndicator(),
-                      )
-                    : Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Obx(
-                              () => controller.profileInfo.value == null
-                                  ? Container()
-                                  : Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Obx(
-                                          () => controller
+                    ? Container()
+                    : Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black
+                                  .withOpacity(0.3), // Gölgenin rengi
+                              offset: const Offset(4, 4), // Gölgenin kayması
+                              blurRadius: 6, // Gölgenin bulanıklığı
+                            ),
+                          ],
+                        ),
+                        child: RotatedBox(
+                          quarterTurns: 1,
+                          child: CountryFlag.fromCountryCode(
+                            controller
+                                .profileInfo.value!.country!.value.countryCode,
+                            width: 60,
+                            height: 40,
+                          ),
+                        ),
+                      ),
+              ),
+            ),
+            Positioned(
+              bottom: 30,
+              left: 45,
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle, // Dairesel şekil
+                      border: Border.all(
+                        color: Colors.blue, // Şerit rengi
+                        width: 3, // Şerit genişliği
+                      ),
+                    ),
+                    child: Obx(
+                      () => controller.profileInfo.value == null
+                          ? const CircleAvatar(
+                              radius: 60,
+                              child: CupertinoActivityIndicator(),
+                            )
+                          : CircleAvatar(
+                              foregroundColor: Colors.transparent,
+                              foregroundImage: CachedNetworkImageProvider(
+                                controller.profileInfo.value!.avatar!.mediaURL
+                                    .minURL.value,
+                              ),
+                              radius: 60,
+                            ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black45,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Obx(
+                        () => controller.profileInfo.value == null
+                            ? const Text("data")
+                            : Text(
+                                controller
+                                    .profileInfo.value!.displayName!.value,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white54,
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(2.0),
+                  child: Text(
+                    "1242141 XP",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+        Container(
+          color: Get.theme.scaffoldBackgroundColor,
+          child: Obx(
+            () => controller.profileInfo.value == null
+                ? const Center(
+                    heightFactor: 20,
+                    child: CupertinoActivityIndicator(),
+                  )
+                : Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Obx(
+                          () => controller.profileInfo.value == null
+                              ? Container()
+                              : Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Obx(
+                                      () => controller
+                                                  .profileInfo
+                                                  .value!
+                                                  .socialaccounts!
+                                                  .value!
+                                                  .steam!
+                                                  .value ==
+                                              ""
+                                          ? Container()
+                                          : IconButton(
+                                              onPressed: () {
+                                                Functions.gotoPage(
+                                                  controller
                                                       .profileInfo
                                                       .value!
                                                       .socialaccounts!
                                                       .value!
                                                       .steam!
-                                                      .value ==
-                                                  ""
-                                              ? Container()
-                                              : IconButton(
-                                                  onPressed: () {
-                                                    Functions.gotoPage(
-                                                      controller
-                                                          .profileInfo
-                                                          .value!
-                                                          .socialaccounts!
-                                                          .value!
-                                                          .steam!
-                                                          .value!,
-                                                    );
-                                                  },
-                                                  icon: const FaIcon(
-                                                    FontAwesomeIcons.steam,
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Functions.gotoPage(
-                                              controller
-                                                  .profileInfo
-                                                  .value!
-                                                  .socialaccounts!
-                                                  .value!
-                                                  .instagram!
-                                                  .value!,
-                                            );
-                                          },
-                                          icon: const FaIcon(
-                                            FontAwesomeIcons.instagram,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Functions.gotoPage(
-                                              controller
-                                                  .profileInfo
-                                                  .value!
-                                                  .socialaccounts!
-                                                  .value!
-                                                  .facebook!
-                                                  .value!,
-                                            );
-                                          },
-                                          icon: const FaIcon(
-                                            FontAwesomeIcons.facebook,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Functions.gotoPage(
-                                              controller
-                                                  .profileInfo
-                                                  .value!
-                                                  .socialaccounts!
-                                                  .value!
-                                                  .twitch!
-                                                  .value!,
-                                            );
-                                          },
-                                          icon: const FaIcon(
-                                            FontAwesomeIcons.twitch,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Functions.gotoPage(
-                                              controller
-                                                  .profileInfo
-                                                  .value!
-                                                  .socialaccounts!
-                                                  .value!
-                                                  .youtube!
-                                                  .value!,
-                                            );
-                                          },
-                                          icon: const FaIcon(
-                                            FontAwesomeIcons.youtube,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Functions.gotoPage(
-                                              controller
-                                                  .profileInfo
-                                                  .value!
-                                                  .socialaccounts!
-                                                  .value!
-                                                  .linkedin!
-                                                  .value!,
-                                            );
-                                          },
-                                          icon: const FaIcon(
-                                            FontAwesomeIcons.linkedin,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Functions.gotoPage(
-                                              controller
-                                                  .profileInfo
-                                                  .value!
-                                                  .socialaccounts!
-                                                  .value!
-                                                  .reddit!
-                                                  .value!,
-                                            );
-                                          },
-                                          icon: const FaIcon(
-                                            FontAwesomeIcons.reddit,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Functions.gotoPage(
-                                              controller
-                                                  .profileInfo
-                                                  .value!
-                                                  .socialaccounts!
-                                                  .value!
-                                                  .github!
-                                                  .value!,
-                                            );
-                                          },
-                                          icon: const FaIcon(
-                                            FontAwesomeIcons.github,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Functions.gotoPage(
-                                              controller
-                                                  .profileInfo
-                                                  .value!
-                                                  .socialaccounts!
-                                                  .value!
-                                                  .discord!
-                                                  .value!,
-                                            );
-                                          },
-                                          icon: const FaIcon(
-                                            FontAwesomeIcons.discord,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                            ),
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          "Hakkımda",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 30,
-                                          ),
-                                        ),
-                                        Text(
-                                          "${controller.profileInfo.value!.country!.value.name}${controller.profileInfo.value!.province == null ? "" : ", ${controller.profileInfo.value!.province!.value.name}"}",
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            const FaIcon(
-                                              FontAwesomeIcons.calendarDays,
-                                              size: 14,
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              controller.profileInfo.value!
-                                                  .registerDate!.value!,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
+                                                      .value!,
+                                                );
+                                              },
+                                              icon: const FaIcon(
+                                                FontAwesomeIcons.steam,
+                                                color: Colors.red,
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                        Text(
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        Functions.gotoPage(
                                           controller
-                                              .profileInfo.value!.burc!.value,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          controller.profileInfo.value!.aboutme!
-                                              .value,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        TabBar(
-                                          controller:
-                                              controller.tabController.value,
-                                          tabs: const [
-                                            Text("Paylaşımlar"),
-                                            Text("Medya"),
-                                            Text("Etiketlenmiş"),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 800,
-                                          child: TabBarView(
-                                            controller:
-                                                controller.tabController.value,
-                                            children: [
-                                              controller.widget.value!,
-                                              controller.widget2.value!,
-                                              controller.widget3.value!,
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 270,
-                                child: Column(
-                                  children: [
-                                    const Text("E-sporlar"),
-                                    Row(
-                                      children: List.generate(
-                                        controller.profileInfo.value!
-                                            .popularGames!.length,
-                                        (index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              foregroundImage:
-                                                  CachedNetworkImageProvider(
-                                                controller
-                                                    .profileInfo
-                                                    .value!
-                                                    .popularGames![index]
-                                                    .logo
-                                                    .mediaURL
-                                                    .minURL
-                                                    .value,
-                                              ),
-                                            ),
-                                          );
-                                        },
+                                              .profileInfo
+                                              .value!
+                                              .socialaccounts!
+                                              .value!
+                                              .instagram!
+                                              .value!,
+                                        );
+                                      },
+                                      icon: const FaIcon(
+                                        FontAwesomeIcons.instagram,
+                                        color: Colors.red,
                                       ),
                                     ),
-                                    const Text("Sporlar"),
-                                    Row(
-                                      children: List.generate(
-                                        4,
-                                        (index) {
-                                          return const Padding(
-                                            padding: EdgeInsets.all(2.0),
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              foregroundImage:
-                                                  CachedNetworkImageProvider(
-                                                "https://aramizdakioyuncu.com/galeri/oyun-logolari/futboll.png",
-                                              ),
-                                            ),
-                                          );
-                                        },
+                                    IconButton(
+                                      onPressed: () {
+                                        Functions.gotoPage(
+                                          controller
+                                              .profileInfo
+                                              .value!
+                                              .socialaccounts!
+                                              .value!
+                                              .facebook!
+                                              .value!,
+                                        );
+                                      },
+                                      icon: const FaIcon(
+                                        FontAwesomeIcons.facebook,
+                                        color: Colors.red,
                                       ),
                                     ),
-                                    const Text("Arkadaşlar"),
-                                    Row(
-                                      children: List.generate(
-                                        controller.profileInfo.value!.myFriends!
-                                            .length,
-                                        (index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              foregroundImage:
-                                                  CachedNetworkImageProvider(
-                                                controller
-                                                    .profileInfo
-                                                    .value!
-                                                    .myFriends![index]
-                                                    .avatar!
-                                                    .mediaURL
-                                                    .minURL
-                                                    .value,
-                                              ),
-                                            ),
-                                          );
-                                        },
+                                    IconButton(
+                                      onPressed: () {
+                                        Functions.gotoPage(
+                                          controller
+                                              .profileInfo
+                                              .value!
+                                              .socialaccounts!
+                                              .value!
+                                              .twitch!
+                                              .value!,
+                                        );
+                                      },
+                                      icon: const FaIcon(
+                                        FontAwesomeIcons.twitch,
+                                        color: Colors.red,
                                       ),
                                     ),
-                                    const Text("Gruplar"),
-                                    Row(
-                                      children: List.generate(
-                                        6,
-                                        (index) {
-                                          return const Padding(
-                                            padding: EdgeInsets.all(2.0),
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              foregroundImage:
-                                                  CachedNetworkImageProvider(
-                                                "https://aramizdakioyuncu.com/galeri/gruplar/1gruplarlogominnak1655550694.png",
-                                              ),
-                                            ),
-                                          );
-                                        },
+                                    IconButton(
+                                      onPressed: () {
+                                        Functions.gotoPage(
+                                          controller
+                                              .profileInfo
+                                              .value!
+                                              .socialaccounts!
+                                              .value!
+                                              .youtube!
+                                              .value!,
+                                        );
+                                      },
+                                      icon: const FaIcon(
+                                        FontAwesomeIcons.youtube,
+                                        color: Colors.red,
                                       ),
                                     ),
-                                    const Text("Albümler"),
-                                    Row(
-                                      children: List.generate(
-                                        6,
-                                        (index) {
-                                          return const Padding(
-                                            padding: EdgeInsets.all(2.0),
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              foregroundImage:
-                                                  CachedNetworkImageProvider(
-                                                "https://aramizdakioyuncu.com/galeri/images/1orijinal23625_minnak16648326273.jpg",
-                                              ),
-                                            ),
-                                          );
-                                        },
+                                    IconButton(
+                                      onPressed: () {
+                                        Functions.gotoPage(
+                                          controller
+                                              .profileInfo
+                                              .value!
+                                              .socialaccounts!
+                                              .value!
+                                              .linkedin!
+                                              .value!,
+                                        );
+                                      },
+                                      icon: const FaIcon(
+                                        FontAwesomeIcons.linkedin,
+                                        color: Colors.red,
                                       ),
                                     ),
-                                    const Text("Eğitim"),
-                                    Row(
-                                      children: List.generate(
-                                        6,
-                                        (index) {
-                                          return const Padding(
-                                            padding: EdgeInsets.all(2.0),
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              foregroundImage:
-                                                  CachedNetworkImageProvider(
-                                                "https://aramizdakioyuncu.com/galeri/okulresimleri/1logominnak1716379394.png",
-                                              ),
-                                            ),
-                                          );
-                                        },
+                                    IconButton(
+                                      onPressed: () {
+                                        Functions.gotoPage(
+                                          controller
+                                              .profileInfo
+                                              .value!
+                                              .socialaccounts!
+                                              .value!
+                                              .reddit!
+                                              .value!,
+                                        );
+                                      },
+                                      icon: const FaIcon(
+                                        FontAwesomeIcons.reddit,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        Functions.gotoPage(
+                                          controller
+                                              .profileInfo
+                                              .value!
+                                              .socialaccounts!
+                                              .value!
+                                              .github!
+                                              .value!,
+                                        );
+                                      },
+                                      icon: const FaIcon(
+                                        FontAwesomeIcons.github,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        Functions.gotoPage(
+                                          controller
+                                              .profileInfo
+                                              .value!
+                                              .socialaccounts!
+                                              .value!
+                                              .discord!
+                                              .value!,
+                                        );
+                                      },
+                                      icon: const FaIcon(
+                                        FontAwesomeIcons.discord,
+                                        color: Colors.red,
                                       ),
                                     ),
                                   ],
                                 ),
-                              )
-                            ],
+                        ),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Hakkımda",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${controller.profileInfo.value!.country!.value.name}${controller.profileInfo.value!.province == null ? "" : ", ${controller.profileInfo.value!.province!.value.name}"}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        const FaIcon(
+                                          FontAwesomeIcons.calendarDays,
+                                          size: 14,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          controller.profileInfo.value!
+                                              .registerDate!.value!,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      controller.profileInfo.value!.burc!.value,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      controller
+                                          .profileInfo.value!.aboutme!.value,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TabBar(
+                                      controller:
+                                          controller.tabController.value,
+                                      onTap: (value) {
+                                        controller.tabControllerIndex.value =
+                                            value;
+                                      },
+                                      tabs: const [
+                                        Text("Paylaşımlar"),
+                                        Text("Medya"),
+                                        Text("Etiketlenmiş"),
+                                      ],
+                                    ),
+                                    Obx(
+                                      () =>
+                                          controller.tabControllerIndex.value ==
+                                                  0
+                                              ? controller.widget.value!
+                                              : Container(),
+                                    ),
+                                    Obx(
+                                      () =>
+                                          controller.tabControllerIndex.value ==
+                                                  1
+                                              ? controller.widget2.value!
+                                              : Container(),
+                                    ),
+                                    Obx(
+                                      () =>
+                                          controller.tabControllerIndex.value ==
+                                                  2
+                                              ? controller.widget3.value!
+                                              : Container(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
+                          SizedBox(
+                            width: 270,
+                            child: Column(
+                              children: [
+                                const Text("E-sporlar"),
+                                Row(
+                                  children: List.generate(
+                                    controller.profileInfo.value!.popularGames!
+                                        .length,
+                                    (index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.transparent,
+                                          foregroundImage:
+                                              CachedNetworkImageProvider(
+                                            controller
+                                                .profileInfo
+                                                .value!
+                                                .popularGames![index]
+                                                .logo
+                                                .mediaURL
+                                                .minURL
+                                                .value,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const Text("Sporlar"),
+                                Row(
+                                  children: List.generate(
+                                    4,
+                                    (index) {
+                                      return const Padding(
+                                        padding: EdgeInsets.all(2.0),
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.transparent,
+                                          foregroundImage:
+                                              CachedNetworkImageProvider(
+                                            "https://aramizdakioyuncu.com/galeri/oyun-logolari/futboll.png",
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const Text("Arkadaşlar"),
+                                Row(
+                                  children: List.generate(
+                                    controller
+                                        .profileInfo.value!.myFriends!.length,
+                                    (index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.transparent,
+                                          foregroundImage:
+                                              CachedNetworkImageProvider(
+                                            controller
+                                                .profileInfo
+                                                .value!
+                                                .myFriends![index]
+                                                .avatar!
+                                                .mediaURL
+                                                .minURL
+                                                .value,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const Text("Gruplar"),
+                                Row(
+                                  children: List.generate(
+                                    6,
+                                    (index) {
+                                      return const Padding(
+                                        padding: EdgeInsets.all(2.0),
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.transparent,
+                                          foregroundImage:
+                                              CachedNetworkImageProvider(
+                                            "https://aramizdakioyuncu.com/galeri/gruplar/1gruplarlogominnak1655550694.png",
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const Text("Albümler"),
+                                Row(
+                                  children: List.generate(
+                                    6,
+                                    (index) {
+                                      return const Padding(
+                                        padding: EdgeInsets.all(2.0),
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.transparent,
+                                          foregroundImage:
+                                              CachedNetworkImageProvider(
+                                            "https://aramizdakioyuncu.com/galeri/images/1orijinal23625_minnak16648326273.jpg",
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const Text("Eğitim"),
+                                Row(
+                                  children: List.generate(
+                                    6,
+                                    (index) {
+                                      return const Padding(
+                                        padding: EdgeInsets.all(2.0),
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.transparent,
+                                          foregroundImage:
+                                              CachedNetworkImageProvider(
+                                            "https://aramizdakioyuncu.com/galeri/okulresimleri/1logominnak1716379394.png",
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
-              ),
-            ),
-          ],
+                    ],
+                  ),
+          ),
         ),
       ],
     );

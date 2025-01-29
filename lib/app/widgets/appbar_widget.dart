@@ -16,7 +16,8 @@ class AppbarWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return AppBar(
-            forceMaterialTransparency: true,
+            backgroundColor: Colors.black,
+            // forceMaterialTransparency: true,
             leading: Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
@@ -34,14 +35,21 @@ class AppbarWidget {
               Get.width < 1000
                   ? const SizedBox.shrink()
                   : PopupMenuButton<String>(
+                      color: const Color.fromARGB(255, 33, 37, 41),
                       icon: const Row(
                         children: [
-                          Text('Gruplar',
-                              style: TextStyle(color: Colors.white)),
-                          Icon(Icons.arrow_drop_down_outlined),
+                          Text(
+                            'Gruplar',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_drop_down_outlined,
+                            color: Colors.white,
+                          ),
                         ],
                       ),
-                      color: const Color.fromARGB(255, 33, 37, 41),
 
                       offset: const Offset(0, 48), // Menü aşağıda açılır
                       itemBuilder: (context) => [
@@ -104,7 +112,10 @@ class AppbarWidget {
                               color: Colors.white,
                             ),
                           ),
-                          Icon(Icons.arrow_drop_down_outlined),
+                          Icon(
+                            Icons.arrow_drop_down_outlined,
+                            color: Colors.white,
+                          ),
                         ],
                       ),
                       color: const Color.fromARGB(255, 33, 37, 41),
@@ -182,7 +193,10 @@ class AppbarWidget {
                               color: Colors.white,
                             ),
                           ),
-                          Icon(Icons.arrow_drop_down_outlined),
+                          Icon(
+                            Icons.arrow_drop_down_outlined,
+                            color: Colors.white,
+                          ),
                         ],
                       ),
                       color: const Color.fromARGB(255, 33, 37, 41),
@@ -313,14 +327,20 @@ class AppbarWidget {
 
                   SpotlightSearchWidget.showSpotlightDialog(context);
                 },
-                icon: const Icon(Icons.search),
+                icon: const Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
               ),
               Applist.currentUser.value == null
                   ? IconButton(
                       onPressed: () {
                         AppWidget.loginModal(Get.context!);
                       },
-                      icon: const Icon(Icons.person),
+                      icon: const Icon(
+                        Icons.person,
+                        color: Colors.white,
+                      ),
                     )
                   : Row(
                       children: [
@@ -458,7 +478,10 @@ class AppbarWidget {
                               },
                             );
                           },
-                          icon: const Icon(Icons.notifications),
+                          icon: const Icon(
+                            Icons.notifications,
+                            color: Colors.white,
+                          ),
                         ),
                         InkWell(
                           onTap: () {
@@ -644,6 +667,7 @@ class AppbarWidget {
                           },
                           icon: const Icon(
                             Icons.menu,
+                            color: Colors.white,
                             size: 40,
                           ),
                         ),

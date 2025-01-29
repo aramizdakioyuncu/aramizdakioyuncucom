@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/modules/controlpanel/controlpanel_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/employee/employee_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/events/events_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/forum/forum_module.dart';
@@ -32,5 +33,6 @@ class AppPages {
     ...ModModule.routes,
     ...EmployeeModule.routes,
     ...EventsModule.routes,
+    ...ControlpanelModule.routes,
   ];
 }

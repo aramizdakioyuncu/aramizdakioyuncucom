@@ -34,7 +34,7 @@ class FooterWidget {
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: SizedBox(
-                      height: 300,
+                      height: 200,
                       child: Column(
                         children: [
                           Text(
@@ -67,7 +67,7 @@ class FooterWidget {
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: SizedBox(
-                      height: 300,
+                      height: 200,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -97,9 +97,10 @@ class FooterWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
-                      height: 300,
+                      height: 200,
                       child: SingleChildScrollView(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
                               "Haberler",
@@ -109,92 +110,56 @@ class FooterWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        "https://aramizdakioyuncu.com/galeri/yazi/1posterminnak1715776167.jpg",
-                                    width: double.infinity,
-                                    height: 80,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                const Expanded(
-                                  flex: 2, // Genişliğin 2 birimi
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start, // Sol hizalama
-                                      children: [
-                                        Text(
-                                          "Fatsa'da Türk Halk Müziği konseri yapıldı.",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Konserde çok güzel eğlenildi ödülleri verildif akls fjklsg jklsgf kdsjdsks ljlık...",
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "https://aramizdakioyuncu.com/galeri/yazi/1posterminnak1715776167.jpg",
+                                      width: double.infinity,
+                                      height: 100,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            const Divider(
-                              color: Colors.red,
-                              thickness: 0.5,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        "https://aramizdakioyuncu.com/galeri/yazi/417haberlerminnak1675644437.jpg",
-                                    width: double.infinity,
-                                    height: 80,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                const Expanded(
-                                  flex: 2,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          "The Witcher 3 Patch 4.01 Güncellemesi",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white,
+                                  const Expanded(
+                                    flex: 2, // Genişliğin 2 birimi
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .start, // Sol hizalama
+                                        children: [
+                                          Text(
+                                            "Fatsa'da Türk Halk Müziği konseri yapıldı.",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          "Konserde çok güzel eğlenildi ödülleri verildif akls fjklsg jklsgf kdsjdsks ljlık...",
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.white,
+                                          Text(
+                                            "Konserde çok güzel eğlenildi ödülleri verildif akls fjklsg jklsgf kdsjdsks ljlık...",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.white,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                )
-                              ],
+                                ],
+                              ),
                             ),
+                            // const Divider(
+
+                            //   color: Colors.red,
+                            //   thickness: 0.5,
+                            // ),
                           ],
                         ),
                       ),
@@ -206,7 +171,7 @@ class FooterWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
-                      height: 300,
+                      height: 200,
                       child: Column(
                         children: [
                           const Text(
@@ -219,54 +184,60 @@ class FooterWidget {
                           ),
                           Column(
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: List.generate(
-                                  3,
-                                  (index) {
-                                    return InkWell(
-                                      onTap: () {},
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: CachedNetworkImage(
-                                          imageUrl: Applist
-                                              .footersocailnetwork[index],
-                                          height: 60,
-                                          width: 60,
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(
+                                    3,
+                                    (index) {
+                                      return InkWell(
+                                        onTap: () {},
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CachedNetworkImage(
+                                            imageUrl: Applist
+                                                .footersocailnetwork[index],
+                                            height: 60,
+                                            width: 60,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: List.generate(
-                                  3,
-                                  (index) {
-                                    return InkWell(
-                                      onTap: () {},
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: CachedNetworkImage(
-                                          imageUrl: Applist
-                                              .footersocailnetwork[index + 3],
-                                          height: 60,
-                                          width: 60,
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(
+                                    3,
+                                    (index) {
+                                      return InkWell(
+                                        onTap: () {},
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CachedNetworkImage(
+                                            imageUrl: Applist
+                                                .footersocailnetwork[index + 3],
+                                            height: 60,
+                                            width: 60,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          CachedNetworkImage(
-                            imageUrl:
-                                "https://aramizdakioyuncu.com/galeri/ana-yapi/etbis.png",
-                            height: 60,
-                            width: 60,
-                          ),
+                          // CachedNetworkImage(
+                          //   imageUrl:
+                          //       "https://aramizdakioyuncu.com/galeri/ana-yapi/etbis.png",
+                          //   height: 60,
+                          //   width: 60,
+                          // ),
                         ],
                       ),
                     ),
@@ -279,6 +250,7 @@ class FooterWidget {
                 Expanded(
                   child: Text(
                     "Bu aramizdakioyuncu.com platformun Tüm Hakları Saklıdır.",
+                    overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
@@ -299,6 +271,7 @@ class FooterWidget {
                       ),
                       Text(
                         "yonetimekibi@aramizdakioyuncu.com",
+                        overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
@@ -321,6 +294,7 @@ class FooterWidget {
                       ),
                       Text(
                         "+905370585150",
+                        overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
