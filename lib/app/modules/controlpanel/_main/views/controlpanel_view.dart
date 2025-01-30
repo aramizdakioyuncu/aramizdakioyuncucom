@@ -37,8 +37,9 @@ class ControlpanelView extends StatelessWidget {
                   },
                 ),
               ),
-              const Center(
-                child: Text('Sunucu Saati : 2021-09-30 12:00:00'),
+              Center(
+                child: Text(
+                    'Sunucu Saati : ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year} ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}'),
               ),
             ],
           ),

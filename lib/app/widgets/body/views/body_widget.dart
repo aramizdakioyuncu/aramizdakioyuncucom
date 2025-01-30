@@ -39,172 +39,187 @@ class BodyWidget {
                 borderRadius: BorderRadius.zero,
               ),
               backgroundColor: Colors.black,
-              child: ListView(
-                padding: EdgeInsets.zero,
+              child: Column(
                 children: [
-                  DrawerHeader(
-                    margin: const EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: CachedNetworkImageProvider(
-                          Applist
-                              .currentUser.value!.banner!.mediaURL.minURL.value,
-                        ),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: const Text(''),
-                  ),
-                  ListTile(
-                    leading: const FaIcon(
-                      FontAwesomeIcons.pencil,
-                      color: Colors.white,
-                    ),
-                    title: const Text('Yazılarım'),
-                    tileColor: Colors.black,
-                    textColor: Colors.white,
-                    onTap: () {
-                      final username = Applist.currentUser.value!.userName!;
-                      Functions.gotoPage(
-                        "/oyuncular/$username/yazilarim",
-                        getnavgiate: true,
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: const FaIcon(
-                      FontAwesomeIcons.lifeRing,
-                      color: Colors.white,
-                    ),
-                    title: const Text('Bildirimlerim'),
-                    tileColor: Colors.black,
-                    textColor: Colors.white,
-                    onTap: () {
-                      final username = Applist.currentUser.value!.userName!;
-                      Functions.gotoPage(
-                        "/oyuncular/$username/bildirilerim",
-                        getnavgiate: true,
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: const FaIcon(
-                      FontAwesomeIcons.comment,
-                      color: Colors.white,
-                    ),
-                    title: const Text('Yorumum'),
-                    tileColor: Colors.black,
-                    textColor: Colors.white,
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    leading: const FaIcon(
-                      FontAwesomeIcons.userSecret,
-                      color: Colors.white,
-                    ),
-                    title: const Text('Yönetim Paneli'),
-                    tileColor: Colors.black,
-                    textColor: Colors.white,
-                    onTap: () {
-                      Functions.gotoPage(
-                        "/controlpanel",
-                        getnavgiate: true,
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: const FaIcon(
-                      FontAwesomeIcons.chartSimple,
-                      color: Colors.white,
-                    ),
-                    title: const Text('Anketler'),
-                    tileColor: Colors.black,
-                    textColor: Colors.white,
-                    onTap: () {
-                      final username = Applist.currentUser.value!.userName!;
-                      Functions.gotoPage(
-                        "/oyuncular/$username/anketler",
-                        getnavgiate: true,
-                      );
-                    },
-                  ),
-                  Obx(
-                    () => ExpansionTile(
-                      leading: const FaIcon(
-                        FontAwesomeIcons.peopleGroup,
-                        color: Colors.white,
-                      ),
-                      title: const Text(
-                        'Gruplar',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      collapsedIconColor: Colors.white,
-                      children: controller.mygroups.value == null
-                          ? []
-                          : List.generate(
-                              controller.mygroups.value!.length,
-                              (index) {
-                                return ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundColor: Colors.transparent,
-                                    foregroundImage: CachedNetworkImageProvider(
-                                      controller.mygroups.value![index]
-                                          .groupLogo.mediaURL.normalURL,
-                                    ),
-                                  ),
-                                  title: Text(
-                                    controller.mygroups.value![index].groupName,
-                                  ),
-                                  tileColor: Colors.black,
-                                  textColor: Colors.white,
-                                  onTap: () {
-                                    Functions.gotoPage(
-                                      "/gruplar/${controller.mygroups.value![index].groupURL}",
-                                      getnavgiate: true,
-                                    );
-                                  },
-                                );
-                              },
+                  Expanded(
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      children: [
+                        DrawerHeader(
+                          margin: const EdgeInsets.all(0),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                Applist.currentUser.value!.banner!.mediaURL
+                                    .minURL.value,
+                              ),
+                              fit: BoxFit.cover,
                             ),
+                          ),
+                          child: const Text(''),
+                        ),
+                        ListTile(
+                          leading: const FaIcon(
+                            FontAwesomeIcons.pencil,
+                            color: Colors.white,
+                          ),
+                          title: const Text('Yazılarım'),
+                          tileColor: Colors.black,
+                          textColor: Colors.white,
+                          onTap: () {
+                            final username =
+                                Applist.currentUser.value!.userName!;
+                            Functions.gotoPage(
+                              "/oyuncular/$username/yazilarim",
+                              getnavgiate: true,
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: const FaIcon(
+                            FontAwesomeIcons.lifeRing,
+                            color: Colors.white,
+                          ),
+                          title: const Text('Bildirimlerim'),
+                          tileColor: Colors.black,
+                          textColor: Colors.white,
+                          onTap: () {
+                            final username =
+                                Applist.currentUser.value!.userName!;
+                            Functions.gotoPage(
+                              "/oyuncular/$username/bildirilerim",
+                              getnavgiate: true,
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: const FaIcon(
+                            FontAwesomeIcons.comment,
+                            color: Colors.white,
+                          ),
+                          title: const Text('Yorumum'),
+                          tileColor: Colors.black,
+                          textColor: Colors.white,
+                          onTap: () {},
+                        ),
+                        ListTile(
+                          leading: const FaIcon(
+                            FontAwesomeIcons.userSecret,
+                            color: Colors.white,
+                          ),
+                          title: const Text('Yönetim Paneli'),
+                          tileColor: Colors.black,
+                          textColor: Colors.white,
+                          onTap: () {
+                            Functions.gotoPage(
+                              "/controlpanel",
+                              getnavgiate: true,
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: const FaIcon(
+                            FontAwesomeIcons.chartSimple,
+                            color: Colors.white,
+                          ),
+                          title: const Text('Anketler'),
+                          tileColor: Colors.black,
+                          textColor: Colors.white,
+                          onTap: () {
+                            final username =
+                                Applist.currentUser.value!.userName!;
+                            Functions.gotoPage(
+                              "/oyuncular/$username/anketler",
+                              getnavgiate: true,
+                            );
+                          },
+                        ),
+                        Obx(
+                          () => ExpansionTile(
+                            leading: const FaIcon(
+                              FontAwesomeIcons.peopleGroup,
+                              color: Colors.white,
+                            ),
+                            title: const Text(
+                              'Gruplar',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            collapsedIconColor: Colors.white,
+                            children: controller.mygroups.value == null
+                                ? []
+                                : List.generate(
+                                    controller.mygroups.value!.length,
+                                    (index) {
+                                      return ListTile(
+                                        leading: CircleAvatar(
+                                          backgroundColor: Colors.transparent,
+                                          foregroundImage:
+                                              CachedNetworkImageProvider(
+                                            controller.mygroups.value![index]
+                                                .groupLogo.mediaURL.normalURL,
+                                          ),
+                                        ),
+                                        title: Text(
+                                          controller
+                                              .mygroups.value![index].groupName,
+                                        ),
+                                        tileColor: Colors.black,
+                                        textColor: Colors.white,
+                                        onTap: () {
+                                          Functions.gotoPage(
+                                            "/gruplar/${controller.mygroups.value![index].groupURL}",
+                                            getnavgiate: true,
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                          ),
+                        ),
+                        ListTile(
+                          leading: const FaIcon(
+                            FontAwesomeIcons.ticket,
+                            color: Colors.white,
+                          ),
+                          title: const Text('Çekiliş'),
+                          tileColor: Colors.black,
+                          textColor: Colors.white,
+                          onTap: () {
+                            Functions.gotoPage("/cekilisler",
+                                getnavgiate: true);
+                          },
+                        ),
+                        ListTile(
+                          leading: const FaIcon(
+                            FontAwesomeIcons.graduationCap,
+                            color: Colors.white,
+                          ),
+                          title: const Text('Eğitim'),
+                          tileColor: Colors.black,
+                          textColor: Colors.white,
+                          onTap: () {
+                            Functions.gotoPage("/okullar/", getnavgiate: true);
+                          },
+                        ),
+                      ],
                     ),
                   ),
-                  ListTile(
-                    leading: const FaIcon(
-                      FontAwesomeIcons.ticket,
-                      color: Colors.white,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ARMOYU.widget.elevatedButton.costum2(
+                      icon: const Icon(
+                        Icons.dark_mode,
+                      ),
+                      onPressed: () {
+                        // ARMOYU.services.darkMode();
+                        Get.changeThemeMode(
+                          Get.isDarkMode ? ThemeMode.light : ThemeMode.dark,
+                        );
+                      },
+                      loadingStatus: false,
                     ),
-                    title: const Text('Çekiliş'),
-                    tileColor: Colors.black,
-                    textColor: Colors.white,
-                    onTap: () {
-                      Functions.gotoPage("/cekilisler", getnavgiate: true);
-                    },
-                  ),
-                  ListTile(
-                    leading: const FaIcon(
-                      FontAwesomeIcons.graduationCap,
-                      color: Colors.white,
-                    ),
-                    title: const Text('Eğitim'),
-                    tileColor: Colors.black,
-                    textColor: Colors.white,
-                    onTap: () {
-                      Functions.gotoPage("/okullar/", getnavgiate: true);
-                    },
-                  ),
-                  ARMOYU.widget.elevatedButton.costum2(
-                    icon: const Icon(
-                      Icons.dark_mode,
-                    ),
-                    onPressed: () {
-                      // ARMOYU.services.darkMode();
-                      Get.changeThemeMode(
-                        Get.isDarkMode ? ThemeMode.light : ThemeMode.dark,
-                      );
-                    },
-                    loadingStatus: false,
                   ),
                 ],
               ),
