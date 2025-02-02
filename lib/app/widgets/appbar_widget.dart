@@ -217,7 +217,7 @@ class AppbarWidget {
                           ),
                         ),
                         const PopupMenuItem(
-                          value: 'okul-temsilcileri',
+                          value: 'ekibimiz/okul-temsilcileri',
                           child: Row(
                             children: [
                               Icon(Icons.school_rounded, color: Colors.white),

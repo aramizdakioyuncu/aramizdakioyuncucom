@@ -9,5 +9,9 @@ class EmployeeModule {
       name: route,
       page: () => const EmployeeView(),
     ),
+    GetPage(
+      name: "$route/okul-temsilcileri",
+      page: () => const EmployeeView(),
+    ),
   ];
 }

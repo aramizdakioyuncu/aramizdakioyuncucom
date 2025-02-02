@@ -16,7 +16,7 @@ class ControlpanelUsersView extends StatelessWidget {
               2: FixedColumnWidth(200),
               3: FixedColumnWidth(100),
               4: FixedColumnWidth(80),
-              5: FixedColumnWidth(100),
+              5: FixedColumnWidth(30),
               6: FixedColumnWidth(100),
               7: FixedColumnWidth(80),
             },

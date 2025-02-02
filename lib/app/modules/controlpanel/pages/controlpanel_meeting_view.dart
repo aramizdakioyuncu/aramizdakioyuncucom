@@ -70,9 +70,11 @@ class ControlpanelMeetingView extends StatelessWidget {
                           TableCell(
                             verticalAlignment:
                                 TableCellVerticalAlignment.middle,
-                            child: Text(
-                              'Zaman',
-                              overflow: TextOverflow.ellipsis,
+                            child: Center(
+                              child: Text(
+                                'Zaman',
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                           TableCell(
@@ -135,9 +137,17 @@ class ControlpanelMeetingView extends StatelessWidget {
                               TableCell(
                                 verticalAlignment:
                                     TableCellVerticalAlignment.middle,
-                                child: Text(
-                                  meetingInfo.zaman,
-                                  overflow: TextOverflow.ellipsis,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      meetingInfo.zaman.split(" ").last,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Text(
+                                      meetingInfo.zaman.split(" ").first,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
                                 ),
                               ),
                               TableCell(

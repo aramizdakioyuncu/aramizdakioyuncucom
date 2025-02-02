@@ -107,9 +107,11 @@ class ControlpanelHomeView extends StatelessWidget {
                               controller.usersList.value![index];
                           return TableRow(
                             decoration: BoxDecoration(
-                              color: index % 2 == 0
-                                  ? Colors.grey.shade200
-                                  : Colors.white, // Striped Efekti
+                              color: userInfo.problemli
+                                  ? Colors.red
+                                  : index % 2 == 0
+                                      ? Colors.grey.shade200
+                                      : Colors.white, // Striped Efekti
                             ),
                             children: [
                               TableCell(
@@ -177,53 +179,95 @@ class ControlpanelHomeView extends StatelessWidget {
                               TableCell(
                                 verticalAlignment:
                                     TableCellVerticalAlignment.middle,
-                                child: Row(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    userInfo.kalanHak > 0
-                                        ? Container()
-                                        : const Padding(
-                                            padding: EdgeInsets.all(2.0),
-                                            child: FaIcon(
-                                              FontAwesomeIcons.check,
-                                              size: 12,
-                                            ),
-                                          ),
-                                    userInfo.kalanHak > 1
-                                        ? Container()
-                                        : const Padding(
-                                            padding: EdgeInsets.all(2.0),
-                                            child: FaIcon(
-                                              FontAwesomeIcons.check,
-                                              size: 12,
-                                            ),
-                                          ),
-                                    userInfo.kalanHak > 2
-                                        ? Container()
-                                        : const Padding(
-                                            padding: EdgeInsets.all(2.0),
-                                            child: FaIcon(
-                                              FontAwesomeIcons.check,
-                                              size: 12,
-                                            ),
-                                          ),
-                                    userInfo.kalanHak > 3
-                                        ? Container()
-                                        : const Padding(
-                                            padding: EdgeInsets.all(2.0),
-                                            child: FaIcon(
-                                              FontAwesomeIcons.check,
-                                              size: 12,
-                                            ),
-                                          ),
-                                    userInfo.kalanHak > 4
-                                        ? Container()
-                                        : const Padding(
-                                            padding: EdgeInsets.all(2.0),
-                                            child: FaIcon(
-                                              FontAwesomeIcons.check,
-                                              size: 12,
-                                            ),
-                                          ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        userInfo.kalanHak > 0
+                                            ? const Padding(
+                                                padding: EdgeInsets.all(2.0),
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.check,
+                                                  size: 12,
+                                                ),
+                                              )
+                                            : const Padding(
+                                                padding: EdgeInsets.all(2.0),
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.xmark,
+                                                  size: 12,
+                                                ),
+                                              ),
+                                        userInfo.kalanHak > 1
+                                            ? const Padding(
+                                                padding: EdgeInsets.all(2.0),
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.check,
+                                                  size: 12,
+                                                ),
+                                              )
+                                            : const Padding(
+                                                padding: EdgeInsets.all(2.0),
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.xmark,
+                                                  size: 12,
+                                                ),
+                                              ),
+                                        userInfo.kalanHak > 2
+                                            ? const Padding(
+                                                padding: EdgeInsets.all(2.0),
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.check,
+                                                  size: 12,
+                                                ),
+                                              )
+                                            : const Padding(
+                                                padding: EdgeInsets.all(2.0),
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.xmark,
+                                                  size: 12,
+                                                ),
+                                              ),
+                                        userInfo.kalanHak > 3
+                                            ? const Padding(
+                                                padding: EdgeInsets.all(2.0),
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.check,
+                                                  size: 12,
+                                                ),
+                                              )
+                                            : const Padding(
+                                                padding: EdgeInsets.all(2.0),
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.xmark,
+                                                  size: 12,
+                                                ),
+                                              ),
+                                        userInfo.kalanHak > 4
+                                            ? const Padding(
+                                                padding: EdgeInsets.all(2.0),
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.check,
+                                                  size: 12,
+                                                ),
+                                              )
+                                            : const Padding(
+                                                padding: EdgeInsets.all(2.0),
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.xmark,
+                                                  size: 12,
+                                                ),
+                                              ),
+                                      ],
+                                    ),
+                                    Text(
+                                      "Kalan Hak: ${userInfo.kalanHak}",
+                                    ),
                                   ],
                                 ),
                               ),
