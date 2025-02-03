@@ -230,13 +230,26 @@ class AppbarWidget {
                           ),
                         ),
                         const PopupMenuItem(
-                          value: 'kurallarımız',
+                          value: 'kurallarimiz',
                           child: Row(
                             children: [
                               Icon(Icons.rule_rounded, color: Colors.white),
                               SizedBox(width: 10),
                               Text(
                                 'Kurallarımız',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 'hakkimizda',
+                          child: Row(
+                            children: [
+                              Icon(Icons.info, color: Colors.white),
+                              SizedBox(width: 10),
+                              Text(
+                                'Hakkımızda',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ],

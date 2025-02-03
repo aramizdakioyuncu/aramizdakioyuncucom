@@ -17,9 +17,10 @@ class ProfileView extends StatelessWidget {
 
     return BodyWidget.custom1(
       context,
-      bgImage: controller.profileInfo.value == null
-          ? "https://aramizdakioyuncu.com/galeri/profilresimleri/1profilsayfaresim1664972413.jpg"
-          : controller.profileInfo.value!.wallpaper!.mediaURL.minURL.value,
+      bgImage: controller.bgwallpaper,
+      // bgImage: controller.profileInfo.value == null
+      //     ? controller.bgwallpaper
+      //     : controller.profileInfo.value!.wallpaper!.mediaURL.minURL.value.obs,
       transparentBody: true,
       body: [
         Stack(

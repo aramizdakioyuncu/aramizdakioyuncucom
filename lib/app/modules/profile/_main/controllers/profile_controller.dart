@@ -25,6 +25,8 @@ class ProfileController extends GetxController
   Rxn<Widget> widget2 = Rxn();
   Rxn<Widget> widget3 = Rxn();
 
+  RxString bgwallpaper = RxString("");
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -196,5 +198,8 @@ class ProfileController extends GetxController
           ? null
           : RxList(friendsList),
     );
+
+    bgwallpaper.value = response.response!.banner!.mediaURL.minURL;
+    bgwallpaper.refresh();
   }
 }

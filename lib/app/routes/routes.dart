@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/modules/about/about_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/controlpanel/controlpanel_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/employee/employee_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/events/events_module.dart';
@@ -10,6 +11,7 @@ import 'package:aramizdakioyuncucom/app/modules/news/news_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/notFound/notFound_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/profile/profile_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/raffle/raffle_module.dart';
+import 'package:aramizdakioyuncucom/app/modules/rules/rules_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/splash/splash_modules.dart';
 
 class Routes {
@@ -22,6 +24,7 @@ class AppPages {
 
   static final notFound404page = NotfoundModule.routes;
   static final routes = [
+    ...AboutModule.routes,
     ...SplashModule.routes,
     ...HomeModule.routes,
     ...ProfileModule.routes,
@@ -29,6 +32,7 @@ class AppPages {
     ...GalleryModule.routes,
     ...NewsModule.routes,
     ...RaffleModule.routes,
+    ...RulesModule.routes,
     ...ForumModule.routes,
     ...ModModule.routes,
     ...EmployeeModule.routes,

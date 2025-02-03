@@ -20,8 +20,6 @@ class SocialView extends StatelessWidget {
     Color colorbg = Colors.white70;
     Color colortxt = Colors.black;
     return BodyWidget.custom1(
-      bgImage:
-          "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp",
       transparentBody: true,
       context,
       body: [

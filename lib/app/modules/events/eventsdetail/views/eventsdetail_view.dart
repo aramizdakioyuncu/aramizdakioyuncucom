@@ -19,7 +19,8 @@ class EventsdetailView extends StatelessWidget {
     return BodyWidget.custom1(
       context,
       bgImage:
-          "https://aramizdakioyuncu.com/galeri/images/10632orijinal73025orijinal16648332426.jpg",
+          "https://aramizdakioyuncu.com/galeri/images/10632orijinal73025orijinal16648332426.jpg"
+              .obs,
       body: [
         Row(
           children: [

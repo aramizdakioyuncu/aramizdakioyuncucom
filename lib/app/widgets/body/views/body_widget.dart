@@ -11,19 +11,23 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class BodyWidget {
-  static Widget custom1(context,
-      {String? bgImage,
-      bool transparentBody = false,
-      bool fullWidth = false,
-      required List<Widget> body}) {
-    Rx<String> backgroundImage =
-        Rx("https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp");
-    // "https://aramizdakioyuncu.com/galeri/ana-yapi/anaarkaplan.jpg",
-    // "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp",
-
-    if (bgImage != null) {
-      backgroundImage.value = bgImage;
+  static Widget custom1(
+    context, {
+    RxString? bgImage,
+    bool transparentBody = false,
+    bool fullWidth = false,
+    required List<Widget> body,
+  }) {
+    // "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp"
+    // "https://aramizdakioyuncu.com/galeri/ana-yapi/anaarkaplan.jpg"
+    // "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp"
+    bgImage ??= RxString(
+        "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp");
+    if (bgImage.value == "") {
+      bgImage.value =
+          "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp";
     }
+
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final controller = Get.put(BodyController());
 
@@ -232,7 +236,7 @@ class BodyWidget {
                 children: [
                   Obx(
                     () => CachedNetworkImage(
-                      imageUrl: backgroundImage.value,
+                      imageUrl: bgImage!.value,
                       fit: BoxFit.cover,
                       width: Get.width,
                       height: Get.height,

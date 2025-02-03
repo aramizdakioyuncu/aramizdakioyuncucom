@@ -17,6 +17,8 @@ class GroupdetailController extends GetxController {
   Rxn<Group> groupInfo = Rxn<Group>();
   Rxn<List<User>> groupusers = Rxn<List<User>>();
 
+  RxString bgwallpaper = RxString("");
+
   @override
   void onInit() {
     super.onInit();
@@ -59,9 +61,13 @@ class GroupdetailController extends GetxController {
           minURL: Rx(response.response!.groupBanner.minURL),
         ),
       ),
+
       groupName: response.response!.groupName,
       // groupUsers: response.response!
     );
+
+    bgwallpaper.value = response.response!.groupBanner.minURL;
+    bgwallpaper.refresh();
   }
 
   fetchgroupusers() async {

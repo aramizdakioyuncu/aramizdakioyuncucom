@@ -19,7 +19,7 @@ class NewsdetailView extends StatelessWidget {
     );
 
     return BodyWidget.custom1(
-      bgImage: controller.newsInfo.value?.media.mediaURL.minURL,
+      bgImage: controller.newsInfo.value?.media.mediaURL.minURL.obs,
       context,
       body: [
         Row(

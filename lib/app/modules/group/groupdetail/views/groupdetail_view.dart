@@ -12,8 +12,12 @@ class GroupdetailView extends StatelessWidget {
   Widget build(Object context) {
     final groupscategory = Get.parameters['group'];
 
-    final controller = Get.put(GroupdetailController(), tag: groupscategory);
+    final controller = Get.put(
+      GroupdetailController(),
+      tag: groupscategory,
+    );
     return BodyWidget.custom1(
+      bgImage: controller.bgwallpaper,
       context,
       body: [
         Column(
