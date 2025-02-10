@@ -5,7 +5,7 @@ import 'package:aramizdakioyuncucom/app/models/user.dart';
 class AppRequest {
   final int id;
   final User reportuser;
-  final FeedbacksCategoryModel category;
+  final FeedbackCategory category;
   final String description;
   final String subject;
   final AppStatus status;

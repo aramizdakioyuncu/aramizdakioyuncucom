@@ -1,5 +1,7 @@
 import 'package:aramizdakioyuncucom/app/modules/profile/_main/controllers/profile_controller.dart';
+import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
+import 'package:aramizdakioyuncucom/app/widgets/app_widget.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_flags/country_flags.dart';
@@ -332,6 +334,13 @@ class ProfileView extends StatelessWidget {
                                   ],
                                 ),
                         ),
+                      ),
+                      ARMOYU.widget.elevatedButton.costum1(
+                        text: "text",
+                        onPressed: () {
+                          AppWidget.showSettingsDialog(context);
+                        },
+                        loadingStatus: false,
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,

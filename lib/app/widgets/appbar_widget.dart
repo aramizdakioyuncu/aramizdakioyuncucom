@@ -12,7 +12,8 @@ class AppbarWidget {
     Functions.cookiesetup();
 
     return PreferredSize(
-      preferredSize: const Size.fromHeight(kToolbarHeight),
+      preferredSize: Size.fromHeight(kToolbarHeight +
+          ((MediaQuery.of(context).size.width < 1000) ? 50 : 0)),
       child: LayoutBuilder(
         builder: (context, constraints) {
           return AppBar(
@@ -675,7 +676,6 @@ class AppbarWidget {
                         ),
                         IconButton(
                           onPressed: () {
-                            drawer.currentState?.openDrawer();
                             drawer.currentState?.openEndDrawer();
                           },
                           icon: const Icon(
@@ -687,6 +687,39 @@ class AppbarWidget {
                       ],
                     ),
             ],
+
+            bottom: (Get.width > 1000)
+                ? null
+                : PreferredSize(
+                    preferredSize: const Size.fromHeight(50),
+                    child: Container(
+                      color: Colors.black,
+                      width: double.infinity,
+                      height: 50,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              drawer.currentState?.openDrawer();
+                            },
+                            icon: const Icon(
+                              Icons.menu,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                          ),
+                          const Expanded(
+                            child: Center(
+                              child: Text(
+                                "",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
           );
         },
       ),

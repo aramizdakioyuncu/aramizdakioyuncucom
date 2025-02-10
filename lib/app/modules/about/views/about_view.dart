@@ -64,89 +64,122 @@ class AboutView extends StatelessWidget {
                   ),
                 ),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Container(
-            color: Colors.black,
-            height: 110,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
+        Container(
+          color: Colors.black,
+          height: 110,
+          width: double.infinity,
+          child: Center(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyu1.png",
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyu1.png",
+                    ),
                   ),
-                  CachedNetworkImage(
-                    imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyu2.png",
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyu2.png",
+                    ),
                   ),
-                  CachedNetworkImage(
-                    imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyu3.png",
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyu3.png",
+                    ),
                   ),
-                  CachedNetworkImage(
-                    imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyu4.png",
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyu4.png",
+                    ),
                   ),
-                  CachedNetworkImage(
-                    imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyu5.png",
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyu5.png",
+                    ),
                   ),
                 ],
               ),
             ),
           ),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Container(
-            color: Colors.black,
-            height: 110,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
+        Container(
+          color: Colors.black,
+          height: 110,
+          width: double.infinity,
+          child: Center(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyukelime1.png",
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyukelime1.png",
+                    ),
                   ),
-                  CachedNetworkImage(
-                    imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyukelime2.png",
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyukelime2.png",
+                    ),
                   ),
-                  CachedNetworkImage(
-                    imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyukelime3.png",
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyukelime3.png",
+                    ),
                   ),
                 ],
               ),
             ),
           ),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Container(
-            color: Colors.black,
-            height: 110,
-            width: 900,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
+        Container(
+          color: Colors.black,
+          height: 110,
+          width: double.infinity,
+          child: Center(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyuvector1.jpg",
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyuvector1.jpg",
+                    ),
                   ),
-                  CachedNetworkImage(
-                    imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyuvector2.jpg",
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyuvector2.jpg",
+                    ),
                   ),
-                  CachedNetworkImage(
-                    imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyuvector3.jpg",
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyuvector3.jpg",
+                    ),
                   ),
                 ],
               ),

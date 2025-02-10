@@ -175,6 +175,255 @@ class AppWidget {
     );
   }
 
+  static void showSettingsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text("Ayarlarım"),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  preicon:
+                                      const Icon(FontAwesomeIcons.facebook),
+                                  title: "Facebook",
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  preicon:
+                                      const Icon(FontAwesomeIcons.instagram),
+                                  title: "Instagram",
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  preicon:
+                                      const Icon(FontAwesomeIcons.linkedin),
+                                  title: "Linledin",
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  preicon: const Icon(FontAwesomeIcons.youtube),
+                                  title: "Youtube",
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  preicon: const Icon(FontAwesomeIcons.twitch),
+                                  title: "Twitch",
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  preicon: const Icon(FontAwesomeIcons.reddit),
+                                  title: "Reddit",
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  preicon: const Icon(FontAwesomeIcons.github),
+                                  title: "Github",
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  preicon: const Icon(FontAwesomeIcons.steam),
+                                  title: "Steam",
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  preicon: const Icon(FontAwesomeIcons.steam),
+                                  title: "Discord",
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                ),
+                              ),
+                              ARMOYU.widget.elevatedButton.costum1(
+                                text: "Kaydet",
+                                onPressed: () {},
+                                loadingStatus: false,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 100,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CachedNetworkImage(
+                                      imageUrl:
+                                          "https://aramizdakioyuncu.com/galeri/ana-yapi/bay.png",
+                                      height: 100,
+                                      width: 100,
+                                    ),
+                                    CachedNetworkImage(
+                                      imageUrl:
+                                          "https://aramizdakioyuncu.com/galeri/ana-yapi/bayan.png",
+                                      height: 100,
+                                      width: 100,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                  title: "Meslek Seçim",
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                  title: "E-Posta",
+                                  type: TextInputType.emailAddress,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                  title: "Cep Numara",
+                                  type: TextInputType.number,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ARMOYU.widget.textField.costum3(
+                                  controller: TextEditingController(),
+                                  onChanged: (val) {},
+                                  title: "Doğum Tarihi",
+                                  type: TextInputType.datetime,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ARMOYU.widget.textField.costum3(
+                                        controller: TextEditingController(),
+                                        onChanged: (val) {},
+                                        title: "Ülke Seçim",
+                                        type: TextInputType.datetime,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ARMOYU.widget.textField.costum3(
+                                        controller: TextEditingController(),
+                                        onChanged: (val) {},
+                                        title: "Şehir Seçim",
+                                        type: TextInputType.datetime,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              ARMOYU.widget.elevatedButton.costum1(
+                                text: "Kaydet",
+                                onPressed: () {},
+                                loadingStatus: false,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ARMOYU.widget.textField.costum3(
+                        controller: TextEditingController(),
+                        onChanged: (val) {},
+                        title: "Mevcut Parola",
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ARMOYU.widget.textField.costum3(
+                        controller: TextEditingController(),
+                        onChanged: (val) {},
+                        preicon: const Icon(Icons.lock),
+                        title: "Yeni Parola",
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ARMOYU.widget.textField.costum3(
+                        controller: TextEditingController(),
+                        onChanged: (val) {},
+                        preicon: const Icon(Icons.lock),
+                        title: "Yeni Parolanızı Tekrar Giriniz",
+                      ),
+                    ),
+                    ARMOYU.widget.elevatedButton.costum1(
+                      text: "Kaydet",
+                      onPressed: () {},
+                      loadingStatus: false,
+                    ),
+                  ],
+                ),
+              ),
+              // actions: [],
+            );
+          },
+        );
+      },
+    );
+  }
+
   static Widget controlpanelMenu({
     int? selectedIndex,
     required Function(int index) onTap,

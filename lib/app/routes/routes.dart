@@ -11,12 +11,18 @@ import 'package:aramizdakioyuncucom/app/modules/news/news_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/notFound/notFound_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/profile/profile_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/raffle/raffle_module.dart';
+import 'package:aramizdakioyuncucom/app/modules/register/register_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/rules/rules_module.dart';
+import 'package:aramizdakioyuncucom/app/modules/shop/shop_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/splash/splash_modules.dart';
 
 class Routes {
   // ignore: constant_identifier_names
   static const PROFILE = "/oyuncular";
+  // ignore: constant_identifier_names
+  static const REGISTER = "/kayit-ol";
+  // ignore: constant_identifier_names
+  static const SHOP = "/magaza";
 }
 
 class AppPages {
@@ -38,5 +44,7 @@ class AppPages {
     ...EmployeeModule.routes,
     ...EventsModule.routes,
     ...ControlpanelModule.routes,
+    ...RegisterModule.routes,
+    ...ShopModule.routes,
   ];
 }

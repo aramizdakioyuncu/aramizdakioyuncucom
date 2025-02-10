@@ -7,21 +7,26 @@ class CardWidget {
   static Widget analysticcard(List<AppStatusChartRequest> list) {
     return SizedBox(
       height: 150,
-      child: ListView.builder(
+      child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        itemCount: list.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CardWidget.statusCardWidget(
-              category: list[index].status.val,
-              categoryvalue: list[index].hourValue.toString(),
-              icon: list[index].status.icon,
-              color: list[index].status.color,
-              backgroundcolor: list[index].status.backgroundcolor,
-            ),
-          );
-        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            list.length,
+            (index) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CardWidget.statusCardWidget(
+                  category: list[index].status.val,
+                  categoryvalue: list[index].hourValue.toString(),
+                  icon: list[index].status.icon,
+                  color: list[index].status.color,
+                  backgroundcolor: list[index].status.backgroundcolor,
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

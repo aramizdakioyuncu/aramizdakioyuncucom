@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:aramizdakioyuncucom/app/models/user.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart' as widgetmedia;
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/role.dart';
 import 'package:armoyu_widgets/data/models/user.dart' as widgetuser;
 
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
@@ -72,6 +73,11 @@ class Functions {
                 minURL: Rx(
                     Applist.currentUser.value!.banner!.mediaURL.minURL.value),
               ),
+            ),
+            role: Role(
+              roleID: Applist.currentUser.value!.role!.roleID,
+              name: Applist.currentUser.value!.role!.name,
+              color: Applist.currentUser.value!.role!.color,
             ),
           ).obs,
           sessionTOKEN: userToken.obs,
@@ -152,27 +158,32 @@ class Functions {
     }
 
     Applist.currentUser.value = User(
-      userID: response.response!.playerID!,
-      userName: Rx<String>(username),
-      password: Rx<String>(password),
-      displayName: Rx<String>(response.response!.displayName!),
-      avatar: Media(
-        mediaID: response.response!.avatar!.mediaID,
-        mediaURL: MediaURL(
-          bigURL: Rx<String>(response.response!.avatar!.mediaURL.bigURL),
-          normalURL: Rx<String>(response.response!.avatar!.mediaURL.normalURL),
-          minURL: Rx<String>(response.response!.avatar!.mediaURL.minURL),
+        userID: response.response!.playerID!,
+        userName: Rx<String>(username),
+        password: Rx<String>(password),
+        displayName: Rx<String>(response.response!.displayName!),
+        avatar: Media(
+          mediaID: response.response!.avatar!.mediaID,
+          mediaURL: MediaURL(
+            bigURL: Rx<String>(response.response!.avatar!.mediaURL.bigURL),
+            normalURL:
+                Rx<String>(response.response!.avatar!.mediaURL.normalURL),
+            minURL: Rx<String>(response.response!.avatar!.mediaURL.minURL),
+          ),
         ),
-      ),
-      banner: Media(
-        mediaID: response.response!.banner!.mediaID,
-        mediaURL: MediaURL(
-          bigURL: Rx<String>(response.response!.banner!.mediaURL.bigURL),
-          normalURL: Rx<String>(response.response!.banner!.mediaURL.normalURL),
-          minURL: Rx<String>(response.response!.banner!.mediaURL.minURL),
+        banner: Media(
+          mediaID: response.response!.banner!.mediaID,
+          mediaURL: MediaURL(
+            bigURL: Rx<String>(response.response!.banner!.mediaURL.bigURL),
+            normalURL:
+                Rx<String>(response.response!.banner!.mediaURL.normalURL),
+            minURL: Rx<String>(response.response!.banner!.mediaURL.minURL),
+          ),
         ),
-      ),
-    );
+        role: Role(
+            roleID: response.response!.roleID!,
+            name: response.response!.roleName!,
+            color: response.response!.roleColor!));
     box.write('userTOKEN', response.result.description);
     box.write('currentUser', Applist.currentUser.toJson());
 

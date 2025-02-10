@@ -1,23 +1,26 @@
 import 'dart:developer' as log;
 
-import 'package:aramizdakioyuncucom/app/models/applist.dart';
 import 'package:aramizdakioyuncucom/app/models/feedbacks_category_model.dart';
 import 'package:aramizdakioyuncucom/app/models/request_category_model.dart';
+import 'package:aramizdakioyuncucom/app/models/request_model.dart';
 import 'package:aramizdakioyuncucom/app/models/request_status_chart_model.dart';
 import 'package:aramizdakioyuncucom/app/models/status_model.dart';
+import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/statistics/statistics_list.dart';
+import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:get/get.dart';
 
 class ControlpanelStatisticsController extends GetxController {
-  var appList = AppList.requestsList.obs;
-  var categoryList = <AppChartRequest>[].obs;
+  Rxn<AppChartRequest> categoryList = Rxn();
   var categoryStatusList = <AppStatusChartRequest>[].obs;
+  var requestsList = <AppRequest>[].obs;
 
   var selectedIndex = 0.obs;
 
   var viewhourly = true.obs;
-  var viewweekly = false.obs;
-  var viewmontly = false.obs;
-  var viewyearly = false.obs;
+  var viewweekly = true.obs;
+  var viewmontly = true.obs;
+  var viewyearly = true.obs;
 
   var selectedTimeIndex = 0.obs;
 
@@ -28,6 +31,106 @@ class ControlpanelStatisticsController extends GetxController {
   var viewinfoforms = false.obs;
   var viewihbar = false.obs;
   var viewthanks = false.obs;
+
+  Rxn<AppChartRequest> chartactiveUserStats = Rxn();
+  Rxn<AppChartRequest> chartevents = Rxn();
+  Rxn<AppChartRequest> chartnewPlayer = Rxn();
+  Rxn<AppChartRequest> chartsessionStats = Rxn();
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    log.log("Anasayfaya Hoşgeldiniz");
+
+    // -------*-----*------
+    fetchFeedbackStatus();
+    statusFilterRequestsByHours();
+    // -------*-----*------
+
+    fetchstatistics(chartactiveUserStats, FeedbackCategory.activeUserStats);
+    fetchstatistics(chartevents, FeedbackCategory.events);
+    fetchstatistics(chartnewPlayer, FeedbackCategory.newPlayer);
+    fetchstatistics(chartsessionStats, FeedbackCategory.sessionStats);
+
+    // //Saatlik
+    // filterRequestsByHours();
+    // //Haftalık
+    // filterRequestsByWeek();
+    // //Aylık
+    // filterRequestsByMontly();
+    // //Yıllık
+    // filterRequestsByYear();
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    log.log("Anasayfadan Çıktınız");
+  }
+
+  Future<void> fetchstatistics(
+      Rxn<AppChartRequest> chart, FeedbackCategory category) async {
+    String categoryvalue = "oturumkayitlari";
+    if (category == FeedbackCategory.activeUserStats) {
+      categoryvalue = "aktifoyuncu";
+    }
+    if (category == FeedbackCategory.events) {
+      categoryvalue = "etkinlikler";
+    }
+    if (category == FeedbackCategory.newPlayer) {
+      categoryvalue = "yenioyuncu";
+    }
+    if (category == FeedbackCategory.sessionStats) {
+      categoryvalue = "oturumkayitlari";
+    }
+    StatisticsListResponse response =
+        await ARMOYU.service.statisticsServices.fetch(category: categoryvalue);
+
+    if (!response.result.status) {
+      return;
+    }
+
+    chart.value ??= AppChartRequest(category: category);
+
+    for (APIStatisticsList element in response.response!) {
+      //HOUR
+
+      chart.value!.hourlypercentage = element.hours.percentage;
+      chart.value!.hourlyValue = element.hours.totalValue;
+      chart.value!.hourly = List.generate(
+        element.hours.titles.length,
+        (index) => {
+          element.hours.titles[index]:
+              int.parse(element.hours.values[index] ?? "0")
+        },
+      );
+      log.log("-----------------------------");
+      //Daily
+
+      chart.value!.dailypercentage = element.days.percentage;
+      chart.value!.dailyValue = element.days.totalValue;
+      chart.value!.daily = List.generate(
+        element.days.titles.length,
+        (index) => {
+          element.days.titles[index]:
+              int.parse(element.days.values[index] ?? "0")
+        },
+      );
+      log.log("-----------------------------");
+      //Monthly
+
+      chart.value!.monthlypercentage = element.month.percentage;
+      chart.value!.monthlyValue = element.month.totalValue;
+      chart.value!.monthly = List.generate(
+        element.month.titles.length,
+        (index) => {
+          element.month.titles[index]:
+              int.parse(element.month.values[index] ?? "0")
+        },
+      );
+    }
+  }
 
   void fetchFeedbackStatus() {
     categoryStatusList.clear();
@@ -50,7 +153,7 @@ class ControlpanelStatisticsController extends GetxController {
             DateTime(datetime.year, datetime.month, datetime.day, 00 + i);
         DateTime endDateTime = startDateTime.add(const Duration(hours: 1));
 
-        List data = AppList.requestsList
+        List data = requestsList
             .where(
               (element2) => ((element2.date.isAfter(startDateTime) &&
                       element2.date.isBefore(endDateTime)) &&
@@ -75,216 +178,6 @@ class ControlpanelStatisticsController extends GetxController {
         totalcount += data.length;
         element.hourValue = totalcount;
       }
-    }
-  }
-
-//CATEGORYFILTER
-  void fetchFeedbackCategories() {
-    categoryList.clear();
-    for (FeedbacksCategoryModel fetchelement in AppList.requestcategoriesList) {
-      categoryList.add(
-        AppChartRequest(category: fetchelement),
-      );
-    }
-  }
-
-  void filterRequestsByHours() {
-    for (var element in categoryList) {
-      DateTime datetime = DateTime.now();
-
-      element.hourly = [];
-
-      int totalcount = 0;
-      for (var i = 0; i < datetime.hour; i++) {
-        DateTime startDateTime =
-            DateTime(datetime.year, datetime.month, datetime.day, 00 + i);
-        DateTime endDateTime = startDateTime.add(const Duration(hours: 1));
-
-        List data = AppList.requestsList
-            .where(
-              (element2) => ((element2.date.isAfter(startDateTime) &&
-                      element2.date.isBefore(endDateTime)) &&
-                  element2.category == element.category),
-            )
-            .toList();
-        String? hourstartString;
-        String? hourendString;
-        if (startDateTime.hour < 10) {
-          hourstartString = "0${startDateTime.hour}";
-        } else {
-          hourstartString = startDateTime.hour.toString();
-        }
-        if (endDateTime.hour < 10) {
-          hourendString = "0${endDateTime.hour}";
-        } else {
-          hourendString = endDateTime.hour.toString();
-        }
-        element.hourly!.add({
-          " $hourstartString - $hourendString": data.length,
-        });
-        totalcount += data.length;
-        element.hourValue = totalcount;
-      }
-
-      log.log("element.hourly ${element.hourly}");
-    }
-  }
-
-  void filterRequestsByWeek() {
-    for (var element in categoryList) {
-      DateTime datetime = DateTime.now();
-
-      int datetimeweekday = datetime.weekday; //haftanın kaçıncı günü
-      log.log("haftanın kaçıncı Günü $datetimeweekday");
-      element.weekly = [];
-
-      int totalcount = 0;
-      for (var i = 0; i < datetimeweekday; i++) {
-        DateTime startDateTime = DateTime(
-            datetime.year, datetime.month, datetime.day - datetimeweekday + i);
-        DateTime endDateTime = datetime;
-
-        List data = AppList.requestsList
-            .where(
-              (element2) => ((element2.date.isAfter(startDateTime) &&
-                      element2.date.isBefore(endDateTime)) &&
-                  element2.category == element.category),
-            )
-            .toList();
-
-        element.weekly!.add({
-          " ${startDateTime.day}": data.length,
-        });
-        totalcount += data.length;
-        element.weeklyValue = totalcount;
-      }
-    }
-  }
-
-  void filterRequestsByMontly() {
-    for (var element in categoryList) {
-      DateTime datetime = DateTime.now();
-
-      element.monthly = [];
-
-      int totalcount = 0;
-      for (var i = 0; i < datetime.day; i++) {
-        DateTime startDateTime = DateTime(datetime.year, datetime.month, i + 1);
-        DateTime endDateTime =
-            DateTime(datetime.year, datetime.month, i + 1, 23, 59);
-
-        List data = AppList.requestsList
-            .where(
-              (element2) => ((element2.date.isAfter(startDateTime) &&
-                      element2.date.isBefore(endDateTime)) &&
-                  element2.category == element.category),
-            )
-            .toList();
-
-        element.monthly!.add({
-          " ${i + 1}": data.length,
-        });
-        totalcount += data.length;
-        element.monthlyValue = totalcount;
-      }
-    }
-  }
-
-  void filterRequestsByYear() {
-    for (var element in categoryList) {
-      DateTime datetime = DateTime.now();
-
-      element.yearly = [];
-
-      int totalcount = 0;
-      for (var i = 0; i < datetime.month; i++) {
-        DateTime startDateTime = DateTime(datetime.year, i + 1, 1);
-        DateTime endDateTime = DateTime(datetime.year, i + 2, 1);
-
-        List data = AppList.requestsList
-            .where(
-              (element2) => ((element2.date.isAfter(startDateTime) &&
-                      element2.date.isBefore(endDateTime)) &&
-                  element2.category == element.category),
-            )
-            .toList();
-
-        element.yearly!.add({
-          " ${startDateTime.day}": data.length,
-        });
-        totalcount += data.length;
-        element.yearlyValue = totalcount;
-      }
-    }
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-
-    log.log("Anasayfaya Hoşgeldiniz");
-
-    fetchFeedbackCategories();
-    filterRequestsByHours();
-    // filterRequestsByWeek();
-    // filterRequestsByMontly();
-    // filterRequestsByYear();
-
-    // -------*-----*------
-    fetchFeedbackStatus();
-    statusFilterRequestsByHours();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-    categoryList.clear();
-    log.log("Anasayfadan Çıktınız");
-  }
-
-  void updateSelectedIndex(int index) {
-    selectedIndex.value = index;
-
-    viewhourly.value = false;
-    viewweekly.value = false;
-    viewmontly.value = false;
-    viewyearly.value = false;
-    if (index == 0) {
-      viewhourly.value = true;
-    } else if (index == 1) {
-      viewweekly.value = true;
-    } else if (index == 2) {
-      viewhourly.value = true;
-    } else if (index == 3) {
-      viewmontly.value = true;
-    } else if (index == 4) {
-      viewyearly.value = true;
-    }
-  }
-
-  void updateTimeSelectedIndex(int index) {
-    selectedTimeIndex.value = index;
-    viewallforms.value = false;
-    viewrequestforms.value = false;
-    viewcomplainforms.value = false;
-    viewprojectstatment.value = false;
-    viewinfoforms.value = false;
-    viewihbar.value = false;
-    viewthanks.value = false;
-    if (index == 0) {
-      viewallforms.value = true;
-    } else if (index == 1) {
-      viewrequestforms.value = true;
-    } else if (index == 2) {
-      viewcomplainforms.value = true;
-    } else if (index == 3) {
-      viewprojectstatment.value = true;
-    } else if (index == 4) {
-      viewinfoforms.value = true;
-    } else if (index == 5) {
-      viewihbar.value = true;
-    } else if (index == 6) {
-      viewthanks.value = true;
     }
   }
 }

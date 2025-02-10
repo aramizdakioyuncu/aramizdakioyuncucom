@@ -36,6 +36,316 @@ class BodyWidget {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppbarWidget.costum1(context, scaffoldKey),
+      drawer: Padding(
+        padding:
+            const EdgeInsets.only(top: 105), // Burada margin-top etkisi sağlar
+
+        child: Drawer(
+          backgroundColor: Colors.black,
+          child: Column(
+            children: [
+              ExpansionTile(
+                collapsedIconColor: Colors.white,
+                title: const Text(
+                  'Gruplar',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                children: [
+                  ListTile(
+                    onTap: () {
+                      Functions.gotoPage(
+                        "/gruplar/search/e-spor",
+                        getnavgiate: true,
+                      );
+                    },
+                    leading:
+                        const Icon(Icons.sports_esports, color: Colors.white),
+                    title: const Text(
+                      "E-spor",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Functions.gotoPage(
+                        "/gruplar/search/spor",
+                        getnavgiate: true,
+                      );
+                    },
+                    leading: const Icon(Icons.sports, color: Colors.white),
+                    title: const Text(
+                      "spor",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Functions.gotoPage(
+                        "/gruplar/search/yazilim-gelistirme",
+                        getnavgiate: true,
+                      );
+                    },
+                    leading: const Icon(Icons.engineering, color: Colors.white),
+                    title: const Text(
+                      "Yazılım & Geliştirme",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              ExpansionTile(
+                collapsedIconColor: Colors.white,
+                title: const Text(
+                  'Galeriler',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                children: [
+                  ListTile(
+                    onTap: () {
+                      Functions.gotoPage(
+                        "/galeriler/american-truck-simulator",
+                        getnavgiate: true,
+                      );
+                    },
+                    leading:
+                        const Icon(Icons.sports_esports, color: Colors.white),
+                    title: const Text(
+                      "American Truck Simulator",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Functions.gotoPage(
+                        "/galeriler/asseto-corsa",
+                        getnavgiate: true,
+                      );
+                    },
+                    leading: const Icon(Icons.sports, color: Colors.white),
+                    title: const Text(
+                      "Assetto Corsa",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Functions.gotoPage(
+                        "/galeriler/euro-truck-simulator-2",
+                        getnavgiate: true,
+                      );
+                    },
+                    leading: const Icon(Icons.engineering, color: Colors.white),
+                    title: const Text(
+                      "Euro Truck Simulator 2",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              ListTile(
+                onTap: () {
+                  Functions.gotoPage(
+                    "/haberler/",
+                    getnavgiate: true,
+                  );
+                },
+                title: const Text(
+                  "Haberler",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              ExpansionTile(
+                collapsedIconColor: Colors.white,
+                title: const Text(
+                  'Ekibimiz',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                children: [
+                  ListTile(
+                    onTap: () {
+                      Functions.gotoPage(
+                        "/ekibimiz/ekibimiz",
+                        getnavgiate: true,
+                      );
+                    },
+                    title: const Text(
+                      "Ekibimiz",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Functions.gotoPage(
+                        "/ekibimiz/okul-temsilcileri",
+                        getnavgiate: true,
+                      );
+                    },
+                    leading: const Icon(Icons.school, color: Colors.white),
+                    title: const Text(
+                      "Okul Temsilcileri",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Functions.gotoPage(
+                        "/kurallarimiz",
+                        getnavgiate: true,
+                      );
+                    },
+                    leading: const Icon(Icons.rule, color: Colors.white),
+                    title: const Text(
+                      "Kurallarımız",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Functions.gotoPage(
+                        "/hakkimizda",
+                        getnavgiate: true,
+                      );
+                    },
+                    leading: const Icon(Icons.info, color: Colors.white),
+                    title: const Text(
+                      "Hakkımızda",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Functions.gotoPage(
+                        "/gizlilik-politikasi",
+                        getnavgiate: true,
+                      );
+                    },
+                    leading:
+                        const Icon(Icons.file_copy_sharp, color: Colors.white),
+                    title: const Text(
+                      "Gizlilik Politikası",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              ListTile(
+                onTap: () {
+                  Functions.gotoPage(
+                    "/gizlilik-politikasi",
+                    getnavgiate: true,
+                  );
+                },
+                title: const Text(
+                  "Çekilişler",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  Functions.gotoPage(
+                    "/gizlilik-politikasi",
+                    getnavgiate: true,
+                  );
+                },
+                title: const Text(
+                  "Forum",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  Functions.gotoPage(
+                    "/gizlilik-politikasi",
+                    getnavgiate: true,
+                  );
+                },
+                title: const Text(
+                  "Modlar",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  Functions.gotoPage(
+                    "/etkinlikler",
+                    getnavgiate: true,
+                  );
+                },
+                title: const Text(
+                  "Etkinlikler",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  Functions.gotoPage(
+                    "/magaza",
+                    getnavgiate: true,
+                  );
+                },
+                title: const Text(
+                  "Mağaza",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  Functions.gotoPage(
+                    "/projeler",
+                    getnavgiate: true,
+                  );
+                },
+                title: const Text(
+                  "Projeler",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       endDrawer: Applist.currentUser.value == null
           ? const Drawer()
           : Drawer(
@@ -90,6 +400,7 @@ class BodyWidget {
                           onTap: () {
                             final username =
                                 Applist.currentUser.value!.userName!;
+
                             Functions.gotoPage(
                               "/oyuncular/$username/bildirilerim",
                               getnavgiate: true,
@@ -106,21 +417,22 @@ class BodyWidget {
                           textColor: Colors.white,
                           onTap: () {},
                         ),
-                        ListTile(
-                          leading: const FaIcon(
-                            FontAwesomeIcons.userSecret,
-                            color: Colors.white,
+                        if (Applist.currentUser.value!.role!.roleID == 1)
+                          ListTile(
+                            leading: const FaIcon(
+                              FontAwesomeIcons.userSecret,
+                              color: Colors.white,
+                            ),
+                            title: const Text('Yönetim Paneli'),
+                            tileColor: Colors.black,
+                            textColor: Colors.white,
+                            onTap: () {
+                              Functions.gotoPage(
+                                "/controlpanel",
+                                getnavgiate: true,
+                              );
+                            },
                           ),
-                          title: const Text('Yönetim Paneli'),
-                          tileColor: Colors.black,
-                          textColor: Colors.white,
-                          onTap: () {
-                            Functions.gotoPage(
-                              "/controlpanel",
-                              getnavgiate: true,
-                            );
-                          },
-                        ),
                         ListTile(
                           leading: const FaIcon(
                             FontAwesomeIcons.chartSimple,
@@ -234,21 +546,29 @@ class BodyWidget {
             children: [
               Stack(
                 children: [
-                  Obx(
-                    () => CachedNetworkImage(
-                      imageUrl: bgImage!.value,
-                      fit: BoxFit.cover,
-                      width: Get.width,
-                      height: Get.height,
-                    ),
-                  ),
+                  MediaQuery.of(context).size.width < 1000
+                      ? SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                        )
+                      : Obx(
+                          () => CachedNetworkImage(
+                            imageUrl: bgImage!.value,
+                            fit: BoxFit.cover,
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                          ),
+                        ),
                   SingleChildScrollView(
                     controller: scrollController.value,
                     child: Column(
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: fullWidth ? 0.0 : Get.width * 0.080,
+                            horizontal: fullWidth ||
+                                    MediaQuery.of(context).size.width < 1000
+                                ? 0.0
+                                : MediaQuery.of(context).size.width * 0.080,
                           ),
                           child: Container(
                             color: transparentBody
