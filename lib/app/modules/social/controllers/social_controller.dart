@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:aramizdakioyuncucom/app/models/user.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/search/search_hashtaglist.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/foreign_currency_list.dart';
@@ -11,6 +10,7 @@ import 'package:armoyu_services/core/models/ARMOYU/API/utils/super_lig.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/Story/storylist.dart';
+import 'package:armoyu_widgets/data/models/user.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

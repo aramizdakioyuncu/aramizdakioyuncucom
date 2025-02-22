@@ -1,6 +1,6 @@
 import 'package:aramizdakioyuncucom/app/models/feedbacks_category_model.dart';
 import 'package:aramizdakioyuncucom/app/models/status_model.dart';
-import 'package:aramizdakioyuncucom/app/models/user.dart';
+import 'package:armoyu_widgets/data/models/user.dart';
 
 class AppRequest {
   final int id;

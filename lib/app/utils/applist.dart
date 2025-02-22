@@ -1,4 +1,4 @@
-import 'package:aramizdakioyuncucom/app/models/user.dart';
+import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 class Applist {

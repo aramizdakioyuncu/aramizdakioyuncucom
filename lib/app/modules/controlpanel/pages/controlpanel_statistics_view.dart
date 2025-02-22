@@ -115,7 +115,7 @@ class ControlpanelStatisticsView extends StatelessWidget {
 
                                 LineBarSpot spot = entry.value; // Spot'u al
 
-                                int indexval = spot.x.round();
+                                // int indexval = spot.x.round();
                                 String title = "";
                                 Color? color;
                                 // barIndex'e göre uygun başlığı seç

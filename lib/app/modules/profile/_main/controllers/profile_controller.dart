@@ -1,15 +1,15 @@
 import 'dart:developer';
 
-import 'package:aramizdakioyuncucom/app/models/game.dart';
-import 'package:aramizdakioyuncucom/app/models/socailaccounts.dart';
-import 'package:aramizdakioyuncucom/app/models/user.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/country.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/game.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/province.dart';
 
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/login&register&password/login.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
+import 'package:armoyu_widgets/data/models/socailaccounts.dart';
+import 'package:armoyu_widgets/data/models/user.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -78,6 +78,7 @@ class ProfileController extends GetxController
       for (PopularGame game in response.response!.popularGames!) {
         populargamelist.add(
           Game(
+            gameType: "",
             gameID: game.gameID!,
             name: game.gameName!,
             logo: Media(
@@ -118,33 +119,53 @@ class ProfileController extends GetxController
       userName: Rx(response.response!.username!),
       displayName: Rx<String>(response.response!.displayName!),
       xp: Rx<String>(response.response!.levelXP!),
-      aboutme: Rx(response.response!.detailInfo!.about!),
-      registerDate: Rxn(response.response!.registeredDate),
+      detailInfo: Rxn(
+        response.response!.detailInfo == null
+            ? null
+            : UserDetailInfo(
+                about: Rxn(response.response!.detailInfo!.about),
+                age: Rxn(response.response!.detailInfo!.age),
+                email: Rxn(response.response!.detailInfo!.email),
+                friends: Rxn(response.response!.detailInfo!.friends),
+                posts: Rxn(response.response!.detailInfo!.posts),
+                awards: Rxn(response.response!.detailInfo!.awards),
+                phoneNumber: Rxn(response.response!.detailInfo!.phoneNumber),
+                birthdayDate: Rxn(response.response!.detailInfo!.birthdayDate),
+                inviteCode: Rxn(response.response!.detailInfo!.inviteCode),
+                lastloginDate:
+                    Rxn(response.response!.detailInfo!.lastloginDate),
+                lastloginDateV2:
+                    Rxn(response.response!.detailInfo!.lastloginDateV2),
+                lastfailedDate:
+                    Rxn(response.response!.detailInfo!.lastfailedDate),
+                country: Rxn(
+                  Country(
+                    countryID:
+                        response.response!.detailInfo!.country!.countryID,
+                    name: response.response!.detailInfo!.country!.name,
+                    countryCode: response.response!.detailInfo!.country!.code,
+                    phoneCode:
+                        response.response!.detailInfo!.country!.phonecode,
+                  ),
+                ),
+                province: Rxn(
+                  Province(
+                    provinceID:
+                        response.response!.detailInfo!.province!.provinceID,
+                    name: response.response!.detailInfo!.province!.name,
+                    plateCode:
+                        response.response!.detailInfo!.province!.platecode,
+                    phoneCode:
+                        response.response!.detailInfo!.province!.phonecode,
+                  ),
+                ),
+              ),
+      ),
       burc: Rx(response.response!.burc!),
       popularGames: RxList<Game>(populargamelist),
-      country: response.response!.detailInfo!.country == null
-          ? null
-          : Rx(
-              Country(
-                countryID: response.response!.detailInfo!.country!.countryID,
-                name: response.response!.detailInfo!.country!.name,
-                countryCode: response.response!.detailInfo!.country!.code,
-                phoneCode: response.response!.detailInfo!.country!.phonecode,
-              ),
-            ),
-      province: response.response!.detailInfo!.province == null
-          ? null
-          : Rx(
-              Province(
-                provinceID: response.response!.detailInfo!.province!.provinceID,
-                name: response.response!.detailInfo!.province!.name,
-                plateCode: response.response!.detailInfo!.province!.platecode,
-                phoneCode: response.response!.detailInfo!.province!.phonecode,
-              ),
-            ),
       socialaccounts: response.response!.socailAccounts == null
           ? null
-          : Rxn<Socialaccounts>(
+          : Rx<Socialaccounts>(
               Socialaccounts(
                 facebook:
                     Rxn<String>(response.response!.socailAccounts!.facebook),

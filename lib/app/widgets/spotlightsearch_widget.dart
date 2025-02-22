@@ -2,14 +2,15 @@ import 'dart:developer';
 
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
-import 'package:armoyu_services/core/models/ARMOYU/user.dart' as servicemodel;
+import 'package:armoyu_services/core/models/ARMOYU/API/search/search_list.dart';
+import 'package:armoyu_widgets/sources/searchbar/searchbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SpotlightSearchWidget {
   static void showSpotlightDialog(BuildContext context) {
-    final filteredItemsv2 = <servicemodel.User>[].obs;
-    final allItemsv2 = <servicemodel.User>[].obs;
+    final filteredItemsv2 = <APISearchDetail>[].obs;
+    final allItemsv2 = <APISearchDetail>[].obs;
     var search = SearchController().obs;
 
     showDialog(
@@ -32,11 +33,23 @@ class SpotlightSearchWidget {
                     filteredItems: filteredItemsv2,
                     searchController: search.value,
                     autofocus: true,
-                    itemSelected: (id, val, username) {
+                    itemSelected: (id, val, username, type) {
                       log(id.toString());
                       log(val.toString());
-                      // Get.toNamed("/home"),
-                      Functions.gotoPage("/oyuncular/$username");
+                      log(username.toString());
+                      log(type.toString());
+                      if (type == ARMOYUSearchType.group) {
+                        Functions.gotoPage(
+                          "/gruplar/$username",
+                          getnavgiate: true,
+                        );
+                        return;
+                      }
+
+                      Functions.gotoPage(
+                        "/oyuncular/$username",
+                        getnavgiate: true,
+                      );
                     },
                   ),
                 ],

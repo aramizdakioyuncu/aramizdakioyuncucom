@@ -61,9 +61,7 @@ class GroupdetailController extends GetxController {
           minURL: Rx(response.response!.groupBanner.minURL),
         ),
       ),
-
       groupName: response.response!.groupName,
-      // groupUsers: response.response!
     );
 
     bgwallpaper.value = response.response!.groupBanner.minURL;

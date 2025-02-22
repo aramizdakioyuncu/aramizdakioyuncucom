@@ -1,14 +1,11 @@
 import 'dart:developer';
 
-import 'package:aramizdakioyuncucom/app/models/user.dart';
-import 'package:armoyu_widgets/data/models/ARMOYU/media.dart' as widgetmedia;
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
-import 'package:armoyu_widgets/data/models/ARMOYU/role.dart';
-import 'package:armoyu_widgets/data/models/user.dart' as widgetuser;
 
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
+import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -41,45 +38,19 @@ class Functions {
   static void cookiesetup() {
     if (Functions.box.read('currentUser') != null &&
         Functions.box.read('userTOKEN') != null) {
-      Applist.currentUser.value = User.fromJson(
-        Functions.box.read('currentUser'),
-      );
+      try {
+        Applist.currentUser.value = User.fromJson(
+          Functions.box.read('currentUser'),
+        );
+      } catch (e) {
+        log(e.toString());
+        return;
+      }
 
       String userToken = Functions.box.read('userTOKEN');
       ARMOYU.widget.accountController.changeUser(
         UserAccounts(
-          user: widgetuser.User(
-            userID: Applist.currentUser.value!.userID,
-            displayName: Rx(Applist.currentUser.value!.displayName!.value),
-            userName: Rx(Applist.currentUser.value!.userName!.value),
-            avatar: widgetmedia.Media(
-              mediaID: Applist.currentUser.value!.avatar!.mediaID,
-              mediaURL: widgetmedia.MediaURL(
-                bigURL: Rx(
-                    Applist.currentUser.value!.avatar!.mediaURL.bigURL.value),
-                normalURL: Rx(Applist
-                    .currentUser.value!.avatar!.mediaURL.normalURL.value),
-                minURL: Rx(
-                    Applist.currentUser.value!.avatar!.mediaURL.minURL.value),
-              ),
-            ),
-            banner: widgetmedia.Media(
-              mediaID: Applist.currentUser.value!.banner!.mediaID,
-              mediaURL: widgetmedia.MediaURL(
-                bigURL: Rx(
-                    Applist.currentUser.value!.banner!.mediaURL.bigURL.value),
-                normalURL: Rx(Applist
-                    .currentUser.value!.banner!.mediaURL.normalURL.value),
-                minURL: Rx(
-                    Applist.currentUser.value!.banner!.mediaURL.minURL.value),
-              ),
-            ),
-            role: Role(
-              roleID: Applist.currentUser.value!.role!.roleID,
-              name: Applist.currentUser.value!.role!.name,
-              color: Applist.currentUser.value!.role!.color,
-            ),
-          ).obs,
+          user: Rx(Applist.currentUser.value!),
           sessionTOKEN: userToken.obs,
           language: Rxn("tr TR"),
         ),
@@ -157,33 +128,8 @@ class Functions {
       return false;
     }
 
-    Applist.currentUser.value = User(
-        userID: response.response!.playerID!,
-        userName: Rx<String>(username),
-        password: Rx<String>(password),
-        displayName: Rx<String>(response.response!.displayName!),
-        avatar: Media(
-          mediaID: response.response!.avatar!.mediaID,
-          mediaURL: MediaURL(
-            bigURL: Rx<String>(response.response!.avatar!.mediaURL.bigURL),
-            normalURL:
-                Rx<String>(response.response!.avatar!.mediaURL.normalURL),
-            minURL: Rx<String>(response.response!.avatar!.mediaURL.minURL),
-          ),
-        ),
-        banner: Media(
-          mediaID: response.response!.banner!.mediaID,
-          mediaURL: MediaURL(
-            bigURL: Rx<String>(response.response!.banner!.mediaURL.bigURL),
-            normalURL:
-                Rx<String>(response.response!.banner!.mediaURL.normalURL),
-            minURL: Rx<String>(response.response!.banner!.mediaURL.minURL),
-          ),
-        ),
-        role: Role(
-            roleID: response.response!.roleID!,
-            name: response.response!.roleName!,
-            color: response.response!.roleColor!));
+    Applist.currentUser.value = User.apilogintoUser(response.response!);
+    log(Applist.currentUser.value!.toJson().toString());
     box.write('userTOKEN', response.result.description);
     box.write('currentUser', Applist.currentUser.toJson());
 
