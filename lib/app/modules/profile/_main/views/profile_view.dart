@@ -13,7 +13,9 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ProfileController());
+    final profileUsername = Get.parameters['username'];
+
+    final controller = Get.put(ProfileController(), tag: profileUsername);
 
     return BodyWidget.custom1(
       context,
@@ -58,8 +60,7 @@ class ProfileView extends StatelessWidget {
                             decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black
-                                      .withOpacity(0.3), // Gölgenin rengi
+                                  color: Colors.black.withValues(alpha: 0.3),
                                   offset:
                                       const Offset(4, 4), // Gölgenin kayması
                                   blurRadius: 6, // Gölgenin bulanıklığı

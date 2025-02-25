@@ -53,12 +53,12 @@ class ForumdetailView extends StatelessWidget {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: Colors.blue.withOpacity(0.5),
+                                  color: Colors.blue.withValues(alpha: 0.5),
                                   width: 2,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.blue.withOpacity(0.3),
+                                    color: Colors.blue.withValues(alpha: 0.5),
                                     blurRadius: 10, // Yumuşatma efekti
                                     spreadRadius: 1,
                                   ),

@@ -67,7 +67,7 @@ class EventsView extends StatelessWidget {
                               bottom: 0,
                               left: 0,
                               child: Container(
-                                color: Colors.black.withOpacity(0.8),
+                                color: Colors.black.withValues(alpha: 0.8),
                                 child: const Padding(
                                   padding: EdgeInsets.all(3.0),
                                   child: Text(
@@ -85,7 +85,7 @@ class EventsView extends StatelessWidget {
                               right: 0,
                               child: Container(
                                 color: const Color.fromARGB(255, 0, 204, 255)
-                                    .withOpacity(0.8),
+                                    .withValues(alpha: 0.8),
                                 child: const Padding(
                                   padding: EdgeInsets.all(3.0),
                                   child: Text(

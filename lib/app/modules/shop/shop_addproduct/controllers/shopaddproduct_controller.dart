@@ -51,9 +51,9 @@ class ShopaddproductController extends GetxController {
     visibleCategories.value = visibleCategories.sublist(0, level + 1);
 
     // Diğer tüm kategorilerin seçimini sıfırla
-    visibleCategories[level].forEach((item) {
+    for (var item in visibleCategories[level]) {
       item['isSelected'] = false;
-    });
+    }
 
     // Seçilen kategoriyi işaretle
     category['isSelected'] = true;

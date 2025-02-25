@@ -29,7 +29,7 @@ class RulesView extends StatelessWidget {
                         child: Material(
                           color: Colors.transparent,
                           child: ListTile(
-                            tileColor: Colors.red.withOpacity(0.5),
+                            tileColor: Colors.red.withValues(alpha: 0.5),
                             leading: const Icon(Icons.warning),
                             title: Text(
                                 "${rulesINFO.ruleId} ${rulesINFO.content}"),

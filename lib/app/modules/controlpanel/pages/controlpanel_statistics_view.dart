@@ -189,8 +189,8 @@ class ControlpanelStatisticsView extends StatelessWidget {
                               dotData: const FlDotData(show: true),
                               belowBarData: BarAreaData(
                                 show: true,
-                                color:
-                                    chartINFO.category.color.withOpacity(0.2),
+                                color: chartINFO.category.color
+                                    .withValues(alpha: 0.2),
                               ),
                             );
                           },

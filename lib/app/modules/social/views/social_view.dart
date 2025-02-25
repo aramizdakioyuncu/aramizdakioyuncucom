@@ -710,8 +710,17 @@ class SocialView extends StatelessWidget {
                                                 (index) {
                                                   return ListTile(
                                                     onTap: () {
+                                                      final username =
+                                                          controller
+                                                              .newregisteredList
+                                                              .value![index]
+                                                              .userName
+                                                              .toString()
+                                                              .split("/")[4];
                                                       Functions.gotoPage(
-                                                          "${controller.newregisteredList.value![index].userName}");
+                                                        "/oyuncular/$username",
+                                                        getnavgiate: true,
+                                                      );
                                                     },
                                                     contentPadding:
                                                         const EdgeInsets.all(0),
@@ -770,7 +779,7 @@ class SocialView extends StatelessWidget {
                         const SizedBox(height: 5),
                         Container(
                           height: 300,
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withValues(alpha: 0.5),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Obx(
@@ -846,7 +855,7 @@ class SocialView extends StatelessWidget {
                         const SizedBox(height: 5),
                         Container(
                           height: 300,
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withValues(alpha: 0.5),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: SingleChildScrollView(

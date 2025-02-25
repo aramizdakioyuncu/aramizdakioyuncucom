@@ -74,7 +74,7 @@ class ShopdetailView extends StatelessWidget {
                               height: 40,
                               width: 50,
                               child: Padding(
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 child: Center(
                                   child: Obx(
                                     () => Text(
