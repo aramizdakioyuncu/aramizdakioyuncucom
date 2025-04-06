@@ -29,7 +29,7 @@ class BodyController extends GetxController {
 
   fetchmygroup() async {
     APIMyGroupListResponse response =
-        await ARMOYU.service.utilsServices.myGroups();
+        await ARMOYU.service.profileServices.myGroups();
 
     if (!response.result.status) {
       return;

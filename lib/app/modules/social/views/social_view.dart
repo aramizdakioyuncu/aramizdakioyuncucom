@@ -629,7 +629,12 @@ class SocialView extends StatelessWidget {
                       context: context,
                       scrollController: ScrollController(),
                       shrinkWrap: true,
-                      profileFunction: (userID, username) {
+                      profileFunction: (
+                          {required avatar,
+                          required banner,
+                          required displayname,
+                          required userID,
+                          required username}) {
                         Get.toNamed("/oyuncular/$username");
                       },
                     ),

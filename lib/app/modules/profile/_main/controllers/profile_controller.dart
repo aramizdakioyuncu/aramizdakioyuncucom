@@ -44,7 +44,12 @@ class ProfileController extends GetxController
       context: Get.context!,
       shrinkWrap: true,
       userID: profileInfo.value!.userID,
-      profileFunction: (userID, username) {},
+      profileFunction: (
+          {required avatar,
+          required banner,
+          required displayname,
+          required userID,
+          required username}) {},
     );
 
     widget2.value = ARMOYU.widget.gallery.mediaGallery(
@@ -57,7 +62,12 @@ class ProfileController extends GetxController
       shrinkWrap: true,
       userID: profileInfo.value!.userID,
       category: "etiketlenmis",
-      profileFunction: (userID, username) {},
+      profileFunction: (
+          {required avatar,
+          required banner,
+          required displayname,
+          required userID,
+          required username}) {},
     );
   }
 
@@ -83,6 +93,7 @@ class ProfileController extends GetxController
             name: game.gameName!,
             logo: Media(
               mediaID: game.gameLogo!.mediaID,
+              mediaType: MediaType.image,
               mediaURL: MediaURL(
                 bigURL: Rx(game.gameLogo!.mediaURL.bigURL),
                 normalURL: Rx(game.gameLogo!.mediaURL.normalURL),
@@ -103,6 +114,7 @@ class ProfileController extends GetxController
             displayName: Rx(friend.oyuncuKullaniciAdi),
             avatar: Media(
               mediaID: 0,
+              mediaType: MediaType.image,
               mediaURL: MediaURL(
                 bigURL: Rx(friend.oyuncuMinnakAvatar.bigURL),
                 normalURL: Rx(friend.oyuncuMinnakAvatar.normalURL),
@@ -186,6 +198,7 @@ class ProfileController extends GetxController
           ? null
           : Media(
               mediaID: response.response!.avatar!.mediaID,
+              mediaType: MediaType.image,
               mediaURL: MediaURL(
                 bigURL: Rx<String>(response.response!.avatar!.mediaURL.bigURL),
                 normalURL:
@@ -197,6 +210,7 @@ class ProfileController extends GetxController
           ? null
           : Media(
               mediaID: response.response!.banner!.mediaID,
+              mediaType: MediaType.image,
               mediaURL: MediaURL(
                 bigURL: Rx<String>(response.response!.banner!.mediaURL.bigURL),
                 normalURL:
@@ -208,6 +222,7 @@ class ProfileController extends GetxController
           ? null
           : Media(
               mediaID: response.response!.banner!.mediaID,
+              mediaType: MediaType.image,
               mediaURL: MediaURL(
                 bigURL: Rx<String>(response.response!.banner!.mediaURL.bigURL),
                 normalURL:

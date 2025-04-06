@@ -135,6 +135,7 @@ class SocialController extends GetxController {
           userName: Rx(element.oyuncuKullaniciAdi),
           avatar: Media(
             mediaID: element.oyuncuID,
+            mediaType: MediaType.image,
             mediaURL: MediaURL(
               bigURL: Rx(element.oyuncuAvatar),
               normalURL: Rx(element.oyuncuAvatar),
@@ -200,6 +201,7 @@ class SocialController extends GetxController {
           userName: Rx(element.oyuncuKullaniciAdi),
           avatar: Media(
             mediaID: element.oyuncuID,
+            mediaType: MediaType.image,
             mediaURL: MediaURL(
               bigURL: Rx(element.oyuncuAvatar),
               normalURL: Rx(element.oyuncuAvatar),
@@ -237,6 +239,7 @@ class SocialController extends GetxController {
           displayName: Rx(element.displayname),
           avatar: Media(
             mediaID: 0,
+            mediaType: MediaType.image,
             mediaURL: MediaURL(
               bigURL: Rx(element.avatar.minURL),
               normalURL: Rx(element.avatar.normalURL),

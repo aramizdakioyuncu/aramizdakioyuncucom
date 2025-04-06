@@ -101,6 +101,7 @@ class Functions {
           displayName: Rx<String>(element.username!),
           avatar: Media(
             mediaID: 0,
+            mediaType: MediaType.image,
             mediaURL: MediaURL(
               bigURL: Rx<String>(element.avatar!),
               normalURL: Rx<String>(element.avatar!),

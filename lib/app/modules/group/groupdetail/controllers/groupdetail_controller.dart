@@ -47,6 +47,7 @@ class GroupdetailController extends GetxController {
       description: response.response!.groupDescription,
       groupLogo: Media(
         mediaID: response.response!.groupID,
+        mediaType: MediaType.image,
         mediaURL: MediaURL(
           bigURL: Rx(response.response!.groupLogo.bigURL),
           normalURL: Rx(response.response!.groupLogo.normalURL),
@@ -55,6 +56,7 @@ class GroupdetailController extends GetxController {
       ),
       groupBanner: Media(
         mediaID: response.response!.groupID,
+        mediaType: MediaType.image,
         mediaURL: MediaURL(
           bigURL: Rx(response.response!.groupBanner.bigURL),
           normalURL: Rx(response.response!.groupBanner.normalURL),
@@ -86,6 +88,7 @@ class GroupdetailController extends GetxController {
         User(
           avatar: Media(
             mediaID: element.userID,
+            mediaType: MediaType.image,
             mediaURL: MediaURL(
               bigURL: Rx(element.avatar.bigURL),
               normalURL: Rx(element.avatar.normalURL),

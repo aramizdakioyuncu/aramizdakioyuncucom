@@ -98,8 +98,8 @@ class ChatWidget {
                               child: chatcalling!.value == true
                                   ? ARMOYU.widget.chat.chatcallWidget(
                                       context,
-                                      chat: chatdetail,
-                                      onClose: (chat) {
+                                      user: chatdetail.user,
+                                      onClose: () {
                                         chatcalling.value = false;
                                       },
                                       speaker: (value) {
