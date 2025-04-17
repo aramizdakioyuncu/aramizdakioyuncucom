@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/modules/profile/_main/controllers/profile_controller.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
@@ -477,7 +478,8 @@ class ProfileView extends StatelessWidget {
                                             () => controller.tabControllerIndex
                                                         .value ==
                                                     0
-                                                ? controller.widget.value!
+                                                ? controller
+                                                    .widgetPosts.widget.value!
                                                 : Container(),
                                           ),
                                           Obx(
@@ -491,7 +493,8 @@ class ProfileView extends StatelessWidget {
                                             () => controller.tabControllerIndex
                                                         .value ==
                                                     2
-                                                ? controller.widget3.value!
+                                                ? controller
+                                                    .widgetPosts3.widget.value!
                                                 : Container(),
                                           ),
                                         ],
@@ -555,7 +558,7 @@ class ProfileView extends StatelessWidget {
                                                     Colors.transparent,
                                                 foregroundImage:
                                                     CachedNetworkImageProvider(
-                                                  "https://aramizdakioyuncu.com/galeri/oyun-logolari/futboll.png",
+                                                  "${APIConstants.storageDomain}/galeri/oyun-logolari/futboll.png",
                                                 ),
                                               ),
                                             );
@@ -602,7 +605,7 @@ class ProfileView extends StatelessWidget {
                                                     Colors.transparent,
                                                 foregroundImage:
                                                     CachedNetworkImageProvider(
-                                                  "https://aramizdakioyuncu.com/galeri/gruplar/1gruplarlogominnak1655550694.png",
+                                                  "${APIConstants.storageDomain}/galeri/gruplar/1gruplarlogominnak1655550694.png",
                                                 ),
                                               ),
                                             );
@@ -621,7 +624,7 @@ class ProfileView extends StatelessWidget {
                                                     Colors.transparent,
                                                 foregroundImage:
                                                     CachedNetworkImageProvider(
-                                                  "https://aramizdakioyuncu.com/galeri/images/1orijinal23625_minnak16648326273.jpg",
+                                                  "${APIConstants.storageDomain}/galeri/images/1orijinal23625_minnak16648326273.jpg",
                                                 ),
                                               ),
                                             );
@@ -640,7 +643,7 @@ class ProfileView extends StatelessWidget {
                                                     Colors.transparent,
                                                 foregroundImage:
                                                     CachedNetworkImageProvider(
-                                                  "https://aramizdakioyuncu.com/galeri/okulresimleri/1logominnak1716379394.png",
+                                                  "${APIConstants.storageDomain}/galeri/okulresimleri/1logominnak1716379394.png",
                                                 ),
                                               ),
                                             );

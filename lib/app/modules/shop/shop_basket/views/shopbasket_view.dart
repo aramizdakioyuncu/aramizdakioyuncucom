@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/modules/shop/shop_widgets/shopappbar_widget.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -74,7 +75,7 @@ class ShopbasketView extends StatelessWidget {
                             child: Center(
                               child: CachedNetworkImage(
                                 imageUrl:
-                                    "https://aramizdakioyuncu.com/galeri/images/1ufaklik21672255178.png",
+                                    "${APIConstants.storageDomain}/galeri/images/1ufaklik21672255178.png",
                               ),
                             ),
                           ),
@@ -229,7 +230,7 @@ class ShopbasketView extends StatelessWidget {
                             child: CachedNetworkImage(
                               height: 80,
                               imageUrl:
-                                  "https://aramizdakioyuncu.com/galeri/odeme/shopier_logo.png",
+                                  "${APIConstants.storageDomain}/galeri/odeme/shopier_logo.png",
                               filterQuality: FilterQuality.high,
                             ),
                           ),
@@ -243,7 +244,7 @@ class ShopbasketView extends StatelessWidget {
                             child: CachedNetworkImage(
                               height: 80,
                               imageUrl:
-                                  "https://aramizdakioyuncu.com/galeri/odeme/dikdortgen-logo-paytr.jpg",
+                                  "${APIConstants.storageDomain}/galeri/odeme/dikdortgen-logo-paytr.jpg",
                               filterQuality: FilterQuality.high,
                             ),
                           ),

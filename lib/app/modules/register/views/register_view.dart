@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -15,7 +16,7 @@ class RegisterView extends StatelessWidget {
           children: [
             CachedNetworkImage(
               imageUrl:
-                  "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png",
+                  "${APIConstants.storageDomain}/galeri/ana-yapi/armoyu.png",
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

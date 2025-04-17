@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -26,7 +27,7 @@ class GalleryView extends StatelessWidget {
                       color: Colors.red,
                       image: DecorationImage(
                         image: CachedNetworkImageProvider(
-                          "https://aramizdakioyuncu.com/galeri/assetto-corsa/6orijinal16648322192.jpg",
+                          "${APIConstants.storageDomain}/galeri/assetto-corsa/6orijinal16648322192.jpg",
                         ),
                         fit: BoxFit.cover,
                       ),

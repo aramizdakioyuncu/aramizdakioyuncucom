@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -70,7 +71,7 @@ class RaffledetailView extends StatelessWidget {
                                             child: const CircleAvatar(
                                               foregroundImage:
                                                   CachedNetworkImageProvider(
-                                                "https://aramizdakioyuncu.com/galeri/profilresimleri/42profilresimminnak1689979489.jpg",
+                                                "${APIConstants.storageDomain}/galeri/profilresimleri/42profilresimminnak1689979489.jpg",
                                               ),
                                             ),
                                           ),

@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
@@ -16,7 +17,8 @@ class ReportsView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: CachedNetworkImage(
-            imageUrl: "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png",
+            imageUrl:
+                "${APIConstants.storageDomain}/galeri/ana-yapi/armoyu.png",
           ),
         ),
         Padding(

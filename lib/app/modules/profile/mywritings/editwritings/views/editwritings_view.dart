@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -69,7 +70,7 @@ class EditwritingsView extends StatelessWidget {
                     width: 200,
                     fit: BoxFit.cover,
                     imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/yazi/1posterminnak1715776167.jpg",
+                        "${APIConstants.storageDomain}/galeri/yazi/1posterminnak1715776167.jpg",
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),

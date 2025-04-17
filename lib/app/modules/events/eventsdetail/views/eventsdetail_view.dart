@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/modules/events/eventsdetail/controllers/eventdetail_controller.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
@@ -19,7 +20,7 @@ class EventsdetailView extends StatelessWidget {
     return BodyWidget.custom1(
       context,
       bgImage:
-          "https://aramizdakioyuncu.com/galeri/images/10632orijinal73025orijinal16648332426.jpg"
+          "${APIConstants.storageDomain}/galeri/images/10632orijinal73025orijinal16648332426.jpg"
               .obs,
       body: [
         Row(

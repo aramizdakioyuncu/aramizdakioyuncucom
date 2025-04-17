@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/modules/social/controllers/social_controller.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
@@ -471,7 +472,7 @@ class SocialView extends StatelessWidget {
                                 decoration: const BoxDecoration(
                                   image: DecorationImage(
                                       image: CachedNetworkImageProvider(
-                                        "https://aramizdakioyuncu.com/galeri/ana-yapi/tanitim/tanitim-minecraft.jpg",
+                                        "${APIConstants.storageDomain}/galeri/ana-yapi/tanitim/tanitim-minecraft.jpg",
                                       ),
                                       fit: BoxFit.cover),
                                 ),
@@ -495,7 +496,7 @@ class SocialView extends StatelessWidget {
                                           children: [
                                             CachedNetworkImage(
                                               imageUrl:
-                                                  "https://aramizdakioyuncu.com/galeri/oyun-logolari/minecraft.png",
+                                                  "${APIConstants.storageDomain}/galeri/oyun-logolari/minecraft.png",
                                             ),
                                             const Expanded(
                                               child: Text("mc.armoyu.com"),
@@ -575,7 +576,7 @@ class SocialView extends StatelessWidget {
                                   height: 25,
                                   width: 25,
                                   imageUrl:
-                                      "https://aramizdakioyuncu.com/galeri/ana-yapi/iconlar/galeriac.png",
+                                      "${APIConstants.storageDomain}/galeri/ana-yapi/iconlar/galeriac.png",
                                 ),
                               ),
                               Padding(
@@ -584,7 +585,7 @@ class SocialView extends StatelessWidget {
                                   height: 25,
                                   width: 25,
                                   imageUrl:
-                                      "https://aramizdakioyuncu.com/galeri/ana-yapi/iconlar/galeriurl.png",
+                                      "${APIConstants.storageDomain}/galeri/ana-yapi/iconlar/galeriurl.png",
                                 ),
                               ),
                               Padding(
@@ -593,7 +594,7 @@ class SocialView extends StatelessWidget {
                                   height: 25,
                                   width: 25,
                                   imageUrl:
-                                      "https://aramizdakioyuncu.com/galeri/ana-yapi/iconlar/videourl.png",
+                                      "${APIConstants.storageDomain}/galeri/ana-yapi/iconlar/videourl.png",
                                 ),
                               ),
                             ],
@@ -606,7 +607,7 @@ class SocialView extends StatelessWidget {
                                   height: 25,
                                   width: 25,
                                   imageUrl:
-                                      "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu64.png",
+                                      "${APIConstants.storageDomain}/galeri/ana-yapi/armoyu64.png",
                                 ),
                               ),
                               SelectableText(
@@ -625,26 +626,16 @@ class SocialView extends StatelessWidget {
                     ),
                     const SizedBox(height: 5),
                     ARMOYU.widget.social.widgetStorycircle(),
-                    ARMOYU.widget.social.posts(
-                      context: context,
-                      scrollController: ScrollController(),
-                      shrinkWrap: true,
-                      profileFunction: (
-                          {required avatar,
-                          required banner,
-                          required displayname,
-                          required userID,
-                          required username}) {
-                        Get.toNamed("/oyuncular/$username");
-                      },
-                    ),
+                    Obx(() => controller.posts.widget.value!),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: SizedBox(
                         width: double.infinity,
                         child: ARMOYU.widget.elevatedButton.costum1(
                           text: "DEVAMINI GETİR",
-                          onPressed: () {},
+                          onPressed: () async {
+                            await controller.posts.loadMore();
+                          },
                           loadingStatus: false,
                         ),
                       ),
@@ -932,7 +923,7 @@ class SocialView extends StatelessWidget {
                                   width: double.infinity,
                                   child: CachedNetworkImage(
                                     imageUrl:
-                                        "https://aramizdakioyuncu.com/galeri/yazi/1poster1715776167.jpg",
+                                        "${APIConstants.storageDomain}/galeri/yazi/1poster1715776167.jpg",
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -976,7 +967,7 @@ class SocialView extends StatelessWidget {
                                 ),
                                 CachedNetworkImage(
                                   imageUrl:
-                                      "https://aramizdakioyuncu.com/galeri/ana-yapi/google-play-logo.png",
+                                      "${APIConstants.storageDomain}/galeri/ana-yapi/google-play-logo.png",
                                   fit: BoxFit.cover,
                                 ),
                                 const Text(

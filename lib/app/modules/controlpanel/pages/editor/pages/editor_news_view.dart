@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +118,7 @@ class EditorNewsView extends StatelessWidget {
                             width: 200,
                             height: 100,
                             imageUrl:
-                                "https://aramizdakioyuncu.com/galeri/yazi/1ufaklik17325_.jpg",
+                                "${APIConstants.storageDomain}/galeri/yazi/1ufaklik17325_.jpg",
                           ),
                         ),
                       ),

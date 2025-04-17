@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -74,7 +75,7 @@ class ModView extends StatelessWidget {
                                   height: 100,
                                   width: 200,
                                   imageUrl:
-                                      "https://aramizdakioyuncu.com/galeri/images/1minnak11652557017.png",
+                                      "${APIConstants.storageDomain}/galeri/images/1minnak11652557017.png",
                                   fit: BoxFit.cover,
                                 ),
                                 const SizedBox(width: 10),
@@ -120,7 +121,7 @@ class ModView extends StatelessWidget {
                               children: [
                                 CachedNetworkImage(
                                   imageUrl:
-                                      "https://aramizdakioyuncu.com/galeri/steam/euro-truck-simulator-2.jpg",
+                                      "${APIConstants.storageDomain}/galeri/steam/euro-truck-simulator-2.jpg",
                                 ),
                                 const Text("Euro Truck Simulator 2"),
                               ],
@@ -145,7 +146,7 @@ class ModView extends StatelessWidget {
                               children: [
                                 CircleAvatar(
                                   foregroundImage: CachedNetworkImageProvider(
-                                    "https://aramizdakioyuncu.com/galeri/profilresimleri/1profilresimminnak1722033975.jpg",
+                                    "${APIConstants.storageDomain}/galeri/profilresimleri/1profilresimminnak1722033975.jpg",
                                   ),
                                 ),
                                 Text("Berkay TİKENOĞLU"),

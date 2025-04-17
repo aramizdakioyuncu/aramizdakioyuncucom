@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/modules/news/newsdetail/controllers/newsdetail_controller.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
@@ -153,7 +154,7 @@ class NewsdetailView extends StatelessWidget {
                               child: CachedNetworkImage(
                                 height: 100,
                                 imageUrl:
-                                    "https://aramizdakioyuncu.com/galeri/profilresimleri/1profilresim1734874339.jpg",
+                                    "${APIConstants.storageDomain}/galeri/profilresimleri/1profilresim1734874339.jpg",
                               ),
                             ),
                             const Expanded(

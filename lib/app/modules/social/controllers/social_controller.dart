@@ -11,6 +11,7 @@ import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/Story/storylist.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:armoyu_widgets/sources/social/bundle/posts_bundle.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -57,6 +58,9 @@ class SocialController extends GetxController {
   var xppopselected = true.obs;
 
   Rxn<Widget> storywidget = Rxn<Widget>(null);
+
+  late PostsWidgetBundle posts;
+
   @override
   void onInit() {
     super.onInit();
@@ -74,6 +78,20 @@ class SocialController extends GetxController {
         uri: Uri.parse(
             'https://discord.com/widget?id=269811924399685634&theme=dark'),
       ),
+    );
+
+    posts = ARMOYU.widget.social.posts(
+      context: Get.context!,
+      scrollController: ScrollController(),
+      shrinkWrap: true,
+      profileFunction: (
+          {required avatar,
+          required banner,
+          required displayname,
+          required userID,
+          required username}) {
+        Get.toNamed("/oyuncular/$username");
+      },
     );
   }
 

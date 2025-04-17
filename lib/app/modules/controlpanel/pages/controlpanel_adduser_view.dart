@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class ControlpanelAdduserView extends StatelessWidget {
                   height: 200,
                   width: 200,
                   imageUrl:
-                      "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png",
+                      "${APIConstants.storageDomain}/galeri/ana-yapi/armoyu.png",
                 ),
               ),
               Expanded(

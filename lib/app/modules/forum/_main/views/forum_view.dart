@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -52,7 +53,7 @@ class ForumView extends StatelessWidget {
                         return const ListTile(
                           leading: CircleAvatar(
                             foregroundImage: CachedNetworkImageProvider(
-                              "https://aramizdakioyuncu.com/galeri/profilresimleri/10962profilresimminnak1713689039.jpg",
+                              "${APIConstants.storageDomain}/galeri/profilresimleri/10962profilresimminnak1713689039.jpg",
                             ),
                           ),
                           title: Text(

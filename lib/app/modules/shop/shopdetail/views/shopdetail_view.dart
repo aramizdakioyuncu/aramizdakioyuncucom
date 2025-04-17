@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/modules/shop/shop_widgets/shopappbar_widget.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
@@ -24,7 +25,7 @@ class ShopdetailView extends StatelessWidget {
                     height: 200,
                     child: CachedNetworkImage(
                       imageUrl:
-                          "https://aramizdakioyuncu.com/galeri/images/1ufaklik21672255178.png",
+                          "${APIConstants.storageDomain}/galeri/images/1ufaklik21672255178.png",
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -40,7 +41,7 @@ class ShopdetailView extends StatelessWidget {
                             color: Colors.black,
                             child: CachedNetworkImage(
                               imageUrl:
-                                  "https://aramizdakioyuncu.com/galeri/images/1ufaklik21672255178.png",
+                                  "${APIConstants.storageDomain}/galeri/images/1ufaklik21672255178.png",
                             ),
                           ),
                         );
@@ -57,7 +58,7 @@ class ShopdetailView extends StatelessWidget {
                   const Text("2019-2020 ARMOYU Forma"),
                   CachedNetworkImage(
                     imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png",
+                        "${APIConstants.storageDomain}/galeri/ana-yapi/armoyu.png",
                   ),
                   const Text("ARMOYU - Topluluğu ve Grupları"),
                   const Text("600,00₺"),

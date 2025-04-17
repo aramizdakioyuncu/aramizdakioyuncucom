@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -332,7 +333,7 @@ class ControlpanelEventsView extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: CachedNetworkImage(
                                 imageUrl:
-                                    "https://aramizdakioyuncu.com/galeri/oyun-logolari/futboll.png",
+                                    "${APIConstants.storageDomain}/galeri/oyun-logolari/futboll.png",
                                 height: 50,
                                 width: 80,
                                 fit: BoxFit.contain,
@@ -352,7 +353,7 @@ class ControlpanelEventsView extends StatelessWidget {
                           children: [
                             CircleAvatar(
                               foregroundImage: CachedNetworkImageProvider(
-                                  "https://aramizdakioyuncu.com/galeri/profilresimleri/10377profilresimminnak1691610524.jpg"),
+                                  "${APIConstants.storageDomain}/galeri/profilresimleri/10377profilresimminnak1691610524.jpg"),
                             ),
                             SizedBox(width: 5),
                             Text(

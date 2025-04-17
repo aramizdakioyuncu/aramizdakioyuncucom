@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,7 @@ class RaffleView extends StatelessWidget {
                                     children: [
                                       CircleAvatar(
                                         foregroundImage: CachedNetworkImageProvider(
-                                            "https://aramizdakioyuncu.com/galeri/ana-yapi/sosyal-hesaplar/steam-logo.png"),
+                                            "${APIConstants.storageDomain}/galeri/ana-yapi/sosyal-hesaplar/steam-logo.png"),
                                       ),
                                       Text(
                                         'Yılbaşı Çekilişi',
@@ -74,7 +75,7 @@ class RaffleView extends StatelessWidget {
                                       CircleAvatar(
                                         foregroundImage:
                                             CachedNetworkImageProvider(
-                                          "https://aramizdakioyuncu.com/galeri/profilresimleri/42profilresimminnak1689979489.jpg",
+                                          "${APIConstants.storageDomain}/galeri/profilresimleri/42profilresimminnak1689979489.jpg",
                                         ),
                                       ),
                                       Text(
@@ -136,7 +137,7 @@ class RaffleView extends StatelessWidget {
                                       CircleAvatar(
                                         foregroundImage:
                                             CachedNetworkImageProvider(
-                                          "https://aramizdakioyuncu.com/galeri/profilresimleri/42profilresimminnak1689979489.jpg",
+                                          "${APIConstants.storageDomain}/galeri/profilresimleri/42profilresimminnak1689979489.jpg",
                                         ),
                                       ),
                                       Text(

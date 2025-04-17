@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +96,7 @@ class ControlpanelSchoolsView extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           foregroundImage: CachedNetworkImageProvider(
-                            "https://aramizdakioyuncu.com/galeri/okulresimleri/1logominnak1716379394.png",
+                            "${APIConstants.storageDomain}/galeri/okulresimleri/1logominnak1716379394.png",
                           ),
                         ),
                         SizedBox(width: 5),
@@ -130,7 +131,7 @@ class ControlpanelSchoolsView extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           foregroundImage: CachedNetworkImageProvider(
-                            "https://aramizdakioyuncu.com/galeri/okulresimleri/1logominnak1716379394.png",
+                            "${APIConstants.storageDomain}/galeri/okulresimleri/1logominnak1716379394.png",
                           ),
                         ),
                         SizedBox(width: 5),

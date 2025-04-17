@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -22,7 +23,7 @@ class AppWidget {
                 children: [
                   CachedNetworkImage(
                     imageUrl:
-                        "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png",
+                        "https://api.aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png",
                     height: 130,
                     width: 130,
                   ),
@@ -70,7 +71,7 @@ class AppWidget {
                                         width: 32,
                                         filterQuality: FilterQuality.high,
                                         imageUrl:
-                                            "https://aramizdakioyuncu.com/galeri/ana-yapi/facebook-logo.png",
+                                            "https://api.aramizdakioyuncu.com/galeri/ana-yapi/facebook-logo.png",
                                       ),
                                     ),
                                     const Spacer(),
@@ -79,7 +80,7 @@ class AppWidget {
                                       width: 32,
                                       filterQuality: FilterQuality.high,
                                       imageUrl:
-                                          "https://aramizdakioyuncu.com/galeri/ana-yapi/steam-logo.png",
+                                          "https://api.aramizdakioyuncu.com/galeri/ana-yapi/steam-logo.png",
                                     ),
                                     const Spacer(),
                                     CachedNetworkImage(
@@ -87,7 +88,7 @@ class AppWidget {
                                       width: 32,
                                       filterQuality: FilterQuality.high,
                                       imageUrl:
-                                          "https://aramizdakioyuncu.com/galeri/ana-yapi/apple-logo.png",
+                                          "https://api.aramizdakioyuncu.com/galeri/ana-yapi/apple-logo.png",
                                     ),
                                     const Spacer(),
                                     CachedNetworkImage(
@@ -298,13 +299,13 @@ class AppWidget {
                                   children: [
                                     CachedNetworkImage(
                                       imageUrl:
-                                          "https://aramizdakioyuncu.com/galeri/ana-yapi/bay.png",
+                                          "${APIConstants.storageDomain}/galeri/ana-yapi/bay.png",
                                       height: 100,
                                       width: 100,
                                     ),
                                     CachedNetworkImage(
                                       imageUrl:
-                                          "https://aramizdakioyuncu.com/galeri/ana-yapi/bayan.png",
+                                          "${APIConstants.storageDomain}/galeri/ana-yapi/bayan.png",
                                       height: 100,
                                       width: 100,
                                     ),

@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class EditorHomeView extends StatelessWidget {
                                       selectedIndex.value == index,
                                   leading: CachedNetworkImage(
                                     imageUrl:
-                                        "https://aramizdakioyuncu.com/galeri/steam/assetto-corsa.jpg",
+                                        "${APIConstants.storageDomain}/galeri/steam/assetto-corsa.jpg",
                                     width: 50,
                                     height: 50,
                                   ),
@@ -78,7 +79,7 @@ class EditorHomeView extends StatelessWidget {
                         CachedNetworkImage(
                           width: double.infinity,
                           imageUrl:
-                              "https://aramizdakioyuncu.com/galeri/haritalar/3haritalar1680457553.jpg",
+                              "${APIConstants.storageDomain}/galeri/haritalar/3haritalar1680457553.jpg",
                           fit: BoxFit.cover,
                         ),
                         ARMOYU.widget.elevatedButton.costum1(
@@ -98,7 +99,7 @@ class EditorHomeView extends StatelessWidget {
                         CachedNetworkImage(
                           width: double.infinity,
                           imageUrl:
-                              "https://aramizdakioyuncu.com/galeri/haritalar/3haritapist1680457797.jpg",
+                              "${APIConstants.storageDomain}/galeri/haritalar/3haritapist1680457797.jpg",
                           fit: BoxFit.cover,
                         ),
                         ARMOYU.widget.elevatedButton.costum1(
@@ -133,7 +134,7 @@ class EditorHomeView extends StatelessWidget {
                                       selectedIndex.value == index,
                                   leading: CachedNetworkImage(
                                     imageUrl:
-                                        "https://aramizdakioyuncu.com/galeri/markalar/13markalar1675208419.png",
+                                        "${APIConstants.storageDomain}/galeri/markalar/13markalar1675208419.png",
                                     width: 50,
                                     height: 50,
                                   ),
@@ -185,7 +186,7 @@ class EditorHomeView extends StatelessWidget {
                                       selectedIndex.value == index,
                                   leading: CachedNetworkImage(
                                     imageUrl:
-                                        "https://aramizdakioyuncu.com/galeri/ana-yapi/modeller/bilinmeyen-oto.png",
+                                        "${APIConstants.storageDomain}/galeri/ana-yapi/modeller/bilinmeyen-oto.png",
                                     width: 50,
                                     height: 50,
                                   ),
@@ -229,7 +230,7 @@ class EditorHomeView extends StatelessWidget {
                         CachedNetworkImage(
                           width: double.infinity,
                           imageUrl:
-                              "https://aramizdakioyuncu.com/galeri/markalar/13markalar1675208419.png",
+                              "${APIConstants.storageDomain}/galeri/markalar/13markalar1675208419.png",
                           fit: BoxFit.cover,
                         ),
                         ARMOYU.widget.elevatedButton.costum1(
@@ -249,7 +250,7 @@ class EditorHomeView extends StatelessWidget {
                         CachedNetworkImage(
                           width: double.infinity,
                           imageUrl:
-                              "https://aramizdakioyuncu.com/galeri/ana-yapi/modeller/bilinmeyen-oto.png",
+                              "${APIConstants.storageDomain}/galeri/ana-yapi/modeller/bilinmeyen-oto.png",
                           fit: BoxFit.cover,
                         ),
                         ARMOYU.widget.elevatedButton.costum1(

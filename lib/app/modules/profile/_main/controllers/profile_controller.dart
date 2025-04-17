@@ -10,6 +10,7 @@ import 'package:armoyu_services/core/models/ARMOYU/API/login&register&password/l
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/socailaccounts.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:armoyu_widgets/sources/social/bundle/posts_bundle.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,9 +22,11 @@ class ProfileController extends GetxController
   Rxn<TabController> tabController = Rxn<TabController>();
   Rx<int> tabControllerIndex = Rx<int>(0);
 
-  Rxn<Widget> widget = Rxn();
+  // Rxn<Widget> widget = Rxn();
+  late PostsWidgetBundle widgetPosts;
   Rxn<Widget> widget2 = Rxn();
-  Rxn<Widget> widget3 = Rxn();
+  late PostsWidgetBundle widgetPosts3;
+  // Rxn<Widget> widget3 = Rxn();
 
   RxString bgwallpaper = RxString("");
 
@@ -40,7 +43,7 @@ class ProfileController extends GetxController
     if (profileUsername != null) {
       await fetchuser(profileUsername);
     }
-    widget.value = ARMOYU.widget.social.posts(
+    widgetPosts = ARMOYU.widget.social.posts(
       context: Get.context!,
       shrinkWrap: true,
       userID: profileInfo.value!.userID,
@@ -57,7 +60,7 @@ class ProfileController extends GetxController
       userID: profileInfo.value!.userID,
     );
 
-    widget3.value = ARMOYU.widget.social.posts(
+    widgetPosts3 = ARMOYU.widget.social.posts(
       context: Get.context!,
       shrinkWrap: true,
       userID: profileInfo.value!.userID,

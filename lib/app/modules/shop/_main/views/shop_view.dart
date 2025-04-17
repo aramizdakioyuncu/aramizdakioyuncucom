@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/modules/shop/shop_widgets/shopappbar_widget.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
@@ -64,7 +65,7 @@ class ShopView extends StatelessWidget {
                           color: Colors.black,
                           child: CachedNetworkImage(
                             imageUrl:
-                                "https://aramizdakioyuncu.com/galeri/images/1ufaklik21672255178.png",
+                                "${APIConstants.storageDomain}/galeri/images/1ufaklik21672255178.png",
                           ),
                         ),
                         const Row(

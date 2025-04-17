@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class ForumdetailView extends StatelessWidget {
                             CircleAvatar(
                               radius: 60,
                               foregroundImage: CachedNetworkImageProvider(
-                                "https://aramizdakioyuncu.com/galeri/profilresimleri/10962profilresimufaklik1713689039.jpg",
+                                "${APIConstants.storageDomain}/galeri/profilresimleri/10962profilresimufaklik1713689039.jpg",
                                 scale: 2,
                               ),
                             ),

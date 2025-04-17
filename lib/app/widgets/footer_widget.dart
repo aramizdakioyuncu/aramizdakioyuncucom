@@ -118,7 +118,7 @@ class FooterWidget {
                                     flex: 2,
                                     child: CachedNetworkImage(
                                       imageUrl:
-                                          "https://aramizdakioyuncu.com/galeri/yazi/1posterminnak1715776167.jpg",
+                                          "https://api.aramizdakioyuncu.com/galeri/yazi/1posterminnak1715776167.jpg",
                                       width: double.infinity,
                                       height: 100,
                                       fit: BoxFit.cover,
@@ -234,7 +234,7 @@ class FooterWidget {
                           ),
                           // CachedNetworkImage(
                           //   imageUrl:
-                          //       "https://aramizdakioyuncu.com/galeri/ana-yapi/etbis.png",
+                          //       "${APIConstants.storageDomain}/galeri/ana-yapi/etbis.png",
                           //   height: 60,
                           //   width: 60,
                           // ),

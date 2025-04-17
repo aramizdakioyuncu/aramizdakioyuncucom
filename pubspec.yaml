@@ -20,7 +20,7 @@ dependencies:
   web_smooth_scroll: ^1.1.0
 
   armoyu_services: ^1.0.0+53
-  armoyu_widgets: ^1.0.0+46
+  armoyu_widgets: ^1.0.0+48
 
   get: ^4.6.6
   get_storage: ^2.1.1

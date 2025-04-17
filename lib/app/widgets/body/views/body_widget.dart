@@ -18,14 +18,14 @@ class BodyWidget {
     bool fullWidth = false,
     required List<Widget> body,
   }) {
-    // "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp"
-    // "https://aramizdakioyuncu.com/galeri/ana-yapi/anaarkaplan.jpg"
-    // "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp"
+    // "${APIConstants.storageDomain}/galeri/ana-yapi/anakisarkaplan.webp"
+    // "${APIConstants.storageDomain}/galeri/ana-yapi/anaarkaplan.jpg"
+    // "${APIConstants.storageDomain}/galeri/ana-yapi/anakisarkaplan.webp"
     bgImage ??= RxString(
-        "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp");
+        "https://api.aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp");
     if (bgImage.value == "") {
       bgImage.value =
-          "https://aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp";
+          "https://api.aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp";
     }
 
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

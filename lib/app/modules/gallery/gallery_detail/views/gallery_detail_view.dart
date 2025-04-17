@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/modules/gallery/gallery_detail/controllers/gallery_detail_controller.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
@@ -29,7 +30,7 @@ class GalleryDetailView extends StatelessWidget {
                         decoration: const BoxDecoration(
                           image: DecorationImage(
                             image: CachedNetworkImageProvider(
-                              "https://aramizdakioyuncu.com/galeri/images/1minnak31678774004.jpg",
+                              "${APIConstants.storageDomain}/galeri/images/1minnak31678774004.jpg",
                             ),
                             fit: BoxFit.cover,
                           ),

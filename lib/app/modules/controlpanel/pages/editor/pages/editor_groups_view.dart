@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,7 @@ class EditorGroupsView extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: CachedNetworkImage(
                           imageUrl:
-                              "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png",
+                              "${APIConstants.storageDomain}/galeri/ana-yapi/armoyu.png",
                         ),
                       ),
                     ),
@@ -111,7 +112,7 @@ class EditorGroupsView extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             foregroundImage: CachedNetworkImageProvider(
-                              "https://aramizdakioyuncu.com/galeri/profilresimleri/11107minnak1734823245.jpg",
+                              "${APIConstants.storageDomain}/galeri/profilresimleri/11107minnak1734823245.jpg",
                             ),
                           ),
                           SizedBox(width: 5),

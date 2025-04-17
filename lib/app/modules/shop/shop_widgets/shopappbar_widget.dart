@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,7 +19,7 @@ class ShopappbarWidget {
             },
             child: CachedNetworkImage(
               imageUrl:
-                  "https://aramizdakioyuncu.com/galeri/ana-yapi/logolar/armoyu-yemek.jpeg",
+                  "${APIConstants.storageDomain}/galeri/ana-yapi/logolar/armoyu-yemek.jpeg",
             ),
           ),
           title: ARMOYU.widget.textField.costum3(

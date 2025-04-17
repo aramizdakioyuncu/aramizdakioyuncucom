@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/modules/splash/controllers/splash_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class SplashView extends StatelessWidget {
           children: [
             CachedNetworkImage(
               imageUrl:
-                  "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu64.png",
+                  "${APIConstants.storageDomain}/galeri/ana-yapi/armoyu64.png",
             ),
             ElevatedButton(
               onPressed: controller.passSecurity,

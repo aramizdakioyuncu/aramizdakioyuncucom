@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class ModdetailView extends StatelessWidget {
                                       width: double.infinity,
                                       fit: BoxFit.cover,
                                       imageUrl:
-                                          "https://aramizdakioyuncu.com/galeri/images/1orijinal11652557017.png",
+                                          "${APIConstants.storageDomain}/galeri/images/1orijinal11652557017.png",
                                     ),
                                   ),
                                   Scrollbar(
@@ -51,35 +52,35 @@ class ModdetailView extends StatelessWidget {
                                             width: 200,
                                             fit: BoxFit.cover,
                                             imageUrl:
-                                                "https://aramizdakioyuncu.com/galeri/images/1orijinal11652557017.png",
+                                                "${APIConstants.storageDomain}/galeri/images/1orijinal11652557017.png",
                                           ),
                                           CachedNetworkImage(
                                             height: 100,
                                             width: 200,
                                             fit: BoxFit.cover,
                                             imageUrl:
-                                                "https://aramizdakioyuncu.com/galeri/images/1orijinal11652557017.png",
+                                                "${APIConstants.storageDomain}/galeri/images/1orijinal11652557017.png",
                                           ),
                                           CachedNetworkImage(
                                             height: 100,
                                             width: 200,
                                             fit: BoxFit.cover,
                                             imageUrl:
-                                                "https://aramizdakioyuncu.com/galeri/images/1orijinal11652557017.png",
+                                                "${APIConstants.storageDomain}/galeri/images/1orijinal11652557017.png",
                                           ),
                                           CachedNetworkImage(
                                             height: 100,
                                             width: 200,
                                             fit: BoxFit.cover,
                                             imageUrl:
-                                                "https://aramizdakioyuncu.com/galeri/images/1orijinal11652557017.png",
+                                                "${APIConstants.storageDomain}/galeri/images/1orijinal11652557017.png",
                                           ),
                                           CachedNetworkImage(
                                             height: 100,
                                             width: 200,
                                             fit: BoxFit.cover,
                                             imageUrl:
-                                                "https://aramizdakioyuncu.com/galeri/images/1orijinal11652557017.png",
+                                                "${APIConstants.storageDomain}/galeri/images/1orijinal11652557017.png",
                                           ),
                                         ],
                                       ),

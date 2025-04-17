@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -125,7 +126,7 @@ class IntroductionView extends StatelessWidget {
         },
       ),
       CachedNetworkImage(
-        imageUrl: "https://aramizdakioyuncu.com/galeri/tanitim/tanitim.jpg",
+        imageUrl: "${APIConstants.storageDomain}/galeri/tanitim/tanitim.jpg",
       ),
       Container(
         height: 120,

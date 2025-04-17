@@ -28,7 +28,7 @@ class AppbarWidget {
                 ),
                 child: CachedNetworkImage(
                   imageUrl:
-                      "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu64.png",
+                      "https://api.aramizdakioyuncu.com/galeri/ana-yapi/armoyu64.png",
                 ),
               ),
             ),
@@ -412,7 +412,7 @@ class AppbarWidget {
                                                                     .transparent,
                                                             foregroundImage:
                                                                 CachedNetworkImageProvider(
-                                                              "https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png",
+                                                              "https://api.aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png",
                                                             ),
                                                           ),
                                                         ),
