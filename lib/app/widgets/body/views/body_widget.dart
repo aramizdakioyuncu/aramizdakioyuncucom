@@ -585,10 +585,8 @@ class BodyWidget {
                   ),
                 ],
               ),
-
-              // controller.widgetchat.value ?? Container(),
-              // controller.widgetchatdetail.value ?? Container(),
-
+              controller.widgetchat.value ?? Container(),
+              controller.widgetchatdetail.value ?? Container(),
               Obx(
                 () => !Applist.provicypolity.value
                     ? CookieWidget.custom1()

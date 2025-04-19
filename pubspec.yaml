@@ -3,7 +3,7 @@ description: "Offical aramizdakiyuncu.com web project"
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+5
+version: 1.0.0+6
 
 environment:
   sdk: ">=3.4.4 <4.0.0"
@@ -20,7 +20,7 @@ dependencies:
   web_smooth_scroll: ^1.1.0
 
   armoyu_services: ^1.0.0+53
-  armoyu_widgets: ^1.0.0+48
+  armoyu_widgets: ^1.0.0+51
 
   get: ^4.6.6
   get_storage: ^2.1.1

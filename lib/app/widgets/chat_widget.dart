@@ -20,7 +20,7 @@ class ChatWidget {
               () => Container(
                 height: chatliststatus.value ? 500 : null,
                 width: 300,
-                color: Colors.grey.shade800,
+                color: Get.theme.scaffoldBackgroundColor,
                 child: Column(
                   children: [
                     Container(
@@ -30,13 +30,19 @@ class ChatWidget {
                         child: Row(
                           children: [
                             const Expanded(
-                              child: Text("Sohbet"),
+                              child: Text(
+                                "Sohbet",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                             IconButton(
                               onPressed: () {
                                 chatliststatus.value = !chatliststatus.value;
                               },
-                              icon: const Icon(Icons.arrow_drop_down_sharp),
+                              icon: const Icon(
+                                Icons.arrow_drop_down_sharp,
+                                color: Colors.white,
+                              ),
                             ),
                           ],
                         ),
@@ -94,7 +100,7 @@ class ChatWidget {
                             child: Container(
                               height: 500,
                               width: 300,
-                              color: Colors.grey.shade800,
+                              color: Get.theme.scaffoldBackgroundColor,
                               child: chatcalling!.value == true
                                   ? ARMOYU.widget.chat.chatcallWidget(
                                       context,
@@ -121,7 +127,9 @@ class ChatWidget {
                                       },
                                       onPressedtoProfile: (userID, username) {
                                         Functions.gotoPage(
-                                            "oyuncular/$username");
+                                          "/oyuncular/$username",
+                                          getnavgiate: true,
+                                        );
                                       },
                                     ),
                             ),
