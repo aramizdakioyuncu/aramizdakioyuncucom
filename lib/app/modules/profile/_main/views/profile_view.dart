@@ -486,7 +486,8 @@ class ProfileView extends StatelessWidget {
                                             () => controller.tabControllerIndex
                                                         .value ==
                                                     1
-                                                ? controller.widget2.value!
+                                                ? controller
+                                                    .widget2.widget.value!
                                                 : Container(),
                                           ),
                                           Obx(

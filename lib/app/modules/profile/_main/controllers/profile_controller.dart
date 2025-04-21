@@ -10,6 +10,7 @@ import 'package:armoyu_services/core/models/ARMOYU/API/login&register&password/l
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/socailaccounts.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:armoyu_widgets/sources/gallery/bundle/gallery_bundle.dart';
 import 'package:armoyu_widgets/sources/social/bundle/posts_bundle.dart';
 
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class ProfileController extends GetxController
 
   // Rxn<Widget> widget = Rxn();
   late PostsWidgetBundle widgetPosts;
-  Rxn<Widget> widget2 = Rxn();
+  late GalleryWidgetBundle widget2;
   late PostsWidgetBundle widgetPosts3;
   // Rxn<Widget> widget3 = Rxn();
 
@@ -55,9 +56,10 @@ class ProfileController extends GetxController
           required username}) {},
     );
 
-    widget2.value = ARMOYU.widget.gallery.mediaGallery(
+    widget2 = ARMOYU.widget.gallery.mediaGallery(
       context: Get.context!,
       userID: profileInfo.value!.userID,
+      username: profileInfo.value!.userName?.value,
     );
 
     widgetPosts3 = ARMOYU.widget.social.posts(

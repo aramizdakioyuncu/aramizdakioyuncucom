@@ -53,19 +53,22 @@ class ChatWidget {
                         : Container(),
                     chatliststatus.value == true
                         ? Expanded(
-                            child: ARMOYU.widget.chat.chatListWidget(
-                              context,
-                              scrollController: ScrollController(),
-                              onPressed: (chat) {
-                                chatdetails.value ??= [];
+                            child: ARMOYU.widget.chat
+                                .chatListWidget(
+                                  context,
+                                  onPressed: (chat) {
+                                    chatdetails.value ??= [];
 
-                                if (!chatdetails.value!.any((detail) =>
-                                    detail.user.userID == chat.user.userID)) {
-                                  chatdetails.value!.add(chat);
-                                  chatdetails.refresh();
-                                }
-                              },
-                            ),
+                                    if (!chatdetails.value!.any((detail) =>
+                                        detail.user.userID ==
+                                        chat.user.userID)) {
+                                      chatdetails.value!.add(chat);
+                                      chatdetails.refresh();
+                                    }
+                                  },
+                                )
+                                .widget
+                                .value!,
                           )
                         : Container(),
                   ],
