@@ -1,7 +1,6 @@
 import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
-import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -50,9 +49,13 @@ class ReportsView extends StatelessWidget {
         Obx(
           () => Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ARMOYU.widget.gallery.mediaList(
-              RxList<Media>([]),
-            ),
+            child: ARMOYU.widget.gallery
+                .mediaList(
+                  context,
+                  onMediaUpdated: (onMediaUpdated) {},
+                )
+                .widget
+                .value!,
           ),
         ),
         Padding(

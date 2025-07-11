@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/search/search_list.dart';
-import 'package:armoyu_widgets/sources/searchbar/searchbar.dart';
+import 'package:armoyu_widgets/sources/searchbar/widgets/searchbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

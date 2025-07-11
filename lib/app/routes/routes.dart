@@ -1,4 +1,5 @@
 import 'package:aramizdakioyuncucom/app/modules/about/about_module.dart';
+import 'package:aramizdakioyuncucom/app/modules/accountdelete/accountdelete_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/controlpanel/controlpanel_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/employee/employee_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/events/events_module.dart';
@@ -13,6 +14,7 @@ import 'package:aramizdakioyuncucom/app/modules/profile/profile_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/raffle/raffle_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/register/register_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/rules/rules_module.dart';
+import 'package:aramizdakioyuncucom/app/modules/securitystandarts/securitystandarts_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/shop/shop_module.dart';
 import 'package:aramizdakioyuncucom/app/modules/splash/splash_modules.dart';
 
@@ -23,6 +25,10 @@ class Routes {
   static const REGISTER = "/kayit-ol";
   // ignore: constant_identifier_names
   static const SHOP = "/magaza";
+  // ignore: constant_identifier_names
+  static const ACCOUNT_DELETE = "/hesap-silme";
+  // ignore: constant_identifier_names
+  static const SECURITY_STANDARTS = "/guvenlik-standartlari";
 }
 
 class AppPages {
@@ -46,5 +52,7 @@ class AppPages {
     ...ControlpanelModule.routes,
     ...RegisterModule.routes,
     ...ShopModule.routes,
+    ...AccountdeleteModule.routes,
+    ...SecuritystandartsModule.routes,
   ];
 }

@@ -19,8 +19,8 @@ dependencies:
   webview_flutter_web: ^0.2.3+4
   web_smooth_scroll: ^1.1.0
 
-  armoyu_services: ^1.0.0+55
-  armoyu_widgets: ^1.0.0+56
+  armoyu_services: ^1.0.0+66
+  armoyu_widgets: ^1.0.0+91
 
   get: ^4.6.6
   get_storage: ^2.1.1
@@ -37,6 +37,7 @@ dependencies:
 
   record: ^5.2.1
   audioplayers: ^6.2.0
+  web: ^1.1.1
   
 dev_dependencies:
   flutter_test:

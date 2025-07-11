@@ -9,8 +9,7 @@ import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
+import 'package:web/web.dart' as web;
 
 class Functions {
   static final box = GetStorage();
@@ -19,19 +18,19 @@ class Functions {
   static void gotoPage(String url,
       {bool newTab = false, bool getnavgiate = false}) {
     if (newTab) {
-      html.window.open(url, '_blank');
+      web.window.open(url, '_blank');
       return;
     }
     if (getnavgiate) {
       Get.toNamed(url);
       return;
     }
-    html.window.location.href = url;
+    web.window.location.href = url;
     return;
   }
 
   static void reloadPage() {
-    html.window.location.reload();
+    web.window.location.reload();
   }
 
 //WEB

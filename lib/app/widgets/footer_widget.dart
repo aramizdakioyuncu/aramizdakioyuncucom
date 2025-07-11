@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -118,7 +119,7 @@ class FooterWidget {
                                     flex: 2,
                                     child: CachedNetworkImage(
                                       imageUrl:
-                                          "https://api.aramizdakioyuncu.com/galeri/yazi/1posterminnak1715776167.jpg",
+                                          "${APIConstants.storageDomain}/galeri/yazi/1posterminnak1715776167.jpg",
                                       width: double.infinity,
                                       height: 100,
                                       fit: BoxFit.cover,

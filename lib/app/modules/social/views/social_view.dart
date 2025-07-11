@@ -625,7 +625,7 @@ class SocialView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    ARMOYU.widget.social.widgetStorycircle(),
+                    ARMOYU.widget.social.widgetStorycircle().widget.value!,
                     Obx(() => controller.posts.widget.value!),
                     Padding(
                       padding: const EdgeInsets.all(8.0),

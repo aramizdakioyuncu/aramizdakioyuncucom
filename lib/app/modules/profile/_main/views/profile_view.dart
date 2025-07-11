@@ -1,6 +1,9 @@
 import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/modules/profile/_main/controllers/profile_controller.dart';
+import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
+import 'package:aramizdakioyuncucom/app/utils/applist.dart';
+import 'package:aramizdakioyuncucom/app/widgets/app_widget.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_flags/country_flags.dart';
@@ -21,9 +24,6 @@ class ProfileView extends StatelessWidget {
     return BodyWidget.custom1(
       context,
       bgImage: controller.bgwallpaper,
-      // bgImage: controller.profileInfo.value == null
-      //     ? controller.bgwallpaper
-      //     : controller.profileInfo.value!.wallpaper!.mediaURL.minURL.value.obs,
       transparentBody: true,
       body: [
         Stack(
@@ -338,18 +338,49 @@ class ProfileView extends StatelessWidget {
                                 ),
                         ),
                       ),
-                      // Applist.currentUser.value == null
-                      //     ? Container()
-                      //     : controller.profileInfo.value!.userID !=
-                      //             Applist.currentUser.value!.userID
-                      //         ? Container()
-                      //         : ARMOYU.widget.elevatedButton.costum1(
-                      //             text: "Ayarlar",
-                      //             onPressed: () {
-                      //               AppWidget.showSettingsDialog(context);
-                      //             },
-                      //             loadingStatus: false,
-                      //           ),
+                      Applist.currentUser.value == null
+                          ? Container()
+                          : controller.profileInfo.value!.userID !=
+                                  Applist.currentUser.value!.userID
+                              ? Container()
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child:
+                                          ARMOYU.widget.elevatedButton.costum1(
+                                        text: "Müzikler",
+                                        onPressed: () {
+                                          AppWidget.showSettingsDialog(context);
+                                        },
+                                        loadingStatus: false,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child:
+                                          ARMOYU.widget.elevatedButton.costum1(
+                                        text: "Galeri",
+                                        onPressed: () {
+                                          AppWidget.showSettingsDialog(context);
+                                        },
+                                        loadingStatus: false,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child:
+                                          ARMOYU.widget.elevatedButton.costum1(
+                                        text: "Ayarlar",
+                                        onPressed: () {
+                                          AppWidget.showSettingsDialog(context);
+                                        },
+                                        loadingStatus: false,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

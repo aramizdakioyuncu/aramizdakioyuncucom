@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
@@ -20,12 +21,12 @@ class BodyWidget {
   }) {
     // "${APIConstants.storageDomain}/galeri/ana-yapi/anakisarkaplan.webp"
     // "${APIConstants.storageDomain}/galeri/ana-yapi/anaarkaplan.jpg"
-    // "${APIConstants.storageDomain}/galeri/ana-yapi/anakisarkaplan.webp"
+
     bgImage ??= RxString(
-        "https://api.aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp");
+        "${APIConstants.storageDomain}/galeri/ana-yapi/anakisarkaplan.webp");
     if (bgImage.value == "") {
       bgImage.value =
-          "https://api.aramizdakioyuncu.com/galeri/ana-yapi/anakisarkaplan.webp";
+          "${APIConstants.storageDomain}/galeri/ana-yapi/anakisarkaplan.webp";
     }
 
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

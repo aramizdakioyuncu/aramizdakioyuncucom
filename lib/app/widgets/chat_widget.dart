@@ -107,7 +107,7 @@ class ChatWidget {
                               child: chatcalling!.value == true
                                   ? ARMOYU.widget.chat.chatcallWidget(
                                       context,
-                                      user: chatdetail.user,
+                                      chat: chatdetail,
                                       onClose: () {
                                         chatcalling.value = false;
                                       },
@@ -120,7 +120,7 @@ class ChatWidget {
                                     )
                                   : ARMOYU.widget.chat.chatdetailWidget(
                                       context,
-                                      chat: chatdetail,
+                                      cachedChat: chatdetail,
                                       chatcall: (chat) {
                                         log("ringing");
                                         chatcalling.value = true;

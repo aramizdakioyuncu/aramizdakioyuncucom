@@ -2,7 +2,6 @@ import 'package:aramizdakioyuncucom/app/modules/shop/shop_addproduct/controllers
 import 'package:aramizdakioyuncucom/app/modules/shop/shop_widgets/shopappbar_widget.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
-import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -31,7 +30,13 @@ class ShopaddproductView extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ARMOYU.widget.gallery.mediaList(<Media>[].obs),
+          child: ARMOYU.widget.gallery
+              .mediaList(
+                context,
+                onMediaUpdated: (onMediaUpdated) {},
+              )
+              .widget
+              .value!,
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),

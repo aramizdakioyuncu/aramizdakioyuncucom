@@ -1,3 +1,4 @@
+import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:aramizdakioyuncucom/app/widgets/app_widget.dart';
@@ -28,7 +29,7 @@ class AppbarWidget {
                 ),
                 child: CachedNetworkImage(
                   imageUrl:
-                      "https://api.aramizdakioyuncu.com/galeri/ana-yapi/armoyu64.png",
+                      "${APIConstants.storageDomain}/galeri/ana-yapi/armoyu64.png",
                 ),
               ),
             ),
@@ -412,7 +413,7 @@ class AppbarWidget {
                                                                     .transparent,
                                                             foregroundImage:
                                                                 CachedNetworkImageProvider(
-                                                              "https://api.aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png",
+                                                              "${APIConstants.storageDomain}/galeri/ana-yapi/armoyu.png",
                                                             ),
                                                           ),
                                                         ),
