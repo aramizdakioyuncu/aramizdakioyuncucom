@@ -352,7 +352,7 @@ class ProfileView extends StatelessWidget {
                                           ARMOYU.widget.elevatedButton.costum1(
                                         text: "Müzikler",
                                         onPressed: () {
-                                          AppWidget.showSettingsDialog(context);
+                                          AppWidget.showMusicDialog(context);
                                         },
                                         loadingStatus: false,
                                       ),

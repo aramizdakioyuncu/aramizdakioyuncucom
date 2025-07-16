@@ -179,13 +179,24 @@ class AppWidget {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setState) {
-            return const AlertDialog(
-              title: Text("Müziklerim"),
+            return AlertDialog(
+              title: const Text("Müziklerim"),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
-                  children: [],
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                          width: 400,
+                          height: 400,
+                          child: ARMOYU.widget.players
+                              .advencedPlayerlist(context)
+                              .widget
+                              .value!),
+                    ),
+                  ],
                 ),
               ),
               // actions: [],

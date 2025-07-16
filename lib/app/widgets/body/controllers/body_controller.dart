@@ -14,7 +14,7 @@ class BodyController extends GetxController {
   Rxn<List<Chat>> chatdetails = Rxn();
 
   Rxn<List<APIMyGroupList>> mygroups = Rxn();
-
+  var isVisible = false.obs;
   @override
   void onInit() {
     super.onInit();
