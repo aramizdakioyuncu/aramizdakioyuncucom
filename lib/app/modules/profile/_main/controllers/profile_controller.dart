@@ -1,5 +1,8 @@
 import 'dart:developer';
 
+import 'package:armoyu_services/core/models/ARMOYU/API/profile/profile_friendlist.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/utils/my_group_list.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/utils/my_school_list.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/country.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/game.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
@@ -23,13 +26,13 @@ class ProfileController extends GetxController
   Rxn<TabController> tabController = Rxn<TabController>();
   Rx<int> tabControllerIndex = Rx<int>(0);
 
-  // Rxn<Widget> widget = Rxn();
+  RxString bgwallpaper = RxString("");
+
   late PostsWidgetBundle widgetPosts;
   late GalleryWidgetBundle widget2;
   late PostsWidgetBundle widgetPosts3;
-  // Rxn<Widget> widget3 = Rxn();
 
-  RxString bgwallpaper = RxString("");
+  Rxn<List<APIProfileFriendlist>> friendlist = Rxn();
 
   @override
   Future<void> onInit() async {
@@ -44,6 +47,27 @@ class ProfileController extends GetxController
     if (profileUsername != null) {
       await fetchuser(profileUsername);
     }
+    // Widgets
+    postsWidget();
+    galleryWidget();
+    taggedPostsWidget();
+    // Widgets
+
+    fetchuserFriends(profileInfo);
+
+    fetchuserGroups();
+    fetchuserschools();
+  }
+
+  galleryWidget() {
+    widget2 = ARMOYU.widget.gallery.mediaGallery(
+      context: Get.context!,
+      userID: profileInfo.value!.userID,
+      username: profileInfo.value!.userName?.value,
+    );
+  }
+
+  postsWidget() {
     widgetPosts = ARMOYU.widget.social.posts(
       context: Get.context!,
       shrinkWrap: true,
@@ -55,13 +79,9 @@ class ProfileController extends GetxController
           required userID,
           required username}) {},
     );
+  }
 
-    widget2 = ARMOYU.widget.gallery.mediaGallery(
-      context: Get.context!,
-      userID: profileInfo.value!.userID,
-      username: profileInfo.value!.userName?.value,
-    );
-
+  taggedPostsWidget() {
     widgetPosts3 = ARMOYU.widget.social.posts(
       context: Get.context!,
       shrinkWrap: true,
@@ -74,6 +94,50 @@ class ProfileController extends GetxController
           required userID,
           required username}) {},
     );
+  }
+
+  fetchuserFriends(Rxn<User> rofileInfo) async {
+    ProfileFriendListResponse response =
+        await ARMOYU.service.profileServices.friendlist(
+      userID: profileInfo.value!.userID!,
+      page: 1,
+    );
+
+    if (!response.result.status) {
+      return;
+    }
+    friendlist.value ??= [];
+    for (APIProfileFriendlist element in response.response!) {
+      friendlist.value!.add(element);
+    }
+  }
+
+  Rxn<List<APIMyGroupList>> grouplist = Rxn();
+  fetchuserGroups() async {
+    APIMyGroupListResponse response =
+        await ARMOYU.service.profileServices.myGroups();
+
+    if (!response.result.status) {
+      return;
+    }
+    grouplist.value ??= [];
+    for (APIMyGroupList element in response.response!) {
+      grouplist.value!.add(element);
+    }
+  }
+
+  Rxn<List<APIMySchoolList>> schoollist = Rxn();
+  fetchuserschools() async {
+    APIMySchoolListResponse response =
+        await ARMOYU.service.profileServices.mySchools();
+
+    if (!response.result.status) {
+      return;
+    }
+    schoollist.value ??= [];
+    for (APIMySchoolList element in response.response!) {
+      schoollist.value!.add(element);
+    }
   }
 
   fetchuser(username) async {
@@ -136,6 +200,9 @@ class ProfileController extends GetxController
       userName: Rx(response.response!.username!),
       displayName: Rx<String>(response.response!.displayName!),
       xp: Rx<String>(response.response!.levelXP!),
+      level: Rx<int>(response.response!.level!),
+      levelColor: Rx<String>(response.response!.levelColor!),
+      registerDate: (response.response!.registeredDateV2),
       detailInfo: Rxn(
         response.response!.detailInfo == null
             ? null

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
+import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/search/search_hashtaglist.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/foreign_currency_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/minecraft_statistics.dart';
@@ -90,7 +91,10 @@ class SocialController extends GetxController {
           required displayname,
           required userID,
           required username}) {
-        Get.toNamed("/oyuncular/$username");
+        Functions.gotoPage(
+          "/oyuncular/$username",
+          getnavgiate: true,
+        );
       },
     );
   }

@@ -356,9 +356,10 @@ class SocialView extends StatelessWidget {
                                         children: [
                                           Table(
                                             columnWidths: const {
-                                              0: FlexColumnWidth(4),
+                                              0: FlexColumnWidth(1),
                                               1: FixedColumnWidth(25),
                                               2: FixedColumnWidth(25),
+                                              3: FixedColumnWidth(25),
                                             },
                                             children: [
                                               const TableRow(
@@ -378,6 +379,7 @@ class SocialView extends StatelessWidget {
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
+                                                    textAlign: TextAlign.center,
                                                   ),
                                                   Text(
                                                     "A",
@@ -386,6 +388,7 @@ class SocialView extends StatelessWidget {
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
+                                                    textAlign: TextAlign.center,
                                                   ),
                                                   Text(
                                                     "P",
@@ -394,6 +397,7 @@ class SocialView extends StatelessWidget {
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
+                                                    textAlign: TextAlign.center,
                                                   ),
                                                 ],
                                               ),
@@ -407,11 +411,46 @@ class SocialView extends StatelessWidget {
                                                         mainAxisSize:
                                                             MainAxisSize.min,
                                                         children: [
-                                                          const CircleAvatar(
-                                                            foregroundImage:
-                                                                CachedNetworkImageProvider(
-                                                                    "https://upload.wikimedia.org/wikipedia/tr/8/80/Sivasspor.png"),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Text(
+                                                              (index + 1)
+                                                                  .toString(),
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
                                                           ),
+                                                          controller.teamList
+                                                                      .value ==
+                                                                  null
+                                                              ? const CupertinoActivityIndicator()
+                                                              : controller
+                                                                          .teamList
+                                                                          .value![
+                                                                              index]
+                                                                          .teamlogo ==
+                                                                      null
+                                                                  ? const SizedBox
+                                                                      .shrink()
+                                                                  : CircleAvatar(
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      foregroundImage:
+                                                                          CachedNetworkImageProvider(
+                                                                        controller
+                                                                            .teamList
+                                                                            .value![index]
+                                                                            .teamlogo!
+                                                                            .minURL,
+                                                                      ),
+                                                                    ),
                                                           Text(
                                                             controller
                                                                 .teamList
@@ -428,29 +467,45 @@ class SocialView extends StatelessWidget {
                                                           ),
                                                         ],
                                                       ),
-                                                      const Text(
-                                                        "10",
-                                                        style: TextStyle(
+                                                      Text(
+                                                        controller
+                                                            .teamList
+                                                            .value![index]
+                                                            .playedmatchcount
+                                                            .toString(),
+                                                        style: const TextStyle(
                                                           color: Colors.red,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
-                                                      const Text(
-                                                        "10",
-                                                        style: TextStyle(
-                                                          color: Colors.red,
+                                                      Text(
+                                                        controller
+                                                            .teamList
+                                                            .value![index]
+                                                            .avarage
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                          color: Colors.orange,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
-                                                      const Text(
-                                                        "2",
-                                                        style: TextStyle(
-                                                          color: Colors.red,
+                                                      Text(
+                                                        controller.teamList
+                                                            .value![index].point
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                          color: Colors.green,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
                                                     ],
                                                   );
@@ -543,7 +598,7 @@ class SocialView extends StatelessWidget {
                     ),
                   ),
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
@@ -691,7 +746,12 @@ class SocialView extends StatelessWidget {
                             child: SingleChildScrollView(
                               child: Column(
                                 children: [
-                                  const Text("Aramıza Hoşgeldiniz"),
+                                  const Text(
+                                    "Aramıza Hoşgeldiniz",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                   Obx(
                                     () => controller.newregisteredList.value ==
                                             null
@@ -775,7 +835,7 @@ class SocialView extends StatelessWidget {
                         const SizedBox(height: 5),
                         Container(
                           height: 300,
-                          color: Colors.black.withValues(alpha: 0.5),
+                          color: colorbg,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Obx(
@@ -851,7 +911,7 @@ class SocialView extends StatelessWidget {
                         const SizedBox(height: 5),
                         Container(
                           height: 300,
-                          color: Colors.black.withValues(alpha: 0.5),
+                          color: colorbg,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: SingleChildScrollView(

@@ -9,43 +9,48 @@ import 'package:get/get.dart';
 
 class ChatWidget {
   static Widget chatlistWidget(context, Rxn<List<Chat>> chatdetails) {
-    var chatliststatus = false.obs;
+    //Eğer Kullanıcı Girişi Yoksa Chat butonu gösterme
+    if (Applist.currentUser.value == null) return const SizedBox.shrink();
 
-    return Applist.currentUser.value == null
-        ? Container()
-        : Positioned(
-            right: 0,
-            bottom: 0,
-            child: Obx(
-              () => Container(
+    var chatliststatus = false.obs;
+    return Obx(
+      () => !chatliststatus.value
+          ? Positioned(
+              right: 10,
+              bottom: 10,
+              child: FloatingActionButton(
+                child: const Icon(Icons.chat),
+                onPressed: () => chatliststatus.value = !chatliststatus.value,
+              ),
+            )
+          : Positioned(
+              right: 0,
+              bottom: 0,
+              child: Container(
                 height: chatliststatus.value ? 500 : null,
                 width: 300,
                 color: Get.theme.scaffoldBackgroundColor,
                 child: Column(
                   children: [
-                    Container(
-                      color: Colors.black,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            const Expanded(
-                              child: Text(
-                                "Sohbet",
-                                style: TextStyle(color: Colors.white),
-                              ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          const Expanded(
+                            child: Text(
+                              "Sohbet",
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            IconButton(
-                              onPressed: () {
-                                chatliststatus.value = !chatliststatus.value;
-                              },
-                              icon: const Icon(
-                                Icons.arrow_drop_down_sharp,
-                                color: Colors.white,
-                              ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              chatliststatus.value = !chatliststatus.value;
+                            },
+                            icon: const Icon(
+                              Icons.arrow_drop_down_sharp,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                     chatliststatus.value == true
@@ -53,29 +58,31 @@ class ChatWidget {
                         : Container(),
                     chatliststatus.value == true
                         ? Expanded(
-                            child: ARMOYU.widget.chat
-                                .chatListWidget(
-                                  context,
-                                  onPressed: (chat) {
-                                    chatdetails.value ??= [];
+                            child: SingleChildScrollView(
+                              child: ARMOYU.widget.chat
+                                  .chatListWidget(
+                                    context,
+                                    onPressed: (chat) {
+                                      chatdetails.value ??= [];
 
-                                    if (!chatdetails.value!.any((detail) =>
-                                        detail.user.userID ==
-                                        chat.user.userID)) {
-                                      chatdetails.value!.add(chat);
-                                      chatdetails.refresh();
-                                    }
-                                  },
-                                )
-                                .widget
-                                .value!,
+                                      if (!chatdetails.value!.any((detail) =>
+                                          detail.user.userID ==
+                                          chat.user.userID)) {
+                                        chatdetails.value!.add(chat);
+                                        chatdetails.refresh();
+                                      }
+                                    },
+                                  )
+                                  .widget
+                                  .value!,
+                            ),
                           )
                         : Container(),
                   ],
                 ),
               ),
             ),
-          );
+    );
   }
 
   static Widget chatdetailWidgets(
@@ -119,6 +126,8 @@ class ChatWidget {
                                       },
                                     )
                                   : ARMOYU.widget.chat.chatdetailWidget(
+                                      chatImage:
+                                          "https://storage.aramizdakioyuncu.com/galeri/ana-yapi/chat/chatarkaplan.png",
                                       context,
                                       cachedChat: chatdetail,
                                       chatcall: (chat) {
@@ -127,6 +136,7 @@ class ChatWidget {
                                       },
                                       onClose: () {
                                         chatdetails.value!.remove(chatdetail);
+                                        chatdetails.refresh();
                                       },
                                       onPressedtoProfile: (userID, username) {
                                         Functions.gotoPage(

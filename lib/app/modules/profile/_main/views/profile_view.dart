@@ -5,6 +5,9 @@ import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
 import 'package:aramizdakioyuncucom/app/widgets/app_widget.dart';
 import 'package:aramizdakioyuncucom/app/widgets/body/views/body_widget.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/profile/profile_friendlist.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/utils/my_group_list.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/utils/my_school_list.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +27,7 @@ class ProfileView extends StatelessWidget {
     return BodyWidget.custom1(
       context,
       bgImage: controller.bgwallpaper,
+      widthScale: 0.125,
       transparentBody: true,
       body: [
         Stack(
@@ -85,28 +89,66 @@ class ProfileView extends StatelessWidget {
               left: 45,
               child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle, // Dairesel şekil
-                      border: Border.all(
-                        color: Colors.blue, // Şerit rengi
-                        width: 3, // Şerit genişliği
-                      ),
-                    ),
-                    child: Obx(
-                      () => controller.profileInfo.value == null
-                          ? const CircleAvatar(
-                              radius: 60,
-                              child: CupertinoActivityIndicator(),
-                            )
-                          : CircleAvatar(
-                              foregroundColor: Colors.transparent,
-                              foregroundImage: CachedNetworkImageProvider(
-                                controller.profileInfo.value!.avatar!.mediaURL
-                                    .minURL.value,
+                  Obx(
+                    () => Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle, // Dairesel şekil
+                        border: controller.profileInfo.value == null
+                            ? null
+                            : Border.all(
+                                color: Color(
+                                  int.parse(
+                                      "0xFF${controller.profileInfo.value!.levelColor!.value}"),
+                                ), // Şerit rengi
+                                width: 5, // Şerit genişliği
                               ),
-                              radius: 60,
-                            ),
+                      ),
+                      child: Obx(
+                        () => controller.profileInfo.value == null
+                            ? const CircleAvatar(
+                                radius: 60,
+                                child: CupertinoActivityIndicator(),
+                              )
+                            : CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                                backgroundImage: CachedNetworkImageProvider(
+                                  controller.profileInfo.value!.avatar!.mediaURL
+                                      .minURL.value,
+                                ),
+                                radius: 60,
+                                child: Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle, // Dairesel şekil
+                                      color: Color(int.parse(
+                                          "0xFF${controller.profileInfo.value!.levelColor!.value}")),
+                                      border: controller.profileInfo.value ==
+                                              null
+                                          ? null
+                                          : Border.all(
+                                              color:
+                                                  Colors.white, // Şerit rengi
+                                              width: 1, // Şerit genişliği
+                                            ),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        controller
+                                            .profileInfo.value!.level!.value
+                                            .toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      ),
                     ),
                   ),
                   Container(
@@ -118,7 +160,7 @@ class ProfileView extends StatelessWidget {
                       padding: const EdgeInsets.all(4.0),
                       child: Obx(
                         () => controller.profileInfo.value == null
-                            ? const Text("data")
+                            ? const Text("Display Name")
                             : Text(
                                 controller
                                     .profileInfo.value!.displayName!.value,
@@ -135,17 +177,25 @@ class ProfileView extends StatelessWidget {
             Positioned(
               bottom: 0,
               left: 0,
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white54,
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(2.0),
-                  child: Text(
-                    "1242141 XP",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+              child: Obx(
+                () => Container(
+                  decoration: controller.profileInfo.value == null
+                      ? null
+                      : BoxDecoration(
+                          color: Color(int.parse(
+                              "0xFF${controller.profileInfo.value!.levelColor!.value}")),
+                        ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: controller.profileInfo.value == null
+                        ? null
+                        : Text(
+                            "${controller.profileInfo.value!.level!.value} XP",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -598,56 +648,92 @@ class ProfileView extends StatelessWidget {
                                         ),
                                       ),
                                       const Text("Arkadaşlar"),
-                                      Row(
-                                        children: List.generate(
-                                          controller.profileInfo.value!
-                                              .myFriends!.length,
-                                          (index) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(2.0),
-                                              child: CircleAvatar(
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                foregroundImage:
-                                                    CachedNetworkImageProvider(
+                                      controller.friendlist.value == null
+                                          ? const CupertinoActivityIndicator()
+                                          : SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                children: List.generate(
                                                   controller
-                                                      .profileInfo
-                                                      .value!
-                                                      .myFriends![index]
-                                                      .avatar!
-                                                      .mediaURL
-                                                      .minURL
-                                                      .value,
+                                                      .friendlist.value!.length,
+                                                  (index) {
+                                                    APIProfileFriendlist
+                                                        friendINFO = controller
+                                                            .friendlist
+                                                            .value![index];
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              2.0),
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          Functions.gotoPage(
+                                                            "/oyuncular/${friendINFO.username}",
+                                                            getnavgiate: true,
+                                                          );
+                                                        },
+                                                        child: CircleAvatar(
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .transparent,
+                                                          foregroundImage:
+                                                              CachedNetworkImageProvider(
+                                                            friendINFO
+                                                                .avatar.minURL,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
                                               ),
-                                            );
-                                          },
-                                        ),
-                                      ),
+                                            ),
                                       const Text("Gruplar"),
-                                      Row(
-                                        children: List.generate(
-                                          6,
-                                          (index) {
-                                            return const Padding(
-                                              padding: EdgeInsets.all(2.0),
-                                              child: CircleAvatar(
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                foregroundImage:
-                                                    CachedNetworkImageProvider(
-                                                  "${APIConstants.storageDomain}/galeri/gruplar/1gruplarlogominnak1655550694.png",
+                                      controller.grouplist.value == null
+                                          ? const CupertinoActivityIndicator()
+                                          : SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                children: List.generate(
+                                                  controller
+                                                      .grouplist.value!.length,
+                                                  (index) {
+                                                    APIMyGroupList groupINFO =
+                                                        controller.grouplist
+                                                            .value![index];
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              2.0),
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          Functions.gotoPage(
+                                                            "/gruplar/${groupINFO.groupURL}",
+                                                            getnavgiate: true,
+                                                          );
+                                                        },
+                                                        child: CircleAvatar(
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .transparent,
+                                                          foregroundImage:
+                                                              CachedNetworkImageProvider(
+                                                            groupINFO
+                                                                .groupLogo
+                                                                .mediaURL
+                                                                .minURL,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
                                               ),
-                                            );
-                                          },
-                                        ),
-                                      ),
+                                            ),
                                       const Text("Albümler"),
                                       Row(
                                         children: List.generate(
-                                          6,
+                                          3,
                                           (index) {
                                             return const Padding(
                                               padding: EdgeInsets.all(2.0),
@@ -664,24 +750,41 @@ class ProfileView extends StatelessWidget {
                                         ),
                                       ),
                                       const Text("Eğitim"),
-                                      Row(
-                                        children: List.generate(
-                                          6,
-                                          (index) {
-                                            return const Padding(
-                                              padding: EdgeInsets.all(2.0),
-                                              child: CircleAvatar(
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                foregroundImage:
-                                                    CachedNetworkImageProvider(
-                                                  "${APIConstants.storageDomain}/galeri/okulresimleri/1logominnak1716379394.png",
-                                                ),
+                                      controller.schoollist.value == null
+                                          ? const CupertinoActivityIndicator()
+                                          : Row(
+                                              children: List.generate(
+                                                controller
+                                                    .schoollist.value!.length,
+                                                (index) {
+                                                  APIMySchoolList schoolINFO =
+                                                      controller.schoollist
+                                                          .value![index];
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            2.0),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        Functions.gotoPage(
+                                                          "/okullar/${schoolINFO.schoolName}",
+                                                          getnavgiate: true,
+                                                        );
+                                                      },
+                                                      child: CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                        foregroundImage:
+                                                            CachedNetworkImageProvider(
+                                                          schoolINFO.schoolLogo
+                                                              .mediaURL.bigURL,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
                                               ),
-                                            );
-                                          },
-                                        ),
-                                      ),
+                                            ),
                                     ],
                                   ),
                           )

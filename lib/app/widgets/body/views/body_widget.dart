@@ -1,4 +1,5 @@
 import 'package:aramizdakioyuncucom/app/constants/api_constants.dart';
+import 'package:aramizdakioyuncucom/app/modules/social/controllers/social_controller.dart';
 import 'package:aramizdakioyuncucom/app/services/armoyu_services.dart';
 import 'package:aramizdakioyuncucom/app/services/functions.dart';
 import 'package:aramizdakioyuncucom/app/utils/applist.dart';
@@ -17,6 +18,7 @@ class BodyWidget {
     RxString? bgImage,
     bool transparentBody = false,
     bool fullWidth = false,
+    double widthScale = 0.08,
     required List<Widget> body,
   }) {
     // "${APIConstants.storageDomain}/galeri/ana-yapi/anakisarkaplan.webp"
@@ -534,6 +536,9 @@ class BodyWidget {
                         Get.changeThemeMode(
                           Get.isDarkMode ? ThemeMode.light : ThemeMode.dark,
                         );
+
+                        final socialcontroller = Get.find<SocialController>();
+                        socialcontroller.posts.loadMore();
                       },
                       loadingStatus: false,
                     ),
@@ -569,7 +574,8 @@ class BodyWidget {
                             horizontal: fullWidth ||
                                     MediaQuery.of(context).size.width < 1000
                                 ? 0.0
-                                : MediaQuery.of(context).size.width * 0.080,
+                                : MediaQuery.of(context).size.width *
+                                    widthScale,
                           ),
                           child: Container(
                             color: transparentBody
@@ -580,7 +586,7 @@ class BodyWidget {
                             ),
                           ),
                         ),
-                        FooterWidget.custom(),
+                        FooterWidget.custom(context),
                       ],
                     ),
                   ),
@@ -593,24 +599,29 @@ class BodyWidget {
                     ? CookieWidget.custom1()
                     : Container(),
               ),
-              Obx(
-                () => AnimatedPositioned(
-                  duration: const Duration(milliseconds: 800),
-                  curve: Curves.easeInOut,
-                  left: controller.isVisible.value
-                      ? 0
-                      : -420, // Ekrana kayma efekti
-                  bottom: 20,
-                  child: MouseRegion(
-                      onEnter: (event) {
-                        controller.isVisible.value = true;
-                      },
-                      onExit: (event) async {
-                        controller.isVisible.value = false;
-                      },
-                      child: ARMOYU.widget.players.musicplayer().widget.value!),
-                ),
-              ),
+              // Obx(
+              //   () => Applist.currentUser.value == null
+              //       ? const SizedBox.shrink()
+              //       : AnimatedPositioned(
+              //           duration: const Duration(milliseconds: 800),
+              //           curve: Curves.easeInOut,
+              //           left: controller.isVisible.value
+              //               ? 0
+              //               : -420, // Ekrana kayma efekti
+              //           bottom: 20,
+              //           child: MouseRegion(
+              //               onEnter: (event) {
+              //                 controller.isVisible.value = true;
+              //               },
+              //               onExit: (event) async {
+              //                 controller.isVisible.value = false;
+              //               },
+              //               child: ARMOYU.widget.players
+              //                   .musicplayer()
+              //                   .widget
+              //                   .value!),
+              //         ),
+              // ),
             ],
           );
         },

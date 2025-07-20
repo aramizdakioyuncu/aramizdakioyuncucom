@@ -63,9 +63,9 @@ class RaffledetailView extends StatelessWidget {
                                         children: [
                                           InkWell(
                                             onTap: () {
-                                              // Get.toNamed("/oyuncular/nero");
                                               Functions.gotoPage(
                                                 "/oyuncular/nero",
+                                                getnavgiate: true,
                                               );
                                             },
                                             child: const CircleAvatar(
