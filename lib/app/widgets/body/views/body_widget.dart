@@ -599,29 +599,29 @@ class BodyWidget {
                     ? CookieWidget.custom1()
                     : Container(),
               ),
-              // Obx(
-              //   () => Applist.currentUser.value == null
-              //       ? const SizedBox.shrink()
-              //       : AnimatedPositioned(
-              //           duration: const Duration(milliseconds: 800),
-              //           curve: Curves.easeInOut,
-              //           left: controller.isVisible.value
-              //               ? 0
-              //               : -420, // Ekrana kayma efekti
-              //           bottom: 20,
-              //           child: MouseRegion(
-              //               onEnter: (event) {
-              //                 controller.isVisible.value = true;
-              //               },
-              //               onExit: (event) async {
-              //                 controller.isVisible.value = false;
-              //               },
-              //               child: ARMOYU.widget.players
-              //                   .musicplayer()
-              //                   .widget
-              //                   .value!),
-              //         ),
-              // ),
+              Obx(
+                () => Applist.currentUser.value == null
+                    ? const SizedBox.shrink()
+                    : AnimatedPositioned(
+                        duration: const Duration(milliseconds: 800),
+                        curve: Curves.easeInOut,
+                        left: controller.isVisible.value
+                            ? 0
+                            : -420, // Ekrana kayma efekti
+                        bottom: 20,
+                        child: MouseRegion(
+                            onEnter: (event) {
+                              controller.isVisible.value = true;
+                            },
+                            onExit: (event) async {
+                              controller.isVisible.value = false;
+                            },
+                            child: ARMOYU.widget.players
+                                .musicplayer()
+                                .widget
+                                .value!),
+                      ),
+              ),
             ],
           );
         },
