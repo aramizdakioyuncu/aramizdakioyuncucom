@@ -16,7 +16,7 @@ jobs:
         run: |
           # 1. GitHub'dan gelen taze 'next' klasörünü ve dosyaları /app içine kopyala
           # Bu komut sunucundaki dosyaları güncelleyecek.
-          cp -rf ./* /app/
+          cp -rf ./next /app/
           
           # 2. Doğrudan /app içinde (yani senin 02-subdomains klasöründe) komutu çalıştır
           cd /app
