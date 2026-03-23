@@ -4,6 +4,7 @@ import { PostCard } from './PostCard';
 import { Stories } from './Stories';
 import { SidebarLeft } from './SidebarLeft';
 import { CloudStorageModal } from '../profile/CloudStorageModal';
+import Link from 'next/link';
 
 interface MockPost {
   id: string;
@@ -220,6 +221,40 @@ export function Dashboard() {
            <p className="text-sm text-armoyu-text-muted font-medium leading-relaxed">Profilini tamamlayarak daha fazla rozet kazanabilir ve toplulukta öne çıkabilirsin.</p>
            <button className="mt-5 w-full px-4 py-2.5 bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-armoyu-text text-sm font-bold rounded-xl hover:bg-black/10 dark:hover:bg-white/10 transition-colors">Profili Düzenle</button>
         </div>
+
+        {/* Gruplarım Kısa Yollar Widget */}
+        {user && (
+          <div className="glass-panel p-6 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg">
+             <div className="flex items-center justify-between mb-6">
+                <h3 className="font-extrabold text-armoyu-text text-lg">Gruplarım</h3>
+                <Link href="/gruplar" className="text-[10px] font-black text-blue-500 hover:underline uppercase tracking-widest">TÜMÜ</Link>
+             </div>
+             <div className="space-y-4">
+                {[
+                  { name: 'RIHTIM', tag: 'RTM', logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=Rihtim', unread: 3 },
+                  { name: 'CODE MASTERS', tag: 'CODE', logo: 'https://api.dicebear.com/7.x/identicon/svg?seed=Code', unread: 0 },
+                  { name: 'İttihat ve Terakki', tag: 'İttihat', logo: 'https://api.dicebear.com/7.x/initials/svg?seed=IT', unread: 12 }
+                ].map((group, idx) => (
+                  <Link 
+                    key={idx} 
+                    href={`/gruplar/${group.name.toLowerCase().replace(/\s+/g, '-')}`}
+                    className="flex items-center justify-between group p-2 rounded-xl border border-transparent hover:border-armoyu-card-border hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+                  >
+                    <div className="flex items-center gap-3">
+                       <img src={group.logo} className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-800 border border-armoyu-card-border group-hover:scale-105 transition-transform" />
+                       <div className="overflow-hidden">
+                          <span className="block text-sm font-black text-armoyu-text truncate max-w-[140px] uppercase tracking-tight">{group.name}</span>
+                          <span className="block text-[10px] font-bold text-armoyu-text-muted">@{group.tag}</span>
+                       </div>
+                    </div>
+                    {group.unread > 0 && (
+                      <span className="bg-blue-600 text-white text-[9px] font-black px-2 py-1 rounded-lg">+{group.unread}</span>
+                    )}
+                  </Link>
+                ))}
+             </div>
+          </div>
+        )}
 
         {/* Gündemdekiler Widget */}
         <div className="glass-panel p-6 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg">

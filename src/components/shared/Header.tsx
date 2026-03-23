@@ -45,6 +45,7 @@ export function Header() {
   const { user, logout, isLoginModalOpen, setIsLoginModalOpen } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isGroupsSubmenuOpen, setIsGroupsSubmenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { openChat } = useChat();
   const router = useRouter();
@@ -284,10 +285,43 @@ export function Header() {
                  Anketler
                </a>
 
-               <a href="#" className="flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                 Gruplar
-               </a>
+               <div className="space-y-1">
+                 <button 
+                   onClick={() => setIsGroupsSubmenuOpen(!isGroupsSubmenuOpen)}
+                   className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border text-left focus:outline-none ${isGroupsSubmenuOpen ? 'text-blue-500 bg-blue-500/5' : 'text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5'}`}
+                 >
+                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                   Gruplarım
+                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className={`ml-auto transition-transform duration-300 ${isGroupsSubmenuOpen ? 'rotate-180' : ''}`}><polyline points="6 9 12 15 18 9"></polyline></svg>
+                 </button>
+                 
+                 {isGroupsSubmenuOpen && (
+                   <div className="pl-4 space-y-1 mt-1 animate-in slide-in-from-top-2 duration-200">
+                      {[
+                        { name: 'RIHTIM', tag: 'RTM', logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=Rihtim' },
+                        { name: 'CODE MASTERS', tag: 'CODE', logo: 'https://api.dicebear.com/7.x/identicon/svg?seed=Code' },
+                        { name: 'İttihat ve Terakki', tag: 'İttihat', logo: 'https://api.dicebear.com/7.x/initials/svg?seed=IT' }
+                      ].map((group, gidx) => (
+                        <Link 
+                          key={gidx} 
+                          href={`/gruplar/${group.name.toLowerCase().replace(/\s+/g, '-')}`}
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex items-center gap-3 p-2.5 rounded-xl text-xs font-bold text-armoyu-text-muted hover:text-blue-500 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+                        >
+                           <img src={group.logo} className="w-7 h-7 rounded-lg bg-white dark:bg-zinc-800 border border-armoyu-drawer-border" />
+                           <span className="truncate">{group.name}</span>
+                        </Link>
+                      ))}
+                      <Link 
+                        href="/gruplar" 
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className="flex items-center justify-center p-2.5 rounded-xl text-[10px] font-black text-blue-500/60 hover:text-blue-500 hover:bg-blue-500/5 transition-all uppercase tracking-widest"
+                      >
+                         Tüm Grupları Gör
+                      </Link>
+                   </div>
+                 )}
+               </div>
 
                <a href="#" className="flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border">
                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
