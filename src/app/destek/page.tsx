@@ -80,7 +80,11 @@ export default function SupportTicketsPage() {
       <div className="space-y-6">
         {filteredTickets.length > 0 ? (
           filteredTickets.map((ticket) => (
-            <div key={ticket.id} className="group glass-panel p-6 md:p-8 rounded-[40px] border border-armoyu-card-border bg-armoyu-card-bg hover:border-blue-500/30 transition-all cursor-pointer shadow-sm hover:shadow-xl">
+            <Link 
+              key={ticket.id} 
+              href={`/destek/${ticket.id}`}
+              className="block group glass-panel p-6 md:p-8 rounded-[40px] border border-armoyu-card-border bg-armoyu-card-bg hover:border-blue-500/30 transition-all cursor-pointer shadow-sm hover:shadow-xl"
+            >
                <div className="flex flex-col md:flex-row justify-between gap-6">
                   <div className="flex-1 flex gap-6">
                      <div className={`w-16 h-16 rounded-[24px] flex items-center justify-center shrink-0 border-2 ${ticket.status === 'Açık' ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : ticket.status === 'Cevaplandı' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' : 'bg-zinc-500/10 border-zinc-500/20 text-zinc-500'}`}>
@@ -112,7 +116,7 @@ export default function SupportTicketsPage() {
                      </div>
                   </div>
                </div>
-            </div>
+            </Link>
           ))
         ) : (
           <div className="text-center py-32 glass-panel rounded-[50px] border-2 border-dashed border-armoyu-card-border space-y-6">
