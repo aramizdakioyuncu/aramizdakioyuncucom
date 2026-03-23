@@ -14,25 +14,25 @@ jobs:
 
       - name: Sync and Deploy
         run: |
-          # 1. GitHub'dan inen kodların içindeki GERÇEK 'next' klasörünü bulalım
-          # Bu komut deponun neresinde olursa olsun 'next' klasörünün yolunu bulur
-          REPO_NEXT_PATH=$(find . -type d -name "next" | grep "02-subdomains" | head -n 1)
+          echo "Dosyalar güncelleniyor..."
           
-          if [ -z "$REPO_NEXT_PATH" ]; then
-            echo "HATA: GitHub deponda 'next' klasörü bulunamadı!"
-            ls -R
-            exit 1
-          fi
+          # 1. GitHub'dan inen tüm içeriği (nokta dahil) /app/next içine kopyala
+          # /app şu an senin '02-subdomains' klasörün.
+          # '.' Runner'ın o an içinde olduğu (yani taze kodların olduğu) yerdir.
           
-          echo "Bulunan kaynak klasör: $REPO_NEXT_PATH"
-          echo "Hedef sunucu klasörü: /app/next"
+          # Önce hedef klasörün var olduğundan emin olalım
+          mkdir -p /app/next
+          
+          # İçeriği kopyala (Hata vermemesi için kopyalama yöntemini düzelttik)
+          cp -rf ./* /app/next/
+          cp -rf ./.[!.]* /app/next/ 2>/dev/null || true # Gizli dosyaları da (.env, .eslintrc vb.) alalım
+          
+          echo "Kopyalama tamamlandı. Docker başlatılıyor..."
 
-          # 2. Dosyaları senkronize et
-          # Kaynaktaki 'next' klasörünün İÇİNDEKİLERİ, sunucudaki '/app/next' İÇİNE kopyalar
-          cp -rf "$REPO_NEXT_PATH"/. /app/next/
-          
-          # 3. İşlem dizinine (02-subdomains) git ve Docker'ı ateşle
+          # 2. İşlem dizinine (02-subdomains) git
           cd /app
+          
+          # 3. Docker build başlasın
           docker compose up -d --build next
           
           # 4. Temizlik
