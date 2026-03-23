@@ -3,24 +3,22 @@ name: Auto Deploy Next
 on:
   push:
     branches:
-      - next  # Sadece next dalına push gelince tetiklenir
+      - next
 
 jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      # 1. Adım: Kodları GitHub Runner'ın güvenli çalışma alanına çek
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Adım: Docker Build ve Çalıştırma
       - name: Build and Deploy Next
+        # DİKKAT: GitHub depondaki klasör hiyerarşisini buraya yazmalısın.
+        # Eğer repo root'unda 01-aramizdakioyuncu.com klasörü varsa:
+        working-directory: ./01-aramizdakioyuncu.com/02-subdomains
         run: |
-          # Checkout bizi doğrudan projenin ana dizinine getirir.
-          # Her şey aynı dizinde olduğu için klasör değiştirmeye (cd) gerek yok.
-          
-          # Mevcut konteyneri durdur, imajı yeniden build et ve ayağa kaldır
+          # Burada Docker artık docker-compose.yml dosyasını görebilecek.
           docker compose up -d --build next
-
-          # Kullanılmayan eski imajları temizle (Disk dolmasını önler)
+          
+          # Sunucu temizliği
           docker image prune -f
