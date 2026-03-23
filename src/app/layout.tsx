@@ -7,6 +7,8 @@ import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { FloatingChatButton } from '@/components/shared/FloatingChatButton';
 import { ChatProvider } from '@/context/ChatContext';
+import { LayoutProvider } from '@/context/LayoutContext';
+import { MainLayoutWrapper } from '@/components/shared/MainLayoutWrapper';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,26 +23,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="tr" className="dark scroll-smooth" suppressHydrationWarning>
+    <html lang="tr" className="scroll-smooth" suppressHydrationWarning>
       <body className={`${inter.className} bg-armoyu-bg text-armoyu-text min-h-screen flex flex-col antialiased relative transition-colors duration-500`}>
         <ThemeProvider>
           <AuthProvider>
-            <ChatProvider>
-              {/* Background Decorative Blobs */}
-          <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none" />
-          <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none" />
-          
-          <Header />
+            <LayoutProvider>
+              <ChatProvider>
+                {/* Background Decorative Blobs */}
+                <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none" />
+                <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none" />
+                
+                <Header />
 
-          <main className="flex-grow w-full max-w-[100vw] overflow-x-hidden pt-8 px-4 md:px-8 max-w-7xl mx-auto z-10">
-            {children}
-          </main>
-          
-          {/* Sadece giriş yapıldığında ekranda belirlenen posizyonda çıkar */}
-          <FloatingChatButton position="bottom-right" />
+                <MainLayoutWrapper>
+                  {children}
+                </MainLayoutWrapper>
+                
+                {/* Sadece giriş yapıldığında ekranda belirlenen posizyonda çıkar */}
+                <FloatingChatButton position="bottom-right" />
 
-          <Footer />
-            </ChatProvider>
+                <Footer />
+              </ChatProvider>
+            </LayoutProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

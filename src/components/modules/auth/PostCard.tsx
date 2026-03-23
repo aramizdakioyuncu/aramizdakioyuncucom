@@ -112,7 +112,7 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
   };
 
   return (
-    <div className="w-full bg-white dark:bg-[#0a0a0e] border border-armoyu-card-border rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+    <div className="w-full bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       
       {/* Üst Kısım: Profil ve Zaman */}
       <div className="p-5 flex items-start gap-4">
@@ -152,7 +152,7 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
                {isMenuOpen && (
                  <>
                    <div className="fixed inset-0 z-40" onClick={() => setIsMenuOpen(false)} />
-                   <div className="absolute right-0 mt-1 w-56 bg-white dark:bg-[#1a1a24] border border-gray-200 dark:border-white/10 rounded-xl shadow-xl z-50 py-1.5 animate-in fade-in zoom-in-95 duration-200">
+                   <div className="absolute right-0 mt-1 w-56 bg-armoyu-drawer-bg border border-gray-200 dark:border-white/10 rounded-xl shadow-xl z-50 py-1.5 animate-in fade-in zoom-in-95 duration-200">
                      <button onClick={() => setIsMenuOpen(false)} className="w-full text-left px-4 py-2.5 text-sm font-medium text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 transition-colors flex items-center gap-3">
                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                        Gönderiyi Kaydet
@@ -277,7 +277,7 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
 
       {/* Ekstrapole Edilmiş Yorum Alanı (Açılır/Kapanır) */}
       {isCommentOpen && (
-        <div className="bg-black/5 dark:bg-[#0a0a0e]/60 border-t border-armoyu-card-border p-4 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="bg-black/5 dark:bg-white/5 border-t border-armoyu-card-border p-4 animate-in fade-in slide-in-from-top-2 duration-200">
           
           {/* Aktif Yanıt (Reply) Durumu Geri Bildirimi */}
           {replyingTo && (
@@ -293,7 +293,7 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
           {/* Yorum Yapma Girdisi */}
           <div className="flex gap-3 mb-2 animate-in fade-in zoom-in-95 duration-300">
              <img src={user?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Berkay"} alt="Sen" className="w-9 h-9 rounded-full bg-white/5 border border-white/10 shrink-0 shadow-sm object-cover" />
-             <div className="flex-1 flex items-center bg-white dark:bg-[#1a1a24] border border-gray-200 dark:border-white/10 rounded-2xl px-3 py-1.5 shadow-sm focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all">
+             <div className="flex-1 flex items-center bg-black/5 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl px-3 py-1.5 shadow-sm focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all">
                 <input 
                   type="text" 
                   value={commentText}
@@ -322,7 +322,7 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
                   <div className="flex gap-3">
                     <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${c.author}`} alt={c.author} className="w-8 h-8 rounded-full bg-white/5 border border-black/10 dark:border-white/10 shrink-0 mt-1 shadow-sm" />
                     <div className="flex-1">
-                      <div className="bg-white dark:bg-[#1a1a24] border border-gray-200 dark:border-white/5 rounded-2xl rounded-tl-sm px-4 py-2 shadow-sm inline-block min-w-[30%]">
+                      <div className="bg-armoyu-drawer-bg border border-gray-200 dark:border-white/5 rounded-2xl rounded-tl-sm px-4 py-2 shadow-sm inline-block min-w-[30%]">
                         <div className="text-xs font-black text-armoyu-text mb-0.5">{c.author}</div>
                         <div className="text-sm font-medium text-armoyu-text-muted">{c.text}</div>
                       </div>
@@ -341,7 +341,7 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
                         <div key={r.id} className="flex gap-2.5 animate-in fade-in slide-in-from-left-2 duration-300">
                           <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${r.author}`} alt={r.author} className="w-6 h-6 rounded-full bg-white/5 border border-black/10 dark:border-white/10 shrink-0 mt-0.5 shadow-sm relative -left-[27px] ring-4 ring-black/5 dark:ring-[#0a0a0e]/60" />
                           <div className="flex-1 -ml-[18px]">
-                            <div className="bg-white/60 dark:bg-[#1a1a24]/60 border border-gray-200 dark:border-white/5 rounded-2xl rounded-tl-sm px-3.5 py-1.5 shadow-sm inline-block">
+                            <div className="bg-armoyu-drawer-bg border border-gray-200 dark:border-white/5 rounded-2xl rounded-tl-sm px-3.5 py-1.5 shadow-sm inline-block">
                               <span className="text-xs font-black text-armoyu-text mr-2">{r.author}</span>
                               <span className="text-[13px] font-medium text-armoyu-text-muted">{r.text}</span>
                             </div>

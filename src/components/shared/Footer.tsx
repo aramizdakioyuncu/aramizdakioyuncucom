@@ -8,7 +8,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="w-full mt-24 border-t border-armoyu-card-border bg-white dark:bg-[#0a0a0e] py-12 px-6 md:px-8 relative z-20 text-center md:text-left">
+    <footer className="w-full mt-24 border-t border-armoyu-card-border bg-armoyu-bg py-12 px-6 md:px-8 relative z-20 text-center md:text-left">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
         
         {/* Hakkımızda */}

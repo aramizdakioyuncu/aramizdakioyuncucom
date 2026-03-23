@@ -17,7 +17,7 @@ export function ChatList({ contacts, activeId, onSelect }: { contacts: ChatConta
   const { closeChat } = useChat();
 
   return (
-    <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-[#050508] border-r border-gray-200 dark:border-white/5">
+    <div className="w-full h-full flex flex-col bg-armoyu-bg border-r border-gray-200 dark:border-white/5">
       {/* Arama ve Başlık */}
       <div className="p-4 md:p-5 border-b border-gray-200 dark:border-white/5">
         <div className="flex justify-between items-center">
@@ -34,7 +34,7 @@ export function ChatList({ contacts, activeId, onSelect }: { contacts: ChatConta
            <input 
              type="text" 
              placeholder="Kişi ara..." 
-             className="w-full bg-white/5 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-800 dark:text-white placeholder-gray-500 hover:border-black/20 dark:hover:border-white/20 focus:outline-none focus:border-blue-500 transition-all"
+             className="w-full bg-white/5 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-gray-500 hover:border-black/20 dark:hover:border-white/20 focus:outline-none focus:border-blue-500 transition-all"
            />
         </div>
       </div>
@@ -65,11 +65,11 @@ export function ChatList({ contacts, activeId, onSelect }: { contacts: ChatConta
             {/* Kişi Bilgisi */}
             <div className="flex-1 overflow-hidden">
               <div className="flex justify-between items-center mb-1">
-                <span className="font-bold text-slate-800 dark:text-gray-200 text-sm truncate max-w-[130px]">{c.name}</span>
-                <span className="text-xs text-gray-500 font-medium">{c.time}</span>
+                <span className="font-black text-slate-900 dark:text-gray-200 text-sm truncate max-w-[130px]">{c.name}</span>
+                <span className="text-xs text-gray-500 font-black">{c.time}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className={`text-xs truncate max-w-[120px] ${c.unreadCount ? 'text-slate-900 dark:text-white font-bold' : 'text-gray-500'}`}>
+                <span className={`text-xs truncate max-w-[120px] font-bold ${c.unreadCount ? 'text-slate-950 dark:text-white' : 'text-slate-500'}`}>
                   {c.lastMessage}
                 </span>
                 {c.unreadCount && (

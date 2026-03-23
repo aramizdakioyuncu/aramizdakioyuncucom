@@ -2,7 +2,7 @@ import React from 'react';
 
 export function ProfileStats() {
   return (
-    <div className="w-full bg-white dark:bg-[#0a0a0e] border border-armoyu-card-border rounded-3xl p-6 shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
+    <div className="w-full bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl p-6 shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
       
       {/* Rakamlar */}
       <div className="flex flex-wrap justify-center md:justify-start gap-6 md:gap-12 w-full md:w-auto">

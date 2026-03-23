@@ -13,7 +13,7 @@ export function ChatInput({ onSend }: { onSend: (text: string) => void }) {
   };
 
   return (
-    <form onSubmit={handleSend} className="p-3 border-t border-gray-200 dark:border-white/5 flex items-center gap-3 bg-white dark:bg-[#0a0a0e]">
+    <form onSubmit={handleSend} className="p-3 border-t border-gray-200 dark:border-white/5 flex items-center gap-3 bg-armoyu-card-bg">
       
       {/* Ekstra Butonlar (Emoji, Dosya Ekle vb.) */}
       <button type="button" className="text-gray-400 hover:text-blue-500 p-2 transition-colors">

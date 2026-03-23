@@ -9,22 +9,35 @@ import { useChat } from '@/context/ChatContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-const navItems = [
+interface NavItem {
+  name: string;
+  href: string;
+  submenu?: { name: string; href: string }[];
+}
+
+const navItems: NavItem[] = [
   {
     name: 'Gruplar',
+    href: '/gruplar',
+  },
+  { name: 'Galeriler', href: '/galeriler' },
+  { name: 'Haberler', href: '/haberler' },
+  { name: 'Çekilişler', href: '/cekilisler' },
+  { name: 'Projeler', href: '#' },
+  { 
+    name: 'Ekibimiz', 
     href: '#',
     submenu: [
-      { name: 'E-spor', href: '#' },
-      { name: 'Spor', href: '#' },
-      { name: 'Yazılım Geliştirme', href: '#' }
+      { name: 'Çalışma Ekibi', href: '/ekibimiz/ekip' },
+      { name: 'İnsan Kaynakları', href: '/ekibimiz/ik' },
+      { name: 'Kurallarımız', href: '/ekibimiz/kurallar' },
+      { name: 'Hakkımızda', href: '/ekibimiz/hakkimizda' },
+      { name: 'Gizlilik Politikası', href: '/ekibimiz/gizlilik' }
     ]
   },
-  { name: 'Klanlar', href: '#' },
-  { name: 'Görevler', href: '#' },
-  { name: 'Çekilişler', href: '#' },
-  { name: 'Forum', href: '#' },
-  { name: 'Modlar', href: '#' },
-  { name: 'Etkinlikler', href: '#' },
+  { name: 'Forum', href: '/forum' },
+  { name: 'Modlar', href: '/modlar' },
+  { name: 'Etkinlikler', href: '/etkinlikler' },
   { name: 'Mağaza', href: '#' },
 ];
 

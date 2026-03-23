@@ -42,7 +42,7 @@ export function ProfileContent() {
       
       {/* Sol Panel: Hakkında Özeti */}
       <div className="w-full lg:w-80 shrink-0 space-y-6">
-        <div className="bg-white dark:bg-[#0a0a0e] border border-armoyu-card-border rounded-3xl p-6 shadow-sm">
+        <div className="bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl p-6 shadow-sm">
           <h3 className="text-lg font-black text-armoyu-text mb-4">Hakkında</h3>
           <p className="text-sm font-medium text-armoyu-text-muted leading-relaxed mb-6">
             Selam, ben Berkay. ARMOYU projesinin kurucusuyum. Genelde rekabetçi FPS oyunları oynarım ve yeni teknolojiler ile ilgilenirim.
@@ -82,7 +82,7 @@ export function ProfileContent() {
         </div>
 
         {/* Rozetler Vitrini */}
-        <div className="bg-white dark:bg-[#0a0a0e] border border-armoyu-card-border rounded-3xl p-6 shadow-sm hidden lg:block">
+        <div className="bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl p-6 shadow-sm hidden lg:block">
           <h3 className="text-lg font-black text-armoyu-text mb-4">Rozetler</h3>
           <div className="flex flex-wrap gap-2">
             <span className="bg-red-500/10 text-red-500 text-xs font-bold px-3 py-1.5 rounded-xl border border-red-500/20">Kurucu</span>
@@ -93,7 +93,7 @@ export function ProfileContent() {
         </div>
 
         {/* Cloud Depolama Temsili Kutusu */}
-        <div className="bg-white dark:bg-[#0a0a0e] border border-armoyu-card-border rounded-3xl p-6 shadow-sm hidden lg:block">
+        <div className="bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl p-6 shadow-sm hidden lg:block">
           <div className="flex justify-between items-center mb-4">
              <h3 className="text-lg font-black text-armoyu-text flex items-center gap-2">
                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>
@@ -123,7 +123,7 @@ export function ProfileContent() {
       <div className="flex-1 min-w-0 flex flex-col gap-6">
         
         {/* Modern Tabs */}
-        <div className="bg-white dark:bg-[#0a0a0e] border border-armoyu-card-border rounded-2xl p-2 shadow-sm overflow-x-auto hide-scrollbar">
+        <div className="bg-armoyu-card-bg border border-armoyu-card-border rounded-2xl p-2 shadow-sm overflow-x-auto hide-scrollbar">
           <div className="flex gap-2 min-w-max">
             {tabs.map((tab) => (
               <button
@@ -144,7 +144,7 @@ export function ProfileContent() {
         {/* Tab İçerikleri */}
         {activeTab === 'Gönderiler' && (
           <div className="space-y-6">
-            <div className="bg-white dark:bg-[#0a0a0e] border border-armoyu-card-border rounded-3xl p-5 shadow-sm">
+            <div className="bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl p-5 shadow-sm">
                <div className="flex gap-4">
                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Berkay" className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 shrink-0 object-cover" alt="Avatar"/>
                  <input type="text" placeholder="Profiline sabit bir gönderi yaz..." className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-armoyu-text placeholder:text-armoyu-text-muted" />
@@ -158,7 +158,7 @@ export function ProfileContent() {
         )}
 
         {activeTab !== 'Gönderiler' && (
-          <div className="bg-white dark:bg-[#0a0a0e] border border-armoyu-card-border rounded-3xl p-12 shadow-sm flex flex-col items-center justify-center text-center">
+          <div className="bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl p-12 shadow-sm flex flex-col items-center justify-center text-center">
             <div className="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center text-armoyu-text-muted mb-4">
                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             </div>

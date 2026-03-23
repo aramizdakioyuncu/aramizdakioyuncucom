@@ -81,7 +81,7 @@ export function ChatContainer() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center h-full text-armoyu-text-muted bg-white dark:bg-[#0a0a0e] rounded-3xl border border-gray-200 dark:border-white/10">
+      <div className="flex items-center justify-center h-full text-armoyu-text-muted bg-armoyu-bg rounded-3xl border border-gray-200 dark:border-white/10">
         Sohbetleri görmek için giriş yapmalısınız.
       </div>
     );
@@ -90,7 +90,7 @@ export function ChatContainer() {
   const activeContact = activeContactId ? MOCK_CONTACTS.find(c => c.id === activeContactId) : null;
 
   return (
-    <div className="flex h-full w-full bg-white dark:bg-[#0a0a0e] overflow-hidden relative z-10">
+    <div className="flex h-full w-full bg-armoyu-bg overflow-hidden relative z-10">
       
       {/* Görünüm 1: Sohbet Listesi (Biri seçili değilse tam ekran gösterilir) */}
       {!activeContactId && (
@@ -101,10 +101,10 @@ export function ChatContainer() {
 
       {/* Görünüm 2: Seçilen Sohbet Paneli (İçerik) */}
       {activeContactId && activeContact && (
-        <div className="w-full h-full flex flex-col bg-white dark:bg-[#0a0a0e] relative animate-in fade-in slide-in-from-right-4 duration-300">
+        <div className="w-full h-full flex flex-col bg-armoyu-bg relative animate-in fade-in slide-in-from-right-4 duration-300">
           
           {/* İçerik Header */}
-          <div className="h-[76px] border-b border-gray-200 dark:border-white/5 bg-white dark:bg-[#0f0f15] flex items-center px-4 gap-3 z-10 shrink-0">
+          <div className="h-[76px] border-b border-gray-200 dark:border-white/5 bg-armoyu-card-bg flex items-center px-4 gap-3 z-10 shrink-0">
              
              {/* Listeye Geri Dönüş butonu! */}
              <button 

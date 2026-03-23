@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { PostCard } from './PostCard';
 import { Stories } from './Stories';
+import { SidebarLeft } from './SidebarLeft';
 import { CloudStorageModal } from '../profile/CloudStorageModal';
 
 interface MockPost {
@@ -119,7 +120,11 @@ export function Dashboard() {
   }, [isLoadingMore, visibleCount, allFilteredPosts.length]);
 
   return (
-    <div className="w-full flex-1 flex gap-6 pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="w-full flex-1 flex gap-6 pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700 items-start">
+      
+      {/* Sol Yan Panel (Ranking & Economy & MC) */}
+      <SidebarLeft />
+
       
       {/* Ana Akış (Feed) */}
       <div className="flex-1 flex flex-col pt-2">

@@ -25,7 +25,7 @@ export function ProfileHeader({ user, isOwnProfile }: ProfileHeaderProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   return (
-    <div className="w-full bg-white dark:bg-[#0a0a0e] border border-armoyu-card-border rounded-3xl overflow-hidden shadow-sm">
+    <div className="w-full bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl overflow-hidden shadow-sm">
       {/* Banner */}
       <div className="h-48 md:h-72 w-full relative">
         <img src={user.banner} alt="Kapak" className="w-full h-full object-cover" />
@@ -37,7 +37,7 @@ export function ProfileHeader({ user, isOwnProfile }: ProfileHeaderProps) {
         
         {/* Avatar & İsim */}
         <div className="flex flex-col md:flex-row md:items-end gap-4 md:gap-6 -mt-16 md:-mt-20 relative z-10 mb-6 md:mb-0">
-          <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white dark:border-[#0a0a0e] overflow-hidden shadow-xl bg-black/5 dark:bg-white/5 shrink-0">
+          <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-armoyu-bg overflow-hidden shadow-xl bg-black/5 dark:bg-white/5 shrink-0">
             <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
           </div>
           
