@@ -5,10 +5,18 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { ProfileHeader } from '@/components/modules/profile/ProfileHeader';
 import { ProfileStats } from '@/components/modules/profile/ProfileStats';
 import { ProfileContent } from '@/components/modules/profile/ProfileContent';
+import { useAuth } from '@/context/AuthContext';
 
 export default function UserProfilePage() {
+  const { user, setIsLoginModalOpen } = useAuth();
   const params = useParams();
   const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (!user) {
+      setIsLoginModalOpen(true);
+    }
+  }, [user, setIsLoginModalOpen]);
 
   const username = (params?.username as string) || 'oyuncu';
   const urlName = searchParams?.get('name');
