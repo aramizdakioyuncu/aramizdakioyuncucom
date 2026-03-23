@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 
 export interface GroupCardProps {
   name: string;
@@ -82,9 +83,12 @@ export function GroupCard({
            </div>
         </div>
 
-        <button className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-500/20 transform active:scale-95 transition-all">
+        <Link 
+          href={`/gruplar/${name.toLowerCase().replace(/\s+/g, '-')}`}
+          className="w-full py-3.5 block text-center rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-500/20 transform active:scale-95 transition-all"
+        >
            Gruba Katıl / Görüntüle
-        </button>
+        </Link>
       </div>
 
     </div>
