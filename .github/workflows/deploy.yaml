@@ -10,15 +10,20 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          # Kodları Runner içindeki kısa yola (yani senin projerine) indirir
-          path: /app
+        uses: actions/checkout@v4 # Kodları güvenli bölgeye indirir
 
-      - name: Build and Deploy Next
-        # Artık yol çok kısa ve temiz:
-        working-directory: /app
+      - name: Sync and Deploy
         run: |
-          # Bu komut çalıştığında dosyalar fiziksel klasöründe GÜNCELLENMİŞ olacak.
+          # 1. Dosyaları senin fiziksel klasörüne (volume olan /app) kopyala
+          # Bu sayede sunucuya girdiğinde dosyaları güncel görürsün.
+          # '.' (nokta) Runner'ın indirdiği taze kodlardır.
+          cp -rn ./* /app/ 2>/dev/null || cp -rf ./* /app/
+          
+          # 2. Artık senin o fiziksel klasörüne gidip işlemi yapalım
+          cd /app/02-subdomains
+          
+          # 3. Docker build başlasın
           docker compose up -d --build next
+          
+          # 4. Temizlik
           docker image prune -f
