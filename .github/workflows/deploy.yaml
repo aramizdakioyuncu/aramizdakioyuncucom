@@ -11,10 +11,14 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          # Kodları Runner içindeki kısa yola (yani senin projerine) indirir
+          path: /app
 
       - name: Build and Deploy Next
-
-        working-directory: ./02-subdomains
+        # Artık yol çok kısa ve temiz:
+        working-directory: /app
         run: |
+          # Bu komut çalıştığında dosyalar fiziksel klasöründe GÜNCELLENMİŞ olacak.
           docker compose up -d --build next
           docker image prune -f
