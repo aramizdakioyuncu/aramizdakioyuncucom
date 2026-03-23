@@ -38,7 +38,7 @@ const navItems: NavItem[] = [
   { name: 'Forum', href: '/forum' },
   { name: 'Modlar', href: '/modlar' },
   { name: 'Etkinlikler', href: '/etkinlikler' },
-  { name: 'Mağaza', href: '#' },
+  { name: 'Mağaza', href: '/magaza' },
 ];
 
 export function Header() {
