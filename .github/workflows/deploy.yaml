@@ -14,13 +14,26 @@ jobs:
 
       - name: Sync and Deploy
         run: |
-          # 1. GitHub'dan gelen taze 'next' klasörünü ve dosyaları /app içine kopyala
-          # Bu komut sunucundaki dosyaları güncelleyecek.
-          cp -rf ./next /app/
+          # 1. GitHub'dan inen kodların içindeki GERÇEK 'next' klasörünü bulalım
+          # Bu komut deponun neresinde olursa olsun 'next' klasörünün yolunu bulur
+          REPO_NEXT_PATH=$(find . -type d -name "next" | grep "02-subdomains" | head -n 1)
           
-          # 2. Doğrudan /app içinde (yani senin 02-subdomains klasöründe) komutu çalıştır
+          if [ -z "$REPO_NEXT_PATH" ]; then
+            echo "HATA: GitHub deponda 'next' klasörü bulunamadı!"
+            ls -R
+            exit 1
+          fi
+          
+          echo "Bulunan kaynak klasör: $REPO_NEXT_PATH"
+          echo "Hedef sunucu klasörü: /app/next"
+
+          # 2. Dosyaları senkronize et
+          # Kaynaktaki 'next' klasörünün İÇİNDEKİLERİ, sunucudaki '/app/next' İÇİNE kopyalar
+          cp -rf "$REPO_NEXT_PATH"/. /app/next/
+          
+          # 3. İşlem dizinine (02-subdomains) git ve Docker'ı ateşle
           cd /app
           docker compose up -d --build next
           
-          # 3. Temizlik
+          # 4. Temizlik
           docker image prune -f
