@@ -13,12 +13,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build and Deploy Next
-        # DİKKAT: GitHub depondaki klasör hiyerarşisini buraya yazmalısın.
-        # Eğer repo root'unda 01-aramizdakioyuncu.com klasörü varsa:
-        working-directory: ./01-aramizdakioyuncu.com/02-subdomains
+
+        working-directory: ./02-subdomains
         run: |
-          # Burada Docker artık docker-compose.yml dosyasını görebilecek.
           docker compose up -d --build next
-          
-          # Sunucu temizliği
           docker image prune -f
