@@ -5,65 +5,8 @@ import { Stories } from './Stories';
 import { SidebarLeft } from './SidebarLeft';
 import { CloudStorageModal } from '../profile/CloudStorageModal';
 import Link from 'next/link';
-
-interface MockPost {
-  id: string;
-  author: {
-    name: string;
-    username: string;
-    avatar: string;
-    verified?: boolean;
-    badge?: string;
-  };
-  content: string;
-  imageUrl?: string;
-  media?: { type: 'image' | 'video'; url: string }[];
-  createdAt: string;
-  stats: {
-    likes: number;
-    comments: number;
-    reposts: number;
-    shares: number;
-  };
-  hashtags: string[];
-}
-
-// 30 Adet Örnek Paylaşım Oluşturucu (Simülasyon)
-const GENERATED_POSTS: MockPost[] = Array.from({ length: 30 }, (_, i) => {
-  const themes = [
-    { tag: '#ArmoyuV3', content: 'V3 sürümüyle gelen yeni özellikler harika! #Gelecek #Tasarım' },
-    { tag: '#CS2Update', content: 'Yeni güncelleme ile vuruş hissi çok değişmiş. #Turnuva #E-spor' },
-    { tag: '#MinecraftServer', content: 'Survival sunucumuzda yeni klan savaşları başlıyor! #Modlar #Oyun' },
-    { tag: '#MultiMedia', content: 'Yeni galeri sistemini denediniz mi? Çok akıcı olmuş. #XStyle #İnovasyon' },
-    { tag: '#ValorantTürkiye', content: 'Yeni ajan yetenekleri dengeleri sarsacak gibi duruyor. #Ranked #Maç' }
-  ];
-  const theme = themes[i % themes.length];
-  
-  return {
-    id: `post-${i + 1}`,
-    author: {
-      name: i % 3 === 0 ? 'Berkay Tikenoğlu' : i % 3 === 1 ? 'Alperen' : 'Zeynep Kaya',
-      username: i % 3 === 0 ? 'berkaytikeno' : i % 3 === 1 ? 'alperen_admin' : 'zeynocash',
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 123}`,
-      verified: i % 5 === 0,
-      badge: i % 10 === 0 ? 'KURUCU' : i % 7 === 0 ? 'MODERATÖR' : undefined
-    },
-    content: `${i + 1}. Paylaşım: ${theme.content}`,
-    imageUrl: i % 4 === 0 ? 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670&auto=format&fit=crop' : undefined,
-    media: i % 6 === 0 ? [
-      { type: 'image' as const, url: 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?q=80&w=2698&auto=format&fit=crop' },
-      { type: 'video' as const, url: 'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4' }
-    ] : undefined,
-    createdAt: `${i + 1} saat önce`,
-    stats: { 
-      likes: Math.floor(Math.random() * 500), 
-      comments: Math.floor(Math.random() * 50), 
-      reposts: Math.floor(Math.random() * 20), 
-      shares: Math.floor(Math.random() * 10) 
-    },
-    hashtags: theme.content.match(/#\w+/g) || []
-  };
-});
+import { userList, postList, groupList } from '@/lib/constants/seedData';
+import { Post, Group } from '@/models';
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -73,15 +16,14 @@ export function Dashboard() {
   const [visibleCount, setVisibleCount] = useState(10);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // Gündemdeki Etiketleri Dinamik Hesapla (En çok kullanılanlar)
+  // Gündemdeki Etiketleri Dinamik Hesapla
   const trendingTags = useMemo(() => {
     const counts: Record<string, number> = {};
-    GENERATED_POSTS.forEach(post => {
+    postList.forEach(post => {
       post.hashtags?.forEach(tag => {
         counts[tag] = (counts[tag] || 0) + 1;
       });
     });
-    // Obje'yi array'e çevir, adede göre sırala ve ilk 5'i al
     return Object.entries(counts)
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => b.count - a.count)
@@ -90,8 +32,8 @@ export function Dashboard() {
 
   // Filtremele ve Pagination Mantığı
   const allFilteredPosts = selectedTag 
-    ? GENERATED_POSTS.filter(post => post.hashtags.includes(selectedTag))
-    : GENERATED_POSTS;
+    ? postList.filter(post => post.hashtags?.includes(selectedTag.replace('#', '')))
+    : postList;
     
   const visiblePosts = allFilteredPosts.slice(0, visibleCount);
 
@@ -134,7 +76,7 @@ export function Dashboard() {
         <Stories />
 
         {/* Yeni Gönderi Paylaşma Alanı */}
-        <div className="glass-panel p-4 md:p-5 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg shadow-sm">
+        <div className="glass-panel p-4 md:p-5 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg shadow-sm mb-8">
           <div className="flex gap-4 items-center">
             <img 
               src={user?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Armoyu"} 
@@ -222,39 +164,41 @@ export function Dashboard() {
            <button className="mt-5 w-full px-4 py-2.5 bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-armoyu-text text-sm font-bold rounded-xl hover:bg-black/10 dark:hover:bg-white/10 transition-colors">Profili Düzenle</button>
         </div>
 
-        {/* Gruplarım Kısa Yollar Widget */}
-        {user && (
-          <div className="glass-panel p-6 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg">
-             <div className="flex items-center justify-between mb-6">
-                <h3 className="font-extrabold text-armoyu-text text-lg">Gruplarım</h3>
-                <Link href="/gruplar" className="text-[10px] font-black text-blue-500 hover:underline uppercase tracking-widest">TÜMÜ</Link>
-             </div>
-             <div className="space-y-4">
-                {[
-                  { name: 'RIHTIM', tag: 'RTM', logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=Rihtim', unread: 3 },
-                  { name: 'CODE MASTERS', tag: 'CODE', logo: 'https://api.dicebear.com/7.x/identicon/svg?seed=Code', unread: 0 },
-                  { name: 'İttihat ve Terakki', tag: 'İttihat', logo: 'https://api.dicebear.com/7.x/initials/svg?seed=IT', unread: 12 }
-                ].map((group, idx) => (
-                  <Link 
+         {/* Benim Gruplarım Widget (Dynamic) */}
+         <div className="glass-panel p-6 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg">
+            <div className="flex items-center justify-between mb-5">
+               <h3 className="font-extrabold text-armoyu-text text-lg">Benim Gruplarım</h3>
+               <span className="bg-blue-500/10 text-blue-500 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">{(user?.groups?.length || 0)} Grup</span>
+            </div>
+            
+            <div className="space-y-4">
+               {(user?.groups?.length || 0) > 0 ? (
+                 user?.groups?.map((group: any, idx: number) => (
+                   <Link 
                     key={idx} 
                     href={`/gruplar/${group.name.toLowerCase().replace(/\s+/g, '-')}`}
-                    className="flex items-center justify-between group p-2 rounded-xl border border-transparent hover:border-armoyu-card-border hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+                    className="flex items-center gap-3 group cursor-pointer p-1 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                   >
-                    <div className="flex items-center gap-3">
-                       <img src={group.logo} className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-800 border border-armoyu-card-border group-hover:scale-105 transition-transform" />
-                       <div className="overflow-hidden">
-                          <span className="block text-sm font-black text-armoyu-text truncate max-w-[140px] uppercase tracking-tight">{group.name}</span>
-                          <span className="block text-[10px] font-bold text-armoyu-text-muted">@{group.tag}</span>
-                       </div>
-                    </div>
-                    {group.unread > 0 && (
-                      <span className="bg-blue-600 text-white text-[9px] font-black px-2 py-1 rounded-lg">+{group.unread}</span>
-                    )}
-                  </Link>
-                ))}
-             </div>
-          </div>
-        )}
+                      <img src={group.logo} alt={group.name} className="w-10 h-10 rounded-xl object-cover border border-black/5 shadow-sm group-hover:scale-105 transition-transform" />
+                      <div className="flex-1 min-w-0">
+                         <h4 className="text-sm font-bold text-armoyu-text truncate group-hover:text-blue-500 transition-colors uppercase tracking-tight">{group.name}</h4>
+                         <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="text-[10px] text-armoyu-text-muted truncate opacity-80 uppercase font-bold tracking-widest">{group.shortName} • AKTİF</span>
+                         </div>
+                      </div>
+                   </Link>
+                 ))
+               ) : (
+                 <div className="text-center py-6 px-4 bg-black/5 dark:bg-white/5 rounded-2xl border border-dashed border-armoyu-card-border">
+                    <p className="text-[11px] font-bold text-armoyu-text-muted uppercase tracking-widest leading-relaxed">
+                       Henüz bir gruba<br/>dahil değilsiniz
+                    </p>
+                    <Link href="/gruplar" className="inline-block mt-3 text-[10px] font-black text-blue-500 hover:text-blue-400 uppercase tracking-tighter">Grupları Kesfet →</Link>
+                 </div>
+               )}
+            </div>
+         </div>
 
         {/* Gündemdekiler Widget */}
         <div className="glass-panel p-6 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg">
@@ -281,8 +225,42 @@ export function Dashboard() {
               ))}
              
              <button className="w-full mt-2 pt-4 border-t border-armoyu-card-border text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-bold flex justify-center transition-colors">
-               Daha Fazla Göster
+               Tümünü Gör
              </button>
+           </div>
+        </div>
+
+
+        {/* Popüler Gruplar Widget */}
+        <div className="glass-panel p-6 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg">
+           <div className="flex items-center justify-between mb-5">
+              <h3 className="font-extrabold text-armoyu-text text-lg">Popüler Gruplar</h3>
+              <Link href="/gruplar" className="text-xs font-bold text-blue-500 hover:underline">Tümü</Link>
+           </div>
+           
+           <div className="space-y-4">
+              {groupList.slice(0, 4).map((group, idx) => (
+                <Link 
+                  key={idx} 
+                  href={`/gruplar/${group.name.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="flex items-center gap-3 group cursor-pointer p-1 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                >
+                   <div className="relative">
+                      <img src={group.logo} alt={group.name} className="w-10 h-10 rounded-xl object-cover border border-black/5 shadow-sm" />
+                      {group.recruitment === 'Açık' && (
+                        <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-armoyu-card-bg shadow-sm" title="Alımlar Açık" />
+                      )}
+                   </div>
+                   <div className="flex-1 min-w-0">
+                      <h4 className="text-sm font-bold text-armoyu-text truncate group-hover:text-blue-500 transition-colors uppercase tracking-tight">{group.name}</h4>
+                      <p className="text-[10px] text-armoyu-text-muted truncate opacity-80">{group.category} • {group.recruitment === 'Açık' ? 'Katıl' : 'Kapalı'}</p>
+                   </div>
+                </Link>
+              ))}
+              
+              <button className="w-full py-3 bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 hover:border-blue-500/30 hover:bg-blue-500/5 text-armoyu-text text-xs font-bold rounded-xl transition-all active:scale-[0.98]">
+                 Yeni Grup Oluştur
+              </button>
            </div>
         </div>
 

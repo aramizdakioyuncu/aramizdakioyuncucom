@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MediaLightbox, PostMedia } from './MediaLightbox';
 import { useAuth } from '@/context/AuthContext';
+import { User } from '@/models';
 
 // Yorumların Tipini (Type) Nested Destekleyecek Şekilde Güncelledik
 interface CommentType {
@@ -22,13 +23,7 @@ interface CommentType {
 
 export interface PostCardProps {
   id: string;
-  author: {
-    name: string;
-    username: string;
-    avatar: string;
-    verified?: boolean;
-    badge?: string;
-  };
+  author: User | null;
   content: string;
   imageUrl?: string; // Legacy support
   media?: PostMedia[];
@@ -48,6 +43,8 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  if (!author) return null;
 
   const displayMedia: PostMedia[] = media 
     ? media 
@@ -103,12 +100,7 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
   };
 
   const goToProfile = () => {
-    const params = new URLSearchParams();
-    if (author.name) params.set('name', author.name);
-    if (author.avatar) params.set('avatar', author.avatar);
-    if (author.badge) params.set('badge', author.badge);
-    
-    router.push(`/oyuncular/${author.username}?${params.toString()}`);
+    router.push(author.getProfileUrl());
   };
 
   return (
@@ -118,7 +110,7 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
       <div className="p-5 flex items-start gap-4">
         <img 
           src={author.avatar} 
-          alt={author.name} 
+          alt={author.displayName} 
           className="w-12 h-12 rounded-full border-2 border-transparent hover:border-blue-500 transition-colors shadow-sm bg-black/5 dark:bg-white/5 object-cover cursor-pointer" 
           onClick={goToProfile}
           title="Profile Git"
@@ -131,40 +123,65 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
                  onClick={goToProfile}
                  title="Profile Git"
                >
-                 {author.name}
+                 {author.displayName}
                </h3>
                {author.verified && (
                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-blue-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                )}
-               {author.badge && (
-                 <span className="bg-red-500/10 text-red-600 dark:text-red-400 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">{author.badge}</span>
+               {author.role?.name && (
+                 <span 
+                   style={{ 
+                     backgroundColor: `${author.role.color}15`, 
+                     color: author.role.color,
+                     borderColor: `${author.role.color}40`
+                   }}
+                   className="text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider border"
+                 >
+                   {author.role.name}
+                 </span>
                )}
              </div>
-             <div className="relative">
-               <button 
-                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                 className="text-armoyu-text-muted hover:text-blue-500 p-1 transition-colors"
-                 title="Seçenekler"
-               >
-                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-               </button>
-               
-               {isMenuOpen && (
-                 <>
-                   <div className="fixed inset-0 z-40" onClick={() => setIsMenuOpen(false)} />
-                   <div className="absolute right-0 mt-1 w-56 bg-armoyu-drawer-bg border border-gray-200 dark:border-white/10 rounded-xl shadow-xl z-50 py-1.5 animate-in fade-in zoom-in-95 duration-200">
-                     <button onClick={() => setIsMenuOpen(false)} className="w-full text-left px-4 py-2.5 text-sm font-medium text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 transition-colors flex items-center gap-3">
-                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                       Gönderiyi Kaydet
-                     </button>
-                     <button onClick={() => setIsMenuOpen(false)} className="w-full text-left px-4 py-2.5 text-sm font-bold text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-3 border-t border-gray-100 dark:border-white/5 mt-1 pt-2.5">
-                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-                       Gönderiyi Şikayet Et
-                     </button>
-                   </div>
-                 </>
-               )}
-             </div>
+              <div className="relative flex items-center gap-1">
+                 {/* Quick Edit (Only for Owner) */}
+                 {user?.username === author.username && (
+                   <button 
+                     className="text-armoyu-text-muted hover:text-blue-500 p-1.5 transition-colors bg-blue-500/5 rounded-lg border border-blue-500/10"
+                     title="Düzenle"
+                   >
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                   </button>
+                 )}
+
+                 <button 
+                   onClick={() => setIsMenuOpen(!isMenuOpen)}
+                   className="text-armoyu-text-muted hover:text-blue-500 p-1 transition-colors"
+                   title="Seçenekler"
+                 >
+                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                 </button>
+                 
+                 {isMenuOpen && (
+                   <>
+                     <div className="fixed inset-0 z-40" onClick={() => setIsMenuOpen(false)} />
+                     <div className="absolute right-0 mt-1 w-56 bg-armoyu-drawer-bg border border-gray-200 dark:border-white/10 rounded-xl shadow-xl z-50 py-1.5 animate-in fade-in zoom-in-95 duration-200">
+                       {user?.username === author.username && (
+                         <button onClick={() => setIsMenuOpen(false)} className="w-full text-left px-4 py-2.5 text-sm font-bold text-blue-500 hover:bg-blue-500/10 transition-colors flex items-center gap-3">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                           Gönderiyi Düzenle
+                         </button>
+                       )}
+                       <button onClick={() => setIsMenuOpen(false)} className="w-full text-left px-4 py-2.5 text-sm font-medium text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 transition-colors flex items-center gap-3">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                         Gönderiyi Kaydet
+                       </button>
+                       <button onClick={() => setIsMenuOpen(false)} className="w-full text-left px-4 py-2.5 text-sm font-bold text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-3 border-t border-gray-100 dark:border-white/5 mt-1 pt-2.5">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                         Gönderiyi Şikayet Et
+                       </button>
+                     </div>
+                   </>
+                 )}
+              </div>
           </div>
           <div className="flex items-center gap-2 text-xs font-medium text-armoyu-text-muted mt-0.5">
             <span className="text-blue-600 dark:text-blue-400 font-bold cursor-pointer hover:underline" onClick={goToProfile}>@{author.username}</span>

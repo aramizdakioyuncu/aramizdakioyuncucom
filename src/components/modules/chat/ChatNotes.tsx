@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { MOCK_NOTES, NoteType } from '@/lib/constants/mockData';
+import { MOCK_NOTES } from '@/lib/constants/mockData';
+import { Note } from '@/models';
 
 export function ChatNotes() {
   return (
@@ -15,7 +15,7 @@ export function ChatNotes() {
   );
 }
 
-function NoteItem({ note }: { note: NoteType }) {
+function NoteItem({ note }: { note: Note }) {
   return (
     <div className="flex flex-col items-center shrink-0 cursor-pointer group relative">
       <div className="relative mb-3 flex flex-col items-center">
@@ -37,8 +37,8 @@ function NoteItem({ note }: { note: NoteType }) {
         {/* Avatar Area */}
         <div className="mt-1 relative">
           <img 
-            src={note.avatar} 
-            alt={note.username} 
+            src={note.user?.avatar} 
+            alt={note.user?.username} 
             className="w-11 h-11 md:w-12 md:h-12 rounded-full border-2 border-white dark:border-white/10 shadow-sm"
           />
           {note.isMe && (
@@ -49,8 +49,8 @@ function NoteItem({ note }: { note: NoteType }) {
         </div>
       </div>
 
-      <span className="text-[10px] text-armoyu-text-muted font-medium truncate w-14 text-center">
-        {note.isMe ? 'Hikayen' : note.username}
+      <span className={`text-[10px] text-armoyu-text-muted font-medium truncate w-14 text-center ${note.isMe ? 'italic' : ''}`}>
+        {note.isMe ? 'Hikayen' : note.user?.displayName || note.user?.username}
       </span>
     </div>
   );

@@ -1,13 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
-interface User {
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string;
-}
+import { User } from '@/models';
 
 interface AuthContextType {
   user: User | null;
@@ -29,7 +23,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Check local storage for persistent login
     const savedUser = localStorage.getItem('armoyu_user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      try {
+        const userData = JSON.parse(savedUser);
+        const userInstance = User.fromJSON(userData);
+        // Delay ensures this happens after initial mount to avoid render conflict warnings
+        setTimeout(() => setUser(userInstance), 0);
+      } catch (e) {
+        console.error('Failed to parse saved user', e);
+        localStorage.removeItem('armoyu_user');
+      }
     }
     setIsLoading(false);
   }, []);

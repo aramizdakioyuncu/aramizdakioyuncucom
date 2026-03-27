@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { MOCK_STORIES, StoryType } from '@/lib/constants/mockData';
+import { MOCK_STORIES } from '@/lib/constants/mockData';
 import { StoryViewer } from './StoryViewer';
+import { Story } from '@/models';
 
 export function Stories() {
   const [activeStoryIndex, setActiveStoryIndex] = useState<number | null>(null);
@@ -28,7 +29,7 @@ export function Stories() {
   );
 }
 
-function StoryItem({ story, onClick }: { story: StoryType, onClick: () => void }) {
+function StoryItem({ story, onClick }: { story: Story, onClick: () => void }) {
   return (
     <div 
       className="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group select-none"
@@ -45,8 +46,8 @@ function StoryItem({ story, onClick }: { story: StoryType, onClick: () => void }
         }`}>
           <div className="bg-armoyu-card-bg p-[2px] rounded-full">
             <img 
-              src={story.avatar} 
-              alt={story.username} 
+              src={story.user?.avatar} 
+              alt={story.user?.username} 
               className={`w-14 h-14 md:w-16 md:h-16 rounded-full border border-black/5 dark:border-white/10 object-cover ${!story.hasUnseen && !story.isMe ? 'grayscale-[0.5] opacity-80' : ''}`}
             />
           </div>
@@ -61,7 +62,7 @@ function StoryItem({ story, onClick }: { story: StoryType, onClick: () => void }
       </div>
 
       <span className={`text-[11px] md:text-xs font-bold truncate w-16 md:w-20 text-center transition-colors ${story.hasUnseen ? 'text-armoyu-text' : 'text-armoyu-text-muted'}`}>
-        {story.isMe ? 'Hikayen' : story.username}
+        {story.isMe ? 'Hikayen' : story.user?.displayName || story.user?.username}
       </span>
     </div>
   );

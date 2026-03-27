@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
+import { userList } from '@/lib/constants/seedData';
 
 export function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { login } = useAuth();
@@ -54,22 +55,22 @@ export function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     setError('');
     setIsSubmitting(true);
     
-    // Geçici test hesabı doğrulaması
+    // Simulate API delay
     setTimeout(() => {
-      if (username === 'test' && password === '123456') {
-        login({
-          id: '1',
-          username: 'testkullanici',
-          displayName: 'Test Kullanıcısı',
-          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ArmoyuTest'
-        });
+      // Search for the user in our seeded userList
+      const foundUser = userList.find(u => 
+        u.username.toLowerCase() === username.toLowerCase()
+      );
+
+      if (foundUser) {
+        login(foundUser);
         setIsSubmitting(false);
         onClose();
       } else {
-        setError('Hatalı giriş! Şimdilik "test" ve "123456" şifresini deneyin.');
+        setError('Kullanıcı bulunamadı! Lütfen listedeki geçerli bir kullanıcı adını deneyin.');
         setIsSubmitting(false);
       }
-    }, 1000);
+    }, 800);
   };
 
   const fillTestAccount = () => {
@@ -104,10 +105,10 @@ export function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             <p className="text-xs text-blue-300 font-medium text-left">Test hesabı ile <br/>arayüzü inceleyin.</p>
             <button 
               type="button" 
-              onClick={fillTestAccount}
+              onClick={() => { setUsername('berkaytikenoglu'); setPassword('armo-v3'); }}
               className="text-xs font-bold bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white py-2 px-4 rounded-lg transition-all shadow-[0_0_10px_rgba(37,99,235,0.3)] border border-blue-400/50 whitespace-nowrap"
             >
-              Test Bilgilerini Gir
+              Kurucu Bilgilerini Gir
             </button>
           </div>
 
@@ -155,7 +156,7 @@ export function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             </Button>
             
             <p className="text-center text-gray-500 text-sm mt-6 font-medium">
-              Henüz ARMOYU'da değil misin? <a href="#" className="text-blue-400 hover:text-blue-300 ml-1">Kayıt Ol</a>
+              Henüz ARMOYU&apos;da değil misin? <a href="#" className="text-blue-400 hover:text-blue-300 ml-1">Kayıt Ol</a>
             </p>
           </form>
         </div>

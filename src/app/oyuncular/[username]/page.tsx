@@ -6,6 +6,7 @@ import { ProfileHeader } from '@/components/modules/profile/ProfileHeader';
 import { ProfileStats } from '@/components/modules/profile/ProfileStats';
 import { ProfileContent } from '@/components/modules/profile/ProfileContent';
 import { useAuth } from '@/context/AuthContext';
+import { userList } from '@/lib/constants/seedData';
 
 export default function UserProfilePage() {
   const { user, setIsLoginModalOpen } = useAuth();
@@ -50,20 +51,21 @@ export default function UserProfilePage() {
     return () => clearTimeout(timer);
   }, [username]);
 
-  const isOwnProfile = username === 'berkaytikeno'; // Mock Authorization
+  const targetUser = userList.find(u => u.username === username);
+  const isOwnProfile = user?.username === username;
 
   return (
     <main className="min-h-screen pt-4 pb-12 w-full animate-in fade-in duration-500">
       <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-6">
         
         {/* Banner & Header (Kapak resmi, avatar, butonlar) */}
-        <ProfileHeader user={mockUser} isOwnProfile={isOwnProfile} />
+        <ProfileHeader user={targetUser || mockUser} isOwnProfile={isOwnProfile} />
 
         {/* Quick Stats & Level (Bar Göstergeleri) */}
         <ProfileStats />
 
         {/* Sidebar & Content Layout (Sekmeler ve Akış) */}
-        <ProfileContent />
+        <ProfileContent user={targetUser || undefined} />
 
       </div>
     </main>

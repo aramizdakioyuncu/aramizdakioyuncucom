@@ -1,68 +1,46 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import React from 'react';
+import { useParams } from 'next/navigation';
 import { PageWidth } from '@/components/shared/PageWidth';
 import { PostCard } from '@/components/modules/auth/PostCard';
 import Link from 'next/link';
-
-// Mock detailed group data
-const GROUP_DATA_MOCK = {
-  name: 'Grup Adı',
-  shortName: 'TAG',
-  description: 'Bu grup ARMOYU topluluğunun bir parçasıdır. Grup üyeleri burada paylaşımlar yapar ve etkinlikler düzenler.',
-  recruitment: 'Alım Açık',
-  date: '01.01.2024',
-  category: 'Topluluk',
-  tag: 'Genel',
-  banner: 'https://images.unsplash.com/photo-1587573089734-09cb6960951b?q=80&w=2672&auto=format&fit=crop',
-  logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=Armoyu',
-  stats: {
-    members: 150,
-    online: 12,
-    posts: 420,
-    founded: '2024'
-  },
-  members: [
-    { name: 'Berkay Tikenoğlu', role: 'Kurucu', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Berkay' },
-    { name: 'MythX', role: 'Yönetici', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MythX' }
-  ]
-};
-
-const MOCK_POSTS = [
-  { 
-    id: '1', 
-    author: {
-      name: 'Grup Yöneticisi',
-      username: 'admin',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Admin',
-      verified: true
-    }, 
-    createdAt: '2 saat önce', 
-    content: 'Grubumuza yeni üyeler katıldı, hoş geldiniz!', 
-    stats: {
-      likes: 45,
-      comments: 4,
-      shares: 2
-    }
-  }
-];
+import { userList, postList, groupList } from '@/lib/constants/seedData';
 
 export default function GroupDetailPage() {
   const params = useParams();
-  const groupId = params?.groupId as string;
+  const groupId = (params?.groupId as string)?.toLowerCase();
   
-  // In a real app, you would fetch data based on groupId
-  // For now, we use RIHTIM data if it matches, otherwise generic
-  const data = (groupId === 'rihtim' || groupId === 'RIHTIM') ? {
-    ...GROUP_DATA_MOCK,
-    name: 'RIHTIM',
-    shortName: 'RTM',
-    description: 'Denizin verdiği huzur ile içinizi ferahlatacak bir yaşam sizi bekliyor. Topluluğumuzda huzur ve eğlence bir arada. Minecraft sunucumuzda en büyük yapıları inşa eden, düzenli etkinlikler düzenleyen ve samimi bir ortam sunan köklü bir klanız.',
-    recruitment: '16 Alım Açık',
-    logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=Rihtim',
-    stats: { members: 1240, online: 85, posts: 3420, founded: '2022' }
-  } : GROUP_DATA_MOCK;
+  // Find group by slug or name
+  const group = groupList.find(g => 
+    g.slug === groupId || 
+    g.name.toLowerCase() === groupId ||
+    g.name.toLowerCase().replace(/\s+/g, '-') === groupId
+  );
+
+  if (!group) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] bg-armoyu-bg text-armoyu-text">
+        <h2 className="text-2xl font-bold mb-4">Grup bulunamadı</h2>
+        <Link href="/gruplar" className="text-blue-500 hover:underline">Gruplara geri dön</Link>
+      </div>
+    );
+  }
+
+  // Filter posts for this group
+  const groupPosts = postList.filter(p => 
+    p.hashtags?.some(h => h.toLowerCase() === group.name.toLowerCase() || h.toLowerCase() === group.shortName.toLowerCase())
+  );
+
+  const data = {
+    ...group,
+    stats: {
+      members: group.memberCount || group.members.length,
+      online: Math.floor((group.memberCount || group.members.length) * 0.15),
+      posts: groupPosts.length + Math.floor(Math.random() * 50), // Sample fallback
+      founded: group.date?.split('.')?.[2] || '2024'
+    }
+  };
 
   return (
     <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -138,9 +116,14 @@ export default function GroupDetailPage() {
                </div>
                
                <div className="space-y-6">
-                  {MOCK_POSTS.map(post => (
+                  {groupPosts.map(post => (
                     <PostCard key={post.id} {...post} />
                   ))}
+                  {groupPosts.length === 0 && (
+                    <div className="text-center py-20 bg-black/5 dark:bg-white/5 rounded-3xl border border-dashed border-armoyu-card-border">
+                       <p className="text-armoyu-text-muted font-bold opacity-60">Henüz bu grupta paylaşım yapılmamış.</p>
+                    </div>
+                  )}
                </div>
             </div>
          </div>
@@ -151,15 +134,31 @@ export default function GroupDetailPage() {
             <div className="glass-panel p-8 rounded-[40px] border border-armoyu-card-border bg-armoyu-card-bg">
                <h4 className="text-xs font-black text-armoyu-text mb-8 uppercase tracking-widest">ÖNE ÇIKAN ÜYELER</h4>
                <div className="space-y-6">
-                  {data.members.map((member, idx) => (
-                    <div key={idx} className="flex items-center gap-4 group cursor-pointer">
+                  {(data.members || []).slice(0, 10).map((member, idx) => (
+                    <Link key={idx} href={`/oyuncular/${member.username}`} className="flex items-center gap-4 group cursor-pointer">
                        <img src={member.avatar} className="w-12 h-12 rounded-2xl border border-blue-500/20 group-hover:scale-105 transition-transform" />
                        <div>
-                          <p className="text-sm font-black text-armoyu-text mb-0.5 group-hover:text-blue-500 transition-colors uppercase">{member.name}</p>
-                          <p className={`text-[10px] font-bold uppercase tracking-widest ${idx === 0 ? 'text-blue-500' : 'text-armoyu-text-muted'}`}>{member.role}</p>
+                          <p className="text-sm font-black text-armoyu-text mb-0.5 group-hover:text-blue-500 transition-colors uppercase">{member.displayName}</p>
+                          <p className={`text-[10px] font-bold uppercase tracking-widest ${idx === 0 ? 'text-blue-500' : 'text-armoyu-text-muted'}`}>{member.role?.name || 'Üye'}</p>
                        </div>
+                    </Link>
+                  ))}
+               </div>
+            </div>
+
+            {/* Group Permissions */}
+            <div className="glass-panel p-8 rounded-[40px] border border-armoyu-card-border bg-armoyu-card-bg">
+               <h4 className="text-xs font-black text-armoyu-text mb-8 uppercase tracking-widest">GRUP YETKİLERİ</h4>
+               <div className="space-y-3">
+                  {(data.permissions || []).map((perm, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5">
+                       <div className="w-2 h-2 rounded-full bg-blue-500" />
+                       <span className="text-[10px] font-black text-armoyu-text uppercase tracking-wider">{perm.replace(/_/g, ' ')}</span>
                     </div>
                   ))}
+                  {(data.permissions?.length || 0) === 0 && (
+                     <p className="text-[10px] text-armoyu-text-muted italic opacity-60">Bu grup için özel yetki tanımlanmamış.</p>
+                  )}
                </div>
             </div>
          </div>

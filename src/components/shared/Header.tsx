@@ -45,10 +45,23 @@ export function Header() {
   const { user, logout, isLoginModalOpen, setIsLoginModalOpen } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isGroupsSubmenuOpen, setIsGroupsSubmenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { openChat } = useChat();
   const router = useRouter();
+
+  const unreadCount = user?.notifications?.filter((n: any) => !n.isRead).length || 0;
+
+  const markAllAsRead = () => {
+    if (user?.notifications) {
+      user.notifications.forEach((n: any) => n.isRead = true);
+      // Force a re-render or state update if needed, but since it's an object reference in seedData, 
+      // simple state toggle might suffice for the demo.
+      setIsNotificationOpen(false);
+      setTimeout(() => setIsNotificationOpen(true), 10);
+    }
+  };
 
   const goToMyProfile = () => {
     if (user?.username) {
@@ -118,7 +131,79 @@ export function Header() {
           </nav>
 
           {/* User Actions */}
-          <div className="flex-shrink-0 pl-4 md:pl-8 border-l border-armoyu-header-border flex items-center h-full ml-auto">
+          <div className="flex-shrink-0 pl-4 md:pl-8 border-l border-armoyu-header-border flex items-center gap-4 h-full ml-auto">
+            
+            {user && (
+              <div className="relative">
+                <button
+                  onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                  className={`relative p-2 rounded-xl transition-all ${isNotificationOpen ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5'}`}
+                  title="Bildirimler"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-red-500 text-white text-[10px] font-black flex items-center justify-center rounded-full border-2 border-armoyu-header-bg animate-bounce">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Notifications Popover */}
+                {isNotificationOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setIsNotificationOpen(false)} />
+                    <div className="absolute right-0 mt-3 w-80 md:w-96 bg-white/90 dark:bg-[#1a1a24]/90 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-3xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                      <div className="p-4 border-b border-armoyu-drawer-border flex justify-between items-center bg-black/5 dark:bg-white/5">
+                        <h4 className="text-sm font-black text-armoyu-text uppercase tracking-widest">BİLDİRİMLER</h4>
+                        <button 
+                          onClick={markAllAsRead}
+                          className="text-[10px] font-bold text-blue-500 hover:underline"
+                        >
+                          Hepsini Okundu İşaretle
+                        </button>
+                      </div>
+                      
+                      <div className="max-h-[400px] overflow-y-auto hide-scrollbar">
+                        {(user.notifications || []).length > 0 ? (
+                          (user.notifications || []).map((notif: any) => (
+                            <div 
+                              key={notif.id} 
+                              className={`p-4 border-b border-armoyu-drawer-border last:border-none hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer group flex gap-3 ${!notif.isRead ? 'bg-blue-500/5' : ''}`}
+                            >
+                              <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0 group-hover:scale-110 transition-transform">
+                                {notif.type === 'like' && <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>}
+                                {notif.type === 'comment' && <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>}
+                                {notif.type === 'group_invite' && <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>}
+                                {notif.type === 'system' && <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-start gap-2">
+                                  <p className="text-xs font-black text-armoyu-text truncate">{notif.title}</p>
+                                  <span className="text-[9px] font-bold text-armoyu-text-muted whitespace-nowrap uppercase tracking-tighter">{notif.createdAt}</span>
+                                </div>
+                                <p className="text-[11px] font-medium text-armoyu-text-muted mt-0.5 line-clamp-2 leading-relaxed">{notif.message}</p>
+                              </div>
+                              {!notif.isRead && <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shadow-[0_0_8px_rgba(59,130,246,0.8)]" />}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="py-12 px-6 text-center">
+                            <div className="w-12 h-12 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-armoyu-text-muted mx-auto mb-3">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                            </div>
+                            <p className="text-sm font-bold text-armoyu-text">Bildirim bulunmuyor</p>
+                            <p className="text-xs text-armoyu-text-muted mt-1">Her şey güncel görünüyor!</p>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <button className="w-full py-3.5 text-xs font-black text-armoyu-text-muted hover:text-blue-500 bg-black/5 dark:bg-white/5 border-t border-armoyu-drawer-border transition-colors uppercase tracking-widest">Tüm Geçmişi Gör</button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
             {user ? (
                <button
                  onClick={() => setIsUserMenuOpen(true)}
@@ -297,21 +382,23 @@ export function Header() {
                  
                  {isGroupsSubmenuOpen && (
                    <div className="pl-4 space-y-1 mt-1 animate-in slide-in-from-top-2 duration-200">
-                      {[
-                        { name: 'RIHTIM', tag: 'RTM', logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=Rihtim' },
-                        { name: 'CODE MASTERS', tag: 'CODE', logo: 'https://api.dicebear.com/7.x/identicon/svg?seed=Code' },
-                        { name: 'İttihat ve Terakki', tag: 'İttihat', logo: 'https://api.dicebear.com/7.x/initials/svg?seed=IT' }
-                      ].map((group, gidx) => (
-                        <Link 
-                          key={gidx} 
-                          href={`/gruplar/${group.name.toLowerCase().replace(/\s+/g, '-')}`}
-                          onClick={() => setIsUserMenuOpen(false)}
-                          className="flex items-center gap-3 p-2.5 rounded-xl text-xs font-bold text-armoyu-text-muted hover:text-blue-500 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
-                        >
-                           <img src={group.logo} className="w-7 h-7 rounded-lg bg-white dark:bg-zinc-800 border border-armoyu-drawer-border" />
-                           <span className="truncate">{group.name}</span>
-                        </Link>
-                      ))}
+                      {(user.groups || []).length > 0 ? (
+                        (user.groups || []).map((group: any, gidx: number) => (
+                          <Link 
+                            key={gidx} 
+                            href={`/gruplar/${group.name.toLowerCase().replace(/\s+/g, '-')}`}
+                            onClick={() => setIsUserMenuOpen(false)}
+                            className="flex items-center gap-3 p-2.5 rounded-xl text-xs font-bold text-armoyu-text-muted hover:text-blue-500 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+                          >
+                             <img src={group.logo} className="w-7 h-7 rounded-lg bg-white dark:bg-zinc-800 border border-armoyu-drawer-border" />
+                             <span className="truncate">{group.name}</span>
+                          </Link>
+                        ))
+                      ) : (
+                        <div className="py-3 px-4 text-center bg-black/5 dark:bg-white/5 rounded-xl border border-dashed border-armoyu-drawer-border mx-2">
+                           <span className="text-[10px] font-bold text-armoyu-text-muted opacity-60 block leading-tight">Henüz bir gruba<br/>dahil değilsin</span>
+                        </div>
+                      )}
                       <Link 
                         href="/gruplar" 
                         onClick={() => setIsUserMenuOpen(false)}

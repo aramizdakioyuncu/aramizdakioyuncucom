@@ -3,84 +3,25 @@
 import React, { useState } from 'react';
 import { GroupCard } from '@/components/modules/groups/GroupCard';
 import { PageWidth } from '@/components/shared/PageWidth';
+import { groupList } from '@/lib/constants/seedData';
+import { Group } from '@/models';
 
-const MOCK_GROUPS = [
-  {
-    name: 'RIHTIM',
-    shortName: 'RTM',
-    description: 'Denizin verdiği huzur ile içinizi ferahlatacak bir yaşam sizi bekliyor. Topluluğumuzda huzur ve eğlence bir arada.',
-    recruitment: '16 Alım Açık',
-    date: '13.03.2022',
-    category: 'E-Spor/Takım',
-    tag: 'Minecraft',
-    banner: 'https://images.unsplash.com/photo-1587573089734-09cb6960951b?q=80&w=2672&auto=format&fit=crop',
-    logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=Rihtim'
-  },
-  {
-    name: 'CODE MASTERS',
-    shortName: 'CODE',
-    description: 'Yazılım geliştirme tutkunlarının bir araya geldiği, projelerin havada uçuştuğu dinamik bir topluluk.',
-    recruitment: '5 Alım Açık',
-    date: '01.01.2023',
-    category: 'Yazılım',
-    tag: 'Next.js',
-    banner: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2672&auto=format&fit=crop',
-    logo: 'https://api.dicebear.com/7.x/identicon/svg?seed=Code'
-  },
-  {
-    name: 'FAST FIVE',
-    shortName: 'F5',
-    description: 'Valorant rekabetçi dünyasında zirveyi hedefleyen, disiplinli ve yetenekli oyuncuların buluşma noktası.',
-    recruitment: '2 Alım Açık',
-    date: '15.05.2023',
-    category: 'E-Spor/Takım',
-    tag: 'Valorant',
-    banner: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670&auto=format&fit=crop',
-    logo: 'https://api.dicebear.com/7.x/bottts/svg?seed=Fast'
-  },
-  {
-    name: 'GREEN COURT',
-    shortName: 'GRN',
-    description: 'Tenis ve açık hava sporlarını sevenler için haftalık turnuvalar ve antrenman grupları düzenliyoruz.',
-    recruitment: 'Sınırsız',
-    date: '10.10.2022',
-    category: 'Spor',
-    tag: 'Tenis',
-    banner: 'https://images.unsplash.com/photo-1595435064212-c441821ac9ac?q=80&w=2670&auto=format&fit=crop',
-    logo: 'https://api.dicebear.com/7.x/initials/svg?seed=Green'
-  },
-  {
-    name: 'İttihat ve Terakki',
-    shortName: 'İttihat',
-    description: 'İttihat Ruhu! Köklü geçmişimizle sahalarda ve her alanda mücadeleye devam ediyoruz.',
-    recruitment: '25 Alım Açık',
-    date: '22.05.2024',
-    category: 'Spor/Takım',
-    tag: 'Futbol',
-    banner: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=2670&auto=format&fit=crop',
-    logo: 'https://api.dicebear.com/7.x/initials/svg?seed=IT'
-  },
-  {
-    name: 'CZAL Hack Team',
-    shortName: 'CZAL HT',
-    description: 'Türk Yazılımcı ve Robotikciler ile toplandık Kendimizi Geliştirmek için çaba gösteriyoruz Biz Fatsa Cahit Zarifoğlu Anadolu Lisesinde kurulduk ve çalışmalarımıza devam ediyoruz sende bize katılmak istersen bize mail atabilirsin Okulumuzu İnternette araştırabilirsiniz.',
-    recruitment: '19 Alım Kapalı',
-    date: '14.10.2018',
-    category: 'Yazılım',
-    tag: 'Robotik Kodlama',
-    banner: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=2669&auto=format&fit=crop',
-    logo: 'https://api.dicebear.com/7.x/bottts/svg?seed=CZAL'
-  }
-];
 
 export default function GroupsPage() {
   const [activeTab, setActiveTab] = useState('Hepsi');
+  const [searchQuery, setSearchQuery] = useState('');
   
   const categories = ['Hepsi', 'E-Spor/Takım', 'Spor', 'Spor/Takım', 'Yazılım'];
   
-  const filteredGroups = activeTab === 'Hepsi' 
-    ? MOCK_GROUPS 
-    : MOCK_GROUPS.filter(g => g.category === activeTab);
+  const filteredGroups = groupList.filter(group => {
+    const matchesTab = activeTab === 'Hepsi' || group.category === activeTab;
+    const matchesSearch = 
+      group.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      group.shortName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      group.description.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return matchesTab && matchesSearch;
+  });
 
   return (
     <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -112,6 +53,8 @@ export default function GroupsPage() {
            <input 
              type="text" 
              placeholder="Grup ara..." 
+             value={searchQuery}
+             onChange={(e) => setSearchQuery(e.target.value)}
              className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl px-5 py-3 text-sm text-armoyu-text focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium" 
            />
            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="absolute right-4 top-3 text-armoyu-text-muted opacity-40"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>

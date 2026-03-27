@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { StoryType } from '@/lib/constants/mockData';
+import { Story, User } from '@/models';
 
 interface StoryViewerProps {
-  stories: StoryType[];
+  stories: Story[];
   initialStoryIndex: number;
   onClose: () => void;
 }
@@ -83,9 +83,9 @@ export function StoryViewer({ stories, initialStoryIndex, onClose }: StoryViewer
         {/* Header */}
         <div className="absolute top-8 left-4 right-4 z-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-             <img src={story.avatar} className="w-9 h-9 rounded-full border border-white/20" alt="" />
+             <img src={story.user?.avatar} className="w-9 h-9 rounded-full border border-white/20" alt="" />
              <div className="flex flex-col">
-                <span className="text-white text-sm font-bold shadow-sm">{story.username}</span>
+                <span className="text-white text-sm font-bold shadow-sm">{story.isMe ? 'Hikayen' : story.user?.displayName || story.user?.username}</span>
                 <span className="text-white/60 text-[10px]">2 saat önce</span>
              </div>
           </div>
@@ -109,7 +109,7 @@ export function StoryViewer({ stories, initialStoryIndex, onClose }: StoryViewer
         <div className="p-4 bg-black/40 backdrop-blur-md flex gap-3 items-center">
            <input 
              type="text" 
-             placeholder={`@${story.username} kişisine yanıt ver...`}
+             placeholder={`@${story.user?.username} kişisine yanıt ver...`}
              className="flex-1 bg-white/10 border border-white/10 rounded-full px-5 py-2.5 text-sm text-white placeholder-white/50 focus:outline-none focus:bg-white/20 transition-all shadow-sm"
            />
            <button className="text-white p-2">

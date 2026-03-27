@@ -4,35 +4,9 @@ import React, { useState } from 'react';
 import { PostCard } from '../auth/PostCard';
 import { CloudStorageModal } from './CloudStorageModal';
 
-const MOCK_PROFILE_POSTS = [
-  {
-    id: 'p1',
-    author: {
-      name: 'Berkay',
-      username: 'berkaytikeno',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Berkay',
-      badge: 'KURUCU'
-    },
-    content: 'Yeni profil tasarımı testleri devam ediyor. Kullanıcı arayüzü gerçekten harika oldu, ellerinize sağlık ekip! 🚀',
-    createdAt: '3 saat önce',
-    stats: { likes: 350, comments: 45, reposts: 12, shares: 8 }
-  },
-  {
-    id: 'p2',
-    author: {
-      name: 'Berkay',
-      username: 'berkaytikeno',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Berkay',
-      badge: 'KURUCU'
-    },
-    content: 'Bu hafta sonu dev bir ARMOYU turnuvası yapmayı planlıyoruz. Katılmak isteyenler bu gönderiyi beğenebilir mi?',
-    imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670&auto=format&fit=crop',
-    createdAt: '1 gün önce',
-    stats: { likes: 1240, comments: 380, reposts: 154, shares: 45 }
-  }
-];
+import { User } from '@/models/auth/User';
 
-export function ProfileContent() {
+export function ProfileContent({ user }: { user?: User }) {
   const [activeTab, setActiveTab] = useState('Gönderiler');
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
   const tabs = ['Gönderiler', 'Hakkında', 'Oynadığı Oyunlar', 'Arkadaşlar'];
@@ -45,7 +19,7 @@ export function ProfileContent() {
         <div className="bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl p-6 shadow-sm">
           <h3 className="text-lg font-black text-armoyu-text mb-4">Hakkında</h3>
           <p className="text-sm font-medium text-armoyu-text-muted leading-relaxed mb-6">
-            Selam, ben Berkay. ARMOYU projesinin kurucusuyum. Genelde rekabetçi FPS oyunları oynarım ve yeni teknolojiler ile ilgilenirim.
+            {user?.bio || 'Bu kullanıcı henüz hakkında bir bilgi eklememiş.'}
           </p>
 
           <div className="space-y-4">
@@ -117,6 +91,39 @@ export function ProfileContent() {
             Depolamayı Yönet
           </button>
         </div>
+
+        {/* Arkadaşlar Widget */}
+        <div className="bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl p-6 shadow-sm">
+          <div className="flex justify-between items-center mb-5">
+            <h3 className="text-lg font-black text-armoyu-text">
+              Arkadaşlar <span className="text-blue-500 ml-1">{user?.friends?.length || 0}</span>
+            </h3>
+            <button 
+              onClick={() => setActiveTab('Arkadaşlar')}
+              className="text-xs font-bold text-blue-500 hover:underline"
+            >
+              Tümünü Gör
+            </button>
+          </div>
+
+          <div className="grid grid-cols-5 gap-2">
+            {(user?.friends || []).slice(0, 5).map((friend, idx) => (
+              <div key={friend.id || idx} className="group relative">
+                <img 
+                  src={friend.avatar} 
+                  alt={friend.displayName} 
+                  className="w-10 h-10 rounded-xl object-cover border border-white/10 group-hover:scale-110 transition-transform cursor-pointer shadow-sm"
+                  title={friend.displayName}
+                />
+              </div>
+            ))}
+            {(user?.friends?.length || 0) === 0 && (
+              <p className="col-span-5 text-xs text-armoyu-text-muted text-center py-2 italic">
+                Henüz arkadaş eklenmemiş.
+              </p>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Sağ Panel: İçerik ve Sekmeler */}
@@ -151,13 +158,60 @@ export function ProfileContent() {
                </div>
             </div>
 
-            {MOCK_PROFILE_POSTS.map(post => (
+            {(user?.myPosts || []).map(post => (
               <PostCard key={post.id} {...post} />
             ))}
+            {(user?.myPosts?.length || 0) === 0 && (
+              <div className="bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl p-12 text-center">
+                 <p className="text-armoyu-text-muted font-medium">Henüz bir paylaşım yapılmamış.</p>
+              </div>
+            )}
           </div>
         )}
 
-        {activeTab !== 'Gönderiler' && (
+        {activeTab === 'Arkadaşlar' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {(user?.friends || []).map((friend) => (
+              <div 
+                key={friend.id} 
+                className="bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl p-5 shadow-sm hover:shadow-md transition-all group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-armoyu-card-border group-hover:scale-105 transition-transform">
+                    <img src={friend.avatar} alt={friend.displayName} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-base font-bold text-armoyu-text truncate">{friend.displayName}</h4>
+                    <p className="text-sm font-medium text-blue-500 truncate">@{friend.username}</p>
+                    <div className="flex items-center gap-2 mt-2">
+                       <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                       <span className="text-[10px] font-bold text-armoyu-text-muted uppercase tracking-wider">Çevrimiçi</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3 mt-5">
+                  <a 
+                    href={`/oyuncular/${friend.username}`}
+                    className="py-2 text-center text-xs font-bold text-armoyu-text bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl transition-colors border border-armoyu-card-border"
+                  >
+                    Profili Gör
+                  </a>
+                  <button className="py-2 text-center text-xs font-bold text-white bg-blue-500 hover:bg-blue-600 rounded-xl shadow-lg shadow-blue-500/20 transition-all">
+                    Mesaj At
+                  </button>
+                </div>
+              </div>
+            ))}
+            {(user?.friends?.length || 0) === 0 && (
+              <div className="col-span-full bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl p-12 text-center">
+                 <p className="text-armoyu-text-muted font-medium">Henüz arkadaş listeniz boş.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab !== 'Gönderiler' && activeTab !== 'Arkadaşlar' && (
           <div className="bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl p-12 shadow-sm flex flex-col items-center justify-center text-center">
             <div className="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center text-armoyu-text-muted mb-4">
                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>

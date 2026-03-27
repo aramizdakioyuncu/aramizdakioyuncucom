@@ -2,32 +2,21 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
-const MOCK_RANKING_LEVEL = [
-  { name: 'Emirhan', username: 'emirhan_top', score: 'LVL 85', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emirhan' },
-  { name: 'Selin', username: 'selingunay', score: 'LVL 72', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Selin' },
-  { name: 'Kaan', username: 'kaan_arslan', score: 'LVL 68', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kaan' },
-  { name: 'Melis', username: 'melis_dev', score: 'LVL 65', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Melis' },
-  { name: 'Can', username: 'can_demir', score: 'LVL 60', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Can' },
-];
-
-const MOCK_RANKING_POPULARITY = [
-  { name: 'Zeynep Kaya', username: 'zeynocash', score: '4.8k', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Zeynep' },
-  { name: 'Berkay', username: 'berkaytikeno', score: '3.2k', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Berkay' },
-  { name: 'Alperen', username: 'alperen_admin', score: '2.9k', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alperen' },
-  { name: 'Deniz', username: 'deniz_mavisi', score: '2.5k', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Deniz' },
-  { name: 'Ece', username: 'ece_yldz', score: '2.1k', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ece' },
-];
+import { useAuth } from '@/context/AuthContext';
+import { MOCK_RANKING_LEVEL, MOCK_RANKING_POPULARITY } from '@/lib/constants/mockData';
 
 export function SidebarLeft() {
   const [rankingType, setRankingType] = useState<'level' | 'popularity'>('level');
+  const [visibleCount, setVisibleCount] = useState(5);
   const router = useRouter();
+  const { user: currentUser } = useAuth();
   
-  const currentRanking = rankingType === 'level' ? MOCK_RANKING_LEVEL : MOCK_RANKING_POPULARITY;
+  const allRankings = rankingType === 'level' ? MOCK_RANKING_LEVEL : MOCK_RANKING_POPULARITY;
+  const currentRanking = allRankings.slice(0, visibleCount);
 
-  const goToProfile = (user: { name: string, username: string, avatar: string }) => {
+  const goToProfile = (user: { displayName: string, username: string, avatar: string }) => {
     const params = new URLSearchParams();
-    if (user.name) params.set('name', user.name);
+    if (user.displayName) params.set('name', user.displayName);
     if (user.avatar) params.set('avatar', user.avatar);
     
     router.push(`/oyuncular/${user.username}?${params.toString()}`);
@@ -45,13 +34,13 @@ export function SidebarLeft() {
                 className={`absolute inset-y-1 transition-all duration-300 ease-out bg-white dark:bg-blue-600 rounded-lg shadow-sm ${rankingType === 'level' ? 'left-1 w-[64px]' : 'left-[73px] w-[62px]'}`}
               />
               <button 
-                onClick={() => setRankingType('level')}
+                onClick={() => { setRankingType('level'); setVisibleCount(5); }}
                 className={`flex-1 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all relative z-10 ${rankingType === 'level' ? 'text-blue-600 dark:text-white' : 'text-armoyu-text-muted hover:text-armoyu-text'}`}
               >
                 Seviye
               </button>
               <button 
-                onClick={() => setRankingType('popularity')}
+                onClick={() => { setRankingType('popularity'); setVisibleCount(5); }}
                 className={`flex-1 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all relative z-10 ${rankingType === 'popularity' ? 'text-blue-600 dark:text-white' : 'text-armoyu-text-muted hover:text-armoyu-text'}`}
               >
                 Popüler
@@ -60,31 +49,46 @@ export function SidebarLeft() {
         </div>
 
         <div className="space-y-3">
-          {currentRanking.map((user, idx) => (
-            <div 
-              key={idx} 
-              onClick={() => goToProfile(user)}
-              className="flex items-center justify-between group cursor-pointer p-1.5 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-            >
-              <div className="flex items-center gap-3">
+          {currentRanking.map((user, idx) => {
+            const isMe = currentUser?.username === user.username;
+            return (
+              <div 
+                key={idx} 
+                onClick={() => goToProfile(user)}
+                className={`flex items-center justify-between group cursor-pointer p-1.5 rounded-xl transition-all ${
+                  isMe 
+                    ? 'bg-blue-600/10 border border-blue-500/30' 
+                    : 'hover:bg-black/5 dark:hover:bg-white/5'
+                }`}
+              >
+                <div className="flex items-center gap-3">
                  <div className="relative">
-                    <img src={user.avatar} alt={user.name} className="w-9 h-9 rounded-full border border-black/10 dark:border-white/10 group-hover:border-blue-500 transition-colors" />
-                    {idx < 3 && (
-                      <div className={`absolute -top-1 -left-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black text-white shadow-sm ${idx === 0 ? 'bg-yellow-500' : idx === 1 ? 'bg-gray-400' : 'bg-orange-600'}`}>
-                        {idx + 1}
-                      </div>
-                    )}
+                    <img src={user.avatar} alt={user.displayName} className="w-9 h-9 rounded-full border border-black/10 dark:border-white/10 group-hover:border-blue-500 transition-colors" />
+                    <div className={`absolute -top-1 -left-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black text-white shadow-sm transition-transform group-hover:scale-110 ${
+                      idx === 0 ? 'bg-yellow-500' : 
+                      idx === 1 ? 'bg-gray-400' : 
+                      idx === 2 ? 'bg-orange-600' : 
+                      'bg-armoyu-card-border text-armoyu-text-muted dark:bg-white/10 dark:text-white/60'
+                    }`}>
+                      {idx + 1}
+                    </div>
                  </div>
-                 <span className="text-sm font-bold text-armoyu-text-muted group-hover:text-armoyu-text transition-colors truncate max-w-[100px]">{user.name}</span>
+                 <span className="text-sm font-bold text-armoyu-text-muted group-hover:text-armoyu-text transition-colors truncate max-w-[100px]">{user.displayName}</span>
               </div>
-              <span className="text-[11px] font-black text-blue-500 bg-blue-500/10 px-2 py-1 rounded-md">{user.score}</span>
+              <span className="text-[10px] font-black text-blue-500 bg-blue-500/10 px-2 py-1 rounded-md">{user.score}</span>
             </div>
-          ))}
+          );
+        })}
         </div>
         
-        <button className="w-full pt-2 text-[11px] font-bold text-armoyu-text-muted hover:text-blue-500 transition-colors border-t border-armoyu-card-border mt-1">
-           Tüm Sıralamayı Gör
-        </button>
+        {visibleCount < allRankings.length && (
+          <button 
+            onClick={() => setVisibleCount(prev => prev + 10)}
+            className="w-full pt-2 text-[11px] font-bold text-armoyu-text-muted hover:text-blue-500 transition-colors border-t border-armoyu-card-border mt-1"
+          >
+             Sıralamadan {Math.min(10, allRankings.length - visibleCount)} Kişi Daha Gör
+          </button>
+        )}
       </div>
 
       {/* Ekonomi Widget */}
@@ -127,6 +131,24 @@ export function SidebarLeft() {
                  <span className="flex items-center justify-end text-[10px] font-bold text-red-500">
                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="mr-0.5 rotate-180"><polyline points="18 15 12 9 6 15"></polyline></svg>
                     0.12%
+                 </span>
+              </div>
+           </div>
+
+           {/* Gümüş */}
+           <div className="flex items-center justify-between p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 font-inter">
+              <div className="flex items-center gap-2.5">
+                 <div className="w-8 h-8 rounded-full bg-slate-400/20 flex items-center justify-center text-slate-500 dark:text-slate-300 font-black text-xs">AG</div>
+                 <div>
+                    <span className="block text-xs font-bold text-armoyu-text">Gümüş</span>
+                    <span className="block text-[10px] text-armoyu-text-muted">Spot Piyasa</span>
+                 </div>
+              </div>
+              <div className="text-right">
+                 <span className="block text-sm font-black text-armoyu-text">₺31.20</span>
+                 <span className="flex items-center justify-end text-[10px] font-bold text-emerald-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="mr-0.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                    0.45%
                  </span>
               </div>
            </div>
