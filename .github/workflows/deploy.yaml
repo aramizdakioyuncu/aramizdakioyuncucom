@@ -16,24 +16,25 @@ jobs:
         run: |
           echo "Dosyalar güncelleniyor..."
           
-          # 1. GitHub'dan inen tüm içeriği (nokta dahil) /app/next içine kopyala
-          # /app şu an senin '02-subdomains' klasörün.
-          # '.' Runner'ın o an içinde olduğu (yani taze kodların olduğu) yerdir.
-          
-          # Önce hedef klasörün var olduğundan emin olalım
+          # Klasör hazırlığı
           mkdir -p /app/next
           
-          # İçeriği kopyala (Hata vermemesi için kopyalama yöntemini düzelttik)
+          # İçeriği kopyala
           cp -rf ./* /app/next/
-          cp -rf ./.[!.]* /app/next/ 2>/dev/null || true # Gizli dosyaları da (.env, .eslintrc vb.) alalım
+          cp -rf ./.[!.]* /app/next/ 2>/dev/null || true 
           
-          echo "Kopyalama tamamlandı. Docker başlatılıyor..."
+          echo "Kopyalama tamamlandı. Docker işlemleri başlıyor..."
 
-          # 2. İşlem dizinine (02-subdomains) git
+          # İşlem dizinine git
           cd /app
           
-          # 3. Docker build başlasın
-          docker compose up -d --build next
+          # 1. Önce çakışan veya eski konteyneri zorla kaldır (Hata alsa bile devam etmesi için || true)
+          # Bu adım, aldığın "Conflict" hatasını engelleyecektir.
+          docker rm -f next_aramizdakioyuncucom || true
+
+          # 2. Docker compose ile build et ve ayağa kaldır
+          # --force-recreate ekleyerek her seferinde taze bir konteyner garantiliyoruz
+          docker compose up -d --build --force-recreate next
           
-          # 4. Temizlik
+          # 3. Temizlik
           docker image prune -f
