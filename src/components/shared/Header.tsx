@@ -42,7 +42,7 @@ const navItems: NavItem[] = [
 ];
 
 export function Header() {
-  const { user, logout, isLoginModalOpen, setIsLoginModalOpen } = useAuth();
+  const { user, login, logout, isLoading, isLoginModalOpen, setIsLoginModalOpen } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -72,6 +72,21 @@ export function Header() {
       router.push(`/oyuncular/${user.username}?${params.toString()}`);
       setIsUserMenuOpen(false);
       setIsMobileMenuOpen(false);
+    }
+  };
+
+  const handleNotificationClick = (notif: any) => {
+    // 1. Mark as read (mock update)
+    notif.isRead = true;
+    
+    // 2. Navigate if clickable and link exists
+    if (notif.isClickable && notif.link) {
+      router.push(notif.link);
+      setIsNotificationOpen(false); // Only close if navigating
+    } else {
+      // Just refresh UI to show as read
+      setIsNotificationOpen(false);
+      setTimeout(() => setIsNotificationOpen(true), 10);
     }
   };
 
@@ -168,13 +183,21 @@ export function Header() {
                           (user.notifications || []).map((notif: any) => (
                             <div 
                               key={notif.id} 
-                              className={`p-4 border-b border-armoyu-drawer-border last:border-none hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer group flex gap-3 ${!notif.isRead ? 'bg-blue-500/5' : ''}`}
+                              onClick={() => handleNotificationClick(notif)}
+                              className={`p-4 border-b border-armoyu-drawer-border last:border-none hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${notif.isClickable ? 'cursor-pointer' : 'cursor-default'} group flex gap-3 ${!notif.isRead ? 'bg-blue-500/5' : ''}`}
                             >
-                              <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0 group-hover:scale-110 transition-transform">
-                                {notif.type === 'like' && <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>}
-                                {notif.type === 'comment' && <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>}
-                                {notif.type === 'group_invite' && <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>}
-                                {notif.type === 'system' && <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>}
+                              <div className="relative shrink-0 group-hover:scale-110 transition-transform">
+                                <img 
+                                  src={notif.sender?.avatar || "https://armoyu.com/assets/img/armoyu_logo.png"} 
+                                  alt="Sender"
+                                  className="w-10 h-10 rounded-2xl object-cover border border-black/5 dark:border-white/5 bg-white/10"
+                                />
+                                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-blue-500 border-2 border-white dark:border-[#1a1a24] flex items-center justify-center text-white shadow-lg">
+                                  {(notif.type === 'POST_LIKE' || notif.type === 'like') && <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>}
+                                  {(notif.type === 'POST_COMMENT' || notif.type === 'comment') && <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>}
+                                  {(notif.type === 'GROUP_INVITE' || notif.type === 'group_invite') && <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>}
+                                  {(notif.category === 'SYSTEM' || notif.type === 'system') && <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M12 22v-4M12 12V8M12 4V2M18 17l-3-3M6 17l3-3M18 7l-3 3M6 7l3-3"></path></svg>}
+                                </div>
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-start gap-2">
@@ -182,6 +205,11 @@ export function Header() {
                                   <span className="text-[9px] font-bold text-armoyu-text-muted whitespace-nowrap uppercase tracking-tighter">{notif.createdAt}</span>
                                 </div>
                                 <p className="text-[11px] font-medium text-armoyu-text-muted mt-0.5 line-clamp-2 leading-relaxed">{notif.message}</p>
+                                {notif.context && (
+                                  <div className="mt-1 px-2 py-1 bg-black/5 dark:bg-white/5 border-l-2 border-blue-500 rounded text-[9px] italic text-armoyu-text-muted">
+                                    "{notif.context}"
+                                  </div>
+                                )}
                               </div>
                               {!notif.isRead && <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shadow-[0_0_8px_rgba(59,130,246,0.8)]" />}
                             </div>
@@ -204,29 +232,35 @@ export function Header() {
               </div>
             )}
 
-            {user ? (
-               <button
-                 onClick={() => setIsUserMenuOpen(true)}
-                 className="flex items-center gap-3 p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-armoyu-header-border focus:outline-none"
-                 title="Profilim"
-               >
-                 <img
-                   src={user.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Armoyu"}
-                   alt="Avatar"
-                   className="w-8 h-8 rounded-full border border-blue-500/50 shadow-[0_0_10px_rgba(59,130,246,0.5)] object-cover bg-white/5"
-                 />
-                 <span className="text-sm font-bold text-armoyu-text hidden md:inline-block pr-2">
-                   {user.displayName.split(' ')[0]}
-                 </span>
-               </button>
-            ) : (
-               <button
-                 onClick={() => setIsLoginModalOpen(true)}
-                 className="flex items-center justify-center w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-armoyu-text-muted hover:text-blue-600 dark:hover:text-blue-400 transition-all border border-armoyu-header-border shadow-sm"
-                 title="Giriş Yap"
-               >
-                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-               </button>
+            {!isLoading && (
+              user ? (
+                <button
+                  onClick={() => setIsUserMenuOpen(true)}
+                  className="flex items-center gap-3 p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-armoyu-header-border focus:outline-none"
+                  title="Profilim"
+                >
+                  <img
+                    src={user.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Armoyu"}
+                    alt="Avatar"
+                    className="w-8 h-8 rounded-full border border-blue-500/50 shadow-[0_0_10px_rgba(59,130,246,0.5)] object-cover bg-white/5"
+                  />
+                  <span className="text-sm font-bold text-armoyu-text hidden md:inline-block pr-2">
+                    {user.displayName.split(' ')[0]}
+                  </span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsLoginModalOpen(true)}
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-armoyu-text-muted hover:text-blue-600 dark:hover:text-blue-400 transition-all border border-armoyu-header-border shadow-sm"
+                  title="Giriş Yap"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </button>
+              )
+            )}
+
+            {isLoading && (
+              <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 animate-pulse border border-armoyu-header-border" />
             )}
           </div>
 

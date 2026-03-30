@@ -41,12 +41,16 @@ export function FloatingChatButton({ position = 'bottom-right' }: FloatingChatBu
         </div>
       )}
 
-      {/* Floating Chat Container Overlay Layout (Tam Köşeye Sıfır / Mobil) */}
-      {isChatOpen && (
-        <div className="fixed bottom-0 right-0 md:bottom-6 md:right-6 z-[70] w-full sm:w-[400px] h-[100dvh] sm:h-[calc(100vh-100px)] md:h-[650px] shadow-[0_0_40px_rgba(0,0,0,0.3)] animate-in fade-in zoom-in-95 origin-bottom-right duration-300 sm:rounded-3xl overflow-hidden border border-black/5 dark:border-white/10 flex flex-col bg-armoyu-card-bg backdrop-blur-xl">
-          <ChatContainer />
-        </div>
-      )}
+      {/* Floating Chat Container - Always mounted to persist state, visibility toggled with CSS */}
+      <div 
+        className={`fixed bottom-0 right-0 md:bottom-6 md:right-6 z-[70] w-full sm:w-[400px] h-[100dvh] sm:h-[calc(100vh-100px)] md:h-[650px] shadow-[0_0_40px_rgba(0,0,0,0.3)] origin-bottom-right transition-all duration-500 sm:rounded-3xl overflow-hidden border border-black/5 dark:border-white/10 flex flex-col bg-armoyu-card-bg backdrop-blur-xl ${
+          isChatOpen 
+          ? 'translate-y-0 scale-100 opacity-100 pointer-events-auto' 
+          : 'translate-y-10 scale-95 opacity-0 pointer-events-none'
+        }`}
+      >
+        <ChatContainer />
+      </div>
     </>
   );
 }

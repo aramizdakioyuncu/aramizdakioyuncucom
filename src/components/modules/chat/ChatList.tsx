@@ -1,10 +1,12 @@
 import { useChat } from '@/context/ChatContext';
+import { useSocket } from '@/context/SocketContext';
 import { ChatNotes } from './ChatNotes';
 import { useState } from 'react';
 import { Chat } from '@/models/social/Chat';
 
 export function ChatList({ contacts, activeId, onSelect }: { contacts: Chat[], activeId: string, onSelect: (id: string) => void }) {
   const { closeChat } = useChat();
+  const { isConnected } = useSocket();
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredContacts = contacts.filter(c => 
@@ -17,10 +19,15 @@ export function ChatList({ contacts, activeId, onSelect }: { contacts: Chat[], a
       {/* Arama ve Başlık */}
       <div className="p-4 md:p-5 border-b border-gray-200 dark:border-white/5">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold text-armoyu-text tracking-tight flex items-center gap-2">
-            Sohbetler
-            <span className="bg-blue-500/10 text-blue-500 text-xs px-2 py-1 rounded-md">{filteredContacts.length} Kişi</span>
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-bold text-armoyu-text tracking-tight flex items-center gap-2">
+              Sohbetler
+            </h2>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5">
+              <div className={`w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.8)]' : 'bg-red-500'} animate-pulse`} />
+              <span className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-tighter">{isConnected ? 'Sockete Bağlı' : 'Bağlanıyor...'}</span>
+            </div>
+          </div>
           <button onClick={closeChat} className="p-2 -mr-2 text-armoyu-text-muted hover:text-red-500 hover:bg-red-500/10 transition-colors rounded-full" title="Sohbeti Kapat">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>

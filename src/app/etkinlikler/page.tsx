@@ -1,7 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { PageWidth } from '@/components/shared/PageWidth';
+import { ViewModeToggle, ViewMode } from '@/components/shared/ViewModeToggle';
+import Link from 'next/link';
 
 const EVENTS = [
   { id: '1', name: 'Valorant Kış Turnuvası', game: 'Valorant', date: '25 Mart 2024', status: 'KAYIT AÇIK', rewards: '5000 TL + VP', participants: '32/64', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80', isHot: true },
@@ -11,6 +13,9 @@ const EVENTS = [
 ];
 
 export default function EventsPage() {
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [activeTab, setActiveTab] = useState('Aktif Etkinlikler');
+
   return (
     <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
       <PageWidth width="max-w-[1440px]" />
@@ -24,65 +29,123 @@ export default function EventsPage() {
 
       <div className="space-y-16">
          
-         {/* Filter Tabs */}
-         <div className="flex flex-wrap justify-center gap-4">
-            {['Aktif Etkinlikler', 'Yaklaşanlar', 'Biten Turnuvalar', 'Özel Etkinlikler'].map((tab, idx) => (
-              <button key={tab} className={`px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${idx === 0 ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/20' : 'bg-black/5 dark:bg-white/5 text-armoyu-text-muted hover:text-blue-500 border border-armoyu-card-border'}`}>
-                 {tab}
-              </button>
-            ))}
+         {/* Filter Tabs & Toggle */}
+         <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+            <div className="flex flex-wrap justify-center gap-4">
+               {['Aktif Etkinlikler', 'Yaklaşanlar', 'Biten Turnuvalar', 'Özel Etkinlikler'].map((tab) => (
+                 <button 
+                  key={tab} 
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/20' : 'bg-black/5 dark:bg-white/5 text-armoyu-text-muted hover:text-blue-500 border border-armoyu-card-border'}`}
+                 >
+                    {tab}
+                 </button>
+               ))}
+            </div>
+            
+            <div className="md:border-l md:border-armoyu-card-border md:pl-8">
+               <ViewModeToggle mode={viewMode} onChange={setViewMode} />
+            </div>
          </div>
 
-         {/* Events Grid */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {EVENTS.map((event) => (
-              <div key={event.id} className="group flex flex-col xl:flex-row glass-panel rounded-[50px] border border-armoyu-card-border overflow-hidden hover:shadow-2xl transition-all duration-500 bg-armoyu-card-bg group">
-                 <div className="w-full xl:w-72 h-64 xl:h-auto overflow-hidden shrink-0 relative">
-                    <img src={event.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={event.name} />
-                    {event.isLive && (
-                       <div className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 bg-red-600/90 backdrop-blur-md rounded-full shadow-lg shadow-red-500/20">
-                          <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                          <span className="text-white text-[9px] font-black uppercase tracking-widest">CANLI YAYINDA</span>
-                       </div>
-                    )}
-                 </div>
-                 
-                 <div className="flex-1 p-10 md:p-12 flex flex-col">
-                    <div className="flex justify-between items-start mb-6">
-                       <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest opacity-80">{event.game}</span>
-                       <span className={`text-[9px] font-black uppercase tracking-widest ${event.status === 'BİTTİ' ? 'text-gray-500' : 'text-emerald-500'}`}>
-                          {event.status}
-                       </span>
-                    </div>
+         {/* Events Display */}
+         {viewMode === 'grid' ? (
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              {EVENTS.map((event) => (
+                <div key={event.id} className="group flex flex-col xl:flex-row glass-panel rounded-[50px] border border-armoyu-card-border overflow-hidden hover:shadow-2xl transition-all duration-500 bg-armoyu-card-bg group">
+                   <div className="w-full xl:w-72 h-64 xl:h-auto overflow-hidden shrink-0 relative">
+                      <img src={event.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={event.name} />
+                      {event.isLive && (
+                         <div className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 bg-red-600/90 backdrop-blur-md rounded-full shadow-lg shadow-red-500/20">
+                            <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                            <span className="text-white text-[9px] font-black uppercase tracking-widest">CANLI YAYINDA</span>
+                         </div>
+                      )}
+                   </div>
+                   
+                   <div className="flex-1 p-10 md:p-12 flex flex-col">
+                      <div className="flex justify-between items-start mb-6">
+                         <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest opacity-80">{event.game}</span>
+                         <span className={`text-[9px] font-black uppercase tracking-widest ${event.status === 'BİTTİ' ? 'text-gray-500' : 'text-emerald-500'}`}>
+                            {event.status}
+                         </span>
+                      </div>
 
-                    <h3 className="text-2xl font-black text-armoyu-text uppercase tracking-tight mb-4 group-hover:text-blue-500 transition-colors leading-tight">
-                       {event.name}
-                    </h3>
+                      <h3 className="text-2xl font-black text-armoyu-text uppercase tracking-tight mb-4 group-hover:text-blue-500 transition-colors leading-tight">
+                         {event.name}
+                      </h3>
 
-                    <div className="grid grid-cols-2 gap-6 mb-8 mt-4 pt-6 border-t border-armoyu-card-border">
-                       <div>
-                          <p className="text-[9px] font-black text-armoyu-text-muted uppercase tracking-widest mb-1">TARİH</p>
-                          <p className="text-sm font-black text-armoyu-text uppercase">{event.date}</p>
-                       </div>
-                       <div>
-                          <p className="text-[9px] font-black text-armoyu-text-muted uppercase tracking-widest mb-1">KATILIMCI</p>
-                          <p className="text-sm font-black text-armoyu-text uppercase">{event.participants}</p>
-                       </div>
-                       <div className="col-span-2">
-                          <p className="text-[9px] font-black text-armoyu-text-muted uppercase tracking-widest mb-1">ÖDÜL HAVUZU</p>
-                          <p className="text-sm font-black text-blue-500 uppercase">{event.rewards}</p>
-                       </div>
-                    </div>
+                      <div className="grid grid-cols-2 gap-6 mb-8 mt-4 pt-6 border-t border-armoyu-card-border">
+                         <div>
+                            <p className="text-[9px] font-black text-armoyu-text-muted uppercase tracking-widest mb-1">TARİH</p>
+                            <p className="text-sm font-black text-armoyu-text uppercase">{event.date}</p>
+                         </div>
+                         <div>
+                            <p className="text-[9px] font-black text-armoyu-text-muted uppercase tracking-widest mb-1">KATILIMCI</p>
+                            <p className="text-sm font-black text-armoyu-text uppercase">{event.participants}</p>
+                         </div>
+                         <div className="col-span-2">
+                            <p className="text-[9px] font-black text-armoyu-text-muted uppercase tracking-widest mb-1">ÖDÜL HAVUZU</p>
+                            <p className="text-sm font-black text-blue-500 uppercase">{event.rewards}</p>
+                         </div>
+                      </div>
 
-                    <div className="mt-auto flex gap-4">
-                       <button className={`flex-1 py-4 font-black text-[10px] uppercase tracking-widest rounded-2xl transition-all shadow-xl active:scale-95 ${event.status === 'BİTTİ' ? 'bg-gray-200 dark:bg-white/5 text-gray-500 cursor-not-allowed shadow-none' : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/20'}`}>
-                          {event.status === 'BİTTİ' ? 'ETKİNLİK TAMAMLANDI' : 'HEMEN KAYIT OL / KATIL'}
-                       </button>
-                    </div>
-                 </div>
+                      <div className="mt-auto flex gap-4">
+                         <button className={`flex-1 py-4 font-black text-[10px] uppercase tracking-widest rounded-2xl transition-all shadow-xl active:scale-95 ${event.status === 'BİTTİ' ? 'bg-gray-200 dark:bg-white/5 text-gray-500 cursor-not-allowed shadow-none' : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/20'}`}>
+                            {event.status === 'BİTTİ' ? 'ETKİNLİK TAMAMLANDI' : 'HEMEN KAYIT OL / KATIL'}
+                         </button>
+                      </div>
+                   </div>
+                </div>
+              ))}
+           </div>
+         ) : (
+           /* Table View */
+           <div className="glass-panel rounded-[40px] border border-armoyu-card-border overflow-hidden bg-armoyu-card-bg shadow-2xl animate-in fade-in duration-500">
+              <div className="overflow-x-auto">
+                 <table className="w-full text-left border-collapse">
+                    <thead>
+                       <tr className="bg-black/5 dark:bg-white/5 border-b border-armoyu-card-border">
+                          <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted">ETKİNLİK</th>
+                          <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted">OYUN</th>
+                          <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted">TARİH</th>
+                          <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted">KATILIM</th>
+                          <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted">ÖDÜL</th>
+                          <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted">DURUM</th>
+                       </tr>
+                    </thead>
+                    <tbody className="divide-y divide-armoyu-card-border">
+                       {EVENTS.map((event) => (
+                          <tr key={event.id} className="group hover:bg-blue-500/5 transition-colors">
+                             <td className="px-8 py-6">
+                                <div className="flex items-center gap-4">
+                                   <img src={event.image} className="w-12 h-12 rounded-xl object-cover shrink-0 border border-black/5 dark:border-white/10" alt="Ev" />
+                                   <span className="text-sm font-black text-armoyu-text group-hover:text-blue-500 transition-colors uppercase tracking-tight">{event.name}</span>
+                                </div>
+                             </td>
+                             <td className="px-8 py-6">
+                                <span className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest px-3 py-1 bg-black/5 dark:bg-white/5 rounded-lg border border-black/5 dark:border-white/5">{event.game}</span>
+                             </td>
+                             <td className="px-8 py-6 text-sm font-bold text-armoyu-text uppercase">{event.date}</td>
+                             <td className="px-8 py-6 text-sm font-bold text-armoyu-text">{event.participants}</td>
+                             <td className="px-8 py-6 text-sm font-black text-blue-500 uppercase tracking-tighter">{event.rewards}</td>
+                             <td className="px-8 py-6">
+                                <div className="flex items-center gap-4">
+                                   <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl border ${event.status === 'BİTTİ' ? 'text-gray-500 border-gray-500/20' : 'text-emerald-500 border-emerald-500/20 bg-emerald-500/5'}`}>
+                                      {event.status}
+                                   </span>
+                                   {event.status !== 'BİTTİ' && (
+                                     <button className="px-5 py-2 bg-blue-600 text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/20 active:scale-95">KATIL</button>
+                                   )}
+                                </div>
+                             </td>
+                          </tr>
+                       ))}
+                    </tbody>
+                 </table>
               </div>
-            ))}
-         </div>
+           </div>
+         )}
 
       </div>
       

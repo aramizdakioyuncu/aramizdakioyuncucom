@@ -1,14 +1,30 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useSocket } from '@/context/SocketContext';
 
-export function ChatInput({ onSend }: { onSend: (text: string) => void }) {
+export function ChatInput({ onSend, chatId }: { onSend: (text: string) => void, chatId?: string }) {
   const [text, setText] = useState('');
+  const { emit } = useSocket();
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (text.trim()) {
       onSend(text);
       setText('');
+      if (chatId) emit('typing', { chatId, isTyping: false });
+    }
+  };
+
+  const handleChange = (val: string) => {
+    setText(val);
+    if (chatId) {
+      const isTyping = val.length > 0;
+      // Include username to help receiver filter out self
+      emit('typing', { 
+        chatId, 
+        isTyping, 
+        username: typeof window !== 'undefined' ? localStorage.getItem('armoyu_username') : undefined 
+      });
     }
   };
 
@@ -27,9 +43,9 @@ export function ChatInput({ onSend }: { onSend: (text: string) => void }) {
       <input 
         type="text" 
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => handleChange(e.target.value)}
         placeholder="Bir mesaj yazın..."
-        className="flex-1 bg-white/5 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-full px-5 py-3 text-sm text-slate-800 dark:text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all shadow-inner"
+        className="flex-1 bg-black/5 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-full px-5 py-3 text-sm text-armoyu-text placeholder-armoyu-text-muted focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all shadow-inner"
       />
 
       {/* Gönder Butonu */}

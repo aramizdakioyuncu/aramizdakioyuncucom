@@ -1,5 +1,7 @@
 import { Role } from './Role';
 import { Chat } from '../social/Chat';
+import { Notification } from '../social/Notification';
+import { NotificationSender } from '../social/NotificationSender';
 
 /**
  * Represents a User in the aramizdakioyuncu.com platform.
@@ -20,7 +22,7 @@ export class User {
   chatList: Chat[] = [];
   friends: User[] = [];
   myPosts: any[] = []; // Use any[] temporarily to avoid circular dependency issues during initialization if needed, or import Post properly
-  notifications: any[] = []; // Notification list
+  notifications: Notification[] = []; // Notification list
 
   constructor(data: Partial<User>) {
     Object.assign(this, data);
@@ -31,6 +33,19 @@ export class User {
    */
   getProfileUrl(): string {
     return `/oyuncular/${this.username}`;
+  }
+
+  /**
+   * Converts the user to a standardized notification sender.
+   */
+  toNotificationSender(): NotificationSender {
+    return new NotificationSender({
+      id: this.id,
+      name: this.displayName,
+      avatar: this.avatar,
+      type: 'USER',
+      url: this.getProfileUrl()
+    });
   }
 
   /**
@@ -65,6 +80,7 @@ export class User {
           level: f.level || 1
         });
       }) : [],
+      notifications: Array.isArray(json.notifications) ? json.notifications.map((n: any) => Notification.fromJSON(n)) : [],
     });
   }
 }

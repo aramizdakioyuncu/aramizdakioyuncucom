@@ -3,7 +3,10 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MediaLightbox, PostMedia } from './MediaLightbox';
+import { RepostModal } from './RepostModal';
 import { useAuth } from '@/context/AuthContext';
+import { useSocket } from '@/context/SocketContext';
+import { RollingNumber } from '@/components/shared/RollingNumber';
 import { User } from '@/models';
 
 // Yorumların Tipini (Type) Nested Destekleyecek Şekilde Güncelledik
@@ -36,10 +39,17 @@ export interface PostCardProps {
   };
   hashtags?: string[];
   onTagClick?: (tag: string) => void;
+  isPending?: boolean;
+  
+  // social lists
+  likeList?: User[];
+  repostList?: User[];
+  commentList?: any[];
 }
 
-export function PostCard({ author, content, imageUrl, media, createdAt, stats, hashtags, onTagClick }: PostCardProps) {
+export function PostCard({ id, author, content, imageUrl, media, createdAt, stats, hashtags, onTagClick, isPending, likeList, repostList, commentList }: PostCardProps) {
   const { user } = useAuth(); // Oturum bilgisini çek
+  const { emit } = useSocket();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -51,17 +61,35 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
     : (imageUrl ? [{ type: 'image', url: imageUrl }] : []);
 
   // Interaction States
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(stats.likes);
+  const [isLiked, setIsLiked] = React.useState(false);
+  const [likeCount, setLikeCount] = React.useState(stats.likes);
   
-  const [isCommentOpen, setIsCommentOpen] = useState(false);
-  const [commentText, setCommentText] = useState('');
-  const [commentsList, setCommentsList] = useState<CommentType[]>([]);
+  // Props değiştikçe local state'i güncelle (Soket desteği için kritik)
+  React.useEffect(() => {
+    setLikeCount(stats.likes);
+  }, [stats.likes]);
+
+  const [isCommentOpen, setIsCommentOpen] = React.useState(false);
+  const [isRepostModalOpen, setIsRepostModalOpen] = useState(false);
+  const [commentText, setCommentText] = React.useState('');
+  const [commentsList, setCommentsList] = React.useState<CommentType[]>(commentList || []);
   const [replyingTo, setReplyingTo] = useState<string | null>(null); // Hangi yoruma yanıt veriliyor
 
   const handleLike = () => {
-    setIsLiked(!isLiked);
-    setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+    if (isPending) return;
+    const newLiked = !isLiked;
+    const newCount = newLiked ? likeCount + 1 : likeCount - 1;
+    
+    setIsLiked(newLiked);
+    setLikeCount(newCount);
+
+    // Emit live update
+    emit('post_like', {
+      postId: id,
+      userId: user?.id,
+      isLiked: newLiked,
+      newCount: newCount
+    });
   };
 
   const handleCommentSubmit = () => {
@@ -104,7 +132,15 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
   };
 
   return (
-    <div className="w-full bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+    <div className={`w-full bg-armoyu-card-bg border border-armoyu-card-border rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 relative ${isPending ? 'opacity-70 pointer-events-none' : ''}`}>
+      
+      {/* Pending Overlay/Indicator */}
+      {isPending && (
+        <div className="absolute top-4 right-4 z-30 bg-blue-600/90 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 shadow-xl flex items-center gap-2 animate-pulse">
+           <div className="w-2.5 h-2.5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+           <span className="text-[10px] font-black text-white uppercase tracking-widest">Gönderiliyor...</span>
+        </div>
+      )}
       
       {/* Üst Kısım: Profil ve Zaman */}
       <div className="p-5 flex items-start gap-4">
@@ -252,6 +288,37 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
         </div>
       )}
 
+      {/* Social Proof (Liked by...) */}
+      {likeList && likeList.length > 0 && (
+         <div className="px-6 py-2 flex items-center gap-2.5 bg-black/5 dark:bg-white/2 border-y border-armoyu-card-border/50 transition-all hover:bg-black/10 dark:hover:bg-white/5 cursor-default">
+            <div className="flex -space-x-2.5 overflow-hidden">
+               {likeList.slice(0, 3).map((l, i) => (
+                  <img 
+                    key={i} 
+                    src={l.avatar} 
+                    alt={l.displayName} 
+                    className="inline-block h-6 w-6 rounded-full ring-2 ring-armoyu-card-bg bg-armoyu-card-bg object-cover shadow-sm transition-transform hover:scale-110 hover:z-10" 
+                    title={l.displayName}
+                  />
+               ))}
+            </div>
+            <div className="text-[11px] font-bold text-armoyu-text-muted flex items-center gap-1">
+               {likeCount > 0 && (
+                 <>
+                   <span className="text-armoyu-text">{likeList[0].displayName}</span>
+                   {likeCount > 1 && (
+                     <>
+                        <span>ve</span>
+                        <span className="text-armoyu-text">{likeCount - 1} diğer kişi</span>
+                     </>
+                   )}
+                   <span>beğendi</span>
+                 </>
+               )}
+            </div>
+         </div>
+      )}
+
       {/* Etkileşim Butonları (Beğeni, Yorum, Paylaş) */}
       <div className="px-5 py-3.5 border-t border-armoyu-card-border flex justify-between items-center bg-black/5 dark:bg-white/5">
         <div className="flex gap-6">
@@ -262,7 +329,7 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
              <div className={`p-1.5 rounded-full transition-colors ${isLiked ? 'bg-blue-500/10' : 'group-hover:bg-blue-500/10'}`}>
                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill={isLiked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" className="group-hover:-translate-y-0.5 transition-transform"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
              </div>
-             {likeCount > 0 && likeCount}
+             {likeCount > 0 && <RollingNumber value={likeCount} />}
           </button>
           
           <button 
@@ -277,7 +344,11 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
               (stats.comments + commentsList.length + commentsList.reduce((acc, c) => acc + (c.replies?.length || 0), 0))}
           </button>
 
-          <button className="flex items-center gap-2 text-sm font-bold text-armoyu-text-muted hover:text-green-500 transition-colors group" title="Yeniden Paylaş (Retweet)">
+          <button 
+            onClick={() => setIsRepostModalOpen(true)}
+            className="flex items-center gap-2 text-sm font-bold text-armoyu-text-muted hover:text-green-500 transition-colors group" 
+            title="Yeniden Paylaş (Retweet)"
+          >
              <div className="p-1.5 rounded-full group-hover:bg-green-500/10 transition-colors">
                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-y-0.5 transition-transform"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
              </div>
@@ -379,6 +450,13 @@ export function PostCard({ author, content, imageUrl, media, createdAt, stats, h
           )}
         </div>
       )}
+
+      {/* Repost Modal Popup */}
+      <RepostModal 
+        isOpen={isRepostModalOpen} 
+        onClose={() => setIsRepostModalOpen(false)} 
+        post={{ id, author, content, media, createdAt }} 
+      />
 
       {/* Media Lightbox Popup */}
       {lightboxIndex !== null && (

@@ -4,10 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { ChatList } from './ChatList';
 import { Chat } from '@/models/social/Chat';
+import { User } from '@/models/auth/User';
 import { ChatMessage as ChatMessageModel } from '@/models/social/ChatMessage';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { useChat } from '@/context/ChatContext';
+import { useSocket } from '@/context/SocketContext';
 
 // Mock Data
 import { userList, postList, groupList } from '@/lib/constants/seedData';
@@ -16,11 +18,24 @@ import { userList, postList, groupList } from '@/lib/constants/seedData';
 export function ChatContainer() {
   const { user } = useAuth();
   const { closeChat } = useChat();
+  const { emit, on, isConnected } = useSocket();
 
   // Eğer null ise liste görünümü açık, ID var ise mesajlaşma açık.
   const [activeContactId, setActiveContactId] = useState<string | null>(null);
   const [localMessages, setLocalMessages] = useState<ChatMessageModel[]>([]);
   const [localContacts, setLocalContacts] = useState<Chat[]>([]);
+
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Scroll to bottom when messages or typing status changes
+  useEffect(() => {
+    scrollToBottom();
+  }, [localMessages, isTyping]);
 
   // Sync with user's chatList
   useEffect(() => {
@@ -29,26 +44,107 @@ export function ChatContainer() {
     }
   }, [user?.chatList]);
 
+  // Socket Connection for Real-time Messages & Typing
+  useEffect(() => {
+    const offMsg = on('message', (incomingMsg: any) => {
+      console.log('[ChatContainer] Incoming socket message:', incomingMsg);
+      
+      // Update contacts list last message
+      setLocalContacts(prev => prev.map(c => {
+        if (c.id === incomingMsg.chatId || c.id === incomingMsg.sender?.username) {
+          const msgModel = new ChatMessageModel({
+            id: incomingMsg.id,
+            sender: incomingMsg.sender ? new User(incomingMsg.sender) : undefined,
+            content: incomingMsg.content,
+            timestamp: incomingMsg.timestamp,
+            isSystem: incomingMsg.isSystem || false
+          });
+
+          // Only add if not already in messages to avoid duplicates from echo
+          const messageExists = c.messages.some(m => m.id === msgModel.id);
+          
+          return new Chat({
+            ...c,
+            lastMessage: msgModel,
+            time: msgModel.timestamp,
+            messages: messageExists ? c.messages : [...(c.messages || []), msgModel],
+            unreadCount: (activeContactId !== c.id && incomingMsg.sender?.username !== user?.username) ? c.unreadCount + 1 : c.unreadCount
+          });
+        }
+        return c;
+      }));
+
+      // If this is the active chat, update visible messages
+      if (activeContactId === incomingMsg.chatId || activeContactId === incomingMsg.sender?.username) {
+        setLocalMessages(prev => {
+          if (prev.some(m => m.id === incomingMsg.id)) return prev;
+          return [...prev, new ChatMessageModel({
+            id: incomingMsg.id,
+            sender: incomingMsg.sender ? new User(incomingMsg.sender) : undefined,
+            content: incomingMsg.content,
+            timestamp: incomingMsg.timestamp,
+            isSystem: incomingMsg.isSystem || false
+          })];
+        });
+        setIsTyping(false); // Stop typing on message receive
+      }
+    });
+
+    const offTyping = on('typing', (data: any) => {
+      // console.log('[ChatContainer] Incoming typing event:', data);
+      
+      // If we are recipient (data.chatId is US) and the sender IS the one we are currently viewing
+      const isChattingWithSender = data.username === activeContactId && data.chatId === user?.username;
+      
+      // Special case for system bot
+      const isBotTyping = data.username === 'system' && data.chatId === user?.username;
+
+      if (isChattingWithSender || isBotTyping) {
+        setIsTyping(data.isTyping);
+      }
+    });
+
+    return () => {
+      offMsg();
+      offTyping();
+    };
+  }, [on, activeContactId, user?.username]);
+
   const handleSelectContact = (id: string) => {
     setActiveContactId(id);
     const contact = localContacts.find((c: Chat) => c.id === id);
     setLocalMessages(contact?.messages || []);
+    setIsTyping(false);
+    
+    // Clear unread on select
+    setLocalContacts(prev => prev.map(c => c.id === id ? { ...c, unreadCount: 0 } as Chat : c));
   };
 
   const handleSendMessage = (text: string) => {
-    if (!text.trim()) return;
+    if (!text.trim() || !activeContactId) return;
     
-    const newMessage = new ChatMessageModel({
+    const messageData = {
       id: Date.now().toString(),
-      sender: user,
+      chatId: activeContactId,
+      sender: { 
+        username: user?.username, 
+        displayName: user?.displayName,
+        avatar: user?.avatar 
+      },
       content: text,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+
+    // Update local state immediately for instant feedback
+    const newMessage = new ChatMessageModel({
+      id: messageData.id,
+      sender: user || undefined,
+      content: text,
+      timestamp: messageData.timestamp,
       isSystem: false
     });
-    
-    setLocalMessages(prev => [...prev, newMessage]);
 
-    // Update lastMessage in contact list
+    setLocalMessages(prev => [...prev, newMessage]);
     setLocalContacts(prev => prev.map(c => {
       if (c.id === activeContactId) {
         return new Chat({
@@ -60,6 +156,9 @@ export function ChatContainer() {
       }
       return c;
     }));
+
+    // Emit via socket for others
+    emit('message', messageData);
   };
 
   if (!user) {
@@ -147,11 +246,24 @@ export function ChatContainer() {
               />
             ))}
 
-            <div className="h-2" />
+            {isTyping && (
+              <div className="flex gap-2 items-center px-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="flex gap-1 items-center bg-black/5 dark:bg-white/5 px-3 py-1.5 rounded-2xl border border-black/5 dark:border-white/5">
+                  <div className="flex gap-0.5 mt-0.5">
+                    <span className="w-1 h-1 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.3s]"></span>
+                    <span className="w-1 h-1 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.15s]"></span>
+                    <span className="w-1 h-1 rounded-full bg-blue-500 animate-bounce"></span>
+                  </div>
+                  <span className="text-[10px] font-bold text-armoyu-text-muted italic ml-1">Yazıyor...</span>
+                </div>
+              </div>
+            )}
+
+            <div ref={messagesEndRef} className="h-2" />
           </div>
 
           {/* Input Area */}
-          <ChatInput onSend={handleSendMessage} />
+          <ChatInput onSend={handleSendMessage} chatId={activeContactId} />
 
         </div>
       )}

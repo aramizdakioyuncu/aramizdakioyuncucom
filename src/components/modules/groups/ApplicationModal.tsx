@@ -35,78 +35,97 @@ export function ApplicationModal({ isOpen, onClose, selectedRole }: ApplicationM
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300"
+        className="absolute inset-0 bg-[#0a0a0f]/90 backdrop-blur-xl animate-in fade-in duration-500"
         onClick={onClose}
       />
       
       {/* Modal Content */}
-      <div className="relative w-full max-w-xl bg-white dark:bg-[#12121a] border border-gray-200 dark:border-white/10 rounded-[40px] shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-300">
+      <div className="relative w-full max-w-xl glass-panel bg-armoyu-card-bg border border-armoyu-card-border rounded-[40px] shadow-[0_32px_120px_rgba(0,0,0,0.6)] overflow-hidden animate-in zoom-in-95 fade-in duration-500">
         
+        {/* Glow Effects */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full -mr-32 -mt-32 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-400/5 blur-[80px] rounded-full -ml-24 -mb-24 pointer-events-none" />
+
         {/* Header */}
-        <div className="p-8 border-b border-gray-100 dark:border-white/5 flex items-center justify-between">
+        <div className="p-10 pb-8 border-b border-armoyu-card-border flex items-start justify-between relative z-10">
            <div>
-              <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tighter italic">EKİP BAŞVURUSU</h2>
-              <p className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mt-1">
-                 ARMOYU AİLESİNE KATILIN
-              </p>
+              <h2 className="text-3xl font-black text-armoyu-text uppercase tracking-tighter italic leading-none">EKİP BAŞVURUSU</h2>
+              <div className="flex items-center gap-2 mt-3">
+                 <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
+                 <p className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em]">
+                    ARMOYU AKADEMİSİNE HOŞ GELDİNİZ
+                 </p>
+              </div>
            </div>
            <button 
              onClick={onClose}
-             className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+             className="w-12 h-12 rounded-2xl bg-black/5 dark:bg-white/5 border border-armoyu-card-border flex items-center justify-center hover:bg-red-500 hover:text-white hover:border-red-500 transition-all group active:scale-90"
            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-gray-900 dark:text-white"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="group-hover:rotate-90 transition-transform"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
            </button>
         </div>
 
         {/* Form Body */}
-        <form className="p-8 space-y-6" onSubmit={(e) => { e.preventDefault(); alert('Başvurunuz başarıyla alındı!'); onClose(); }}>
-           <div className="space-y-4">
-              <div className="space-y-2">
-                 <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">BAŞVURULACAK POZİSYON (AKTİF İLANLAR)</label>
-                 <div className="relative">
+        <form className="p-10 pt-8 space-y-8 relative z-10" onSubmit={(e) => { e.preventDefault(); alert('Başvurunuz başarıyla alındı!'); onClose(); }}>
+           <div className="space-y-6">
+              
+              {/* Pozisyon Seçimi */}
+              <div className="space-y-2.5">
+                 <label className="text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted ml-1 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50" />
+                    Pozisyon (Aktif İlanlar)
+                 </label>
+                 <div className="relative group">
                     <select 
                        defaultValue={selectedRole || "Genel Başvuru"}
-                       className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-bold text-sm appearance-none cursor-pointer"
+                       className="w-full bg-black/10 dark:bg-black/20 border border-armoyu-card-border rounded-2xl px-6 py-4 text-armoyu-text focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all font-black text-sm appearance-none cursor-pointer group-hover:border-armoyu-text-muted/30 uppercase tracking-tight"
                     >
                        {ACTIVE_ROLES.map(role => (
-                          <option key={role} value={role} className="bg-white dark:bg-[#12121a] text-gray-900 dark:text-white">{role}</option>
+                          <option key={role} value={role} className="bg-[#12121a] text-white py-4">{role}</option>
                        ))}
                     </select>
-                    <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-armoyu-text-muted transition-transform group-hover:translate-y-[-40%]">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
                  </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">ADINIZ VE SOYADINIZ</label>
-                    <input required type="text" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl px-5 py-4 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-bold text-sm" placeholder="Örn: Berkay Tikenoğlu" />
+              {/* Kişisel Bilgiler Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2.5">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted ml-1">AD SOYAD</label>
+                    <input required type="text" className="w-full bg-black/10 dark:bg-black/20 border border-armoyu-card-border rounded-2xl px-6 py-4 text-armoyu-text placeholder:text-armoyu-text-muted/40 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all font-bold text-sm uppercase tracking-tight" placeholder="Örn: Berkay Tikenoğlu" />
                  </div>
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">E-POSTA ADRESİNİZ</label>
-                    <input required type="email" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl px-5 py-4 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-bold text-sm" placeholder="user@gmail.com" />
+                 <div className="space-y-2.5">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted ml-1">YAŞ</label>
+                    <input required type="number" min="13" max="99" className="w-full bg-black/10 dark:bg-black/20 border border-armoyu-card-border rounded-2xl px-6 py-4 text-armoyu-text focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all font-bold text-sm" placeholder="Örn: 24" />
                  </div>
               </div>
 
-              <div className="space-y-2">
-                 <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">YAŞINIZ</label>
-                 <input required type="number" min="13" max="99" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl px-5 py-4 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-bold text-sm" placeholder="Örn: 24" />
+              <div className="space-y-2.5">
+                 <label className="text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted ml-1">E-POSTA ADRESİ</label>
+                 <input required type="email" className="w-full bg-black/10 dark:bg-black/20 border border-armoyu-card-border rounded-2xl px-6 py-4 text-armoyu-text placeholder:text-armoyu-text-muted/40 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all font-bold text-sm" placeholder="ornek@armoyu.com" />
               </div>
 
-              <div className="space-y-2">
-                 <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">KENDİNİZDEN KISACA BAHSEDİN</label>
-                 <textarea required rows={4} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl px-5 py-4 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-bold text-sm no-scrollbar" placeholder="Neden sizi seçmeliyiz? Tecrübeleriniz neler?" />
+              <div className="space-y-2.5">
+                 <label className="text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted ml-1">TECRÜBELER & KENDİNDEN BAHSET</label>
+                 <textarea required rows={4} className="w-full bg-black/10 dark:bg-black/20 border border-armoyu-card-border rounded-2xl px-6 py-4 text-armoyu-text placeholder:text-armoyu-text-muted/40 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all font-medium text-sm no-scrollbar resize-none leading-relaxed" placeholder="Neden sizi aramıza almalıyız? İlgili tecrübeleriniz nelerdir?.." />
               </div>
            </div>
 
-           <button className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl shadow-blue-500/30 transition-all active:scale-95">
-              BAŞVURUYU TAMAMLA
-           </button>
+           <div className="pt-4">
+              <button className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-blue-600/20 transition-all active:scale-95 relative overflow-hidden group/btn">
+                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
+                 BAŞVURUYU TAMAMLA
+              </button>
+           </div>
            
-           <p className="text-[9px] text-center text-gray-500 dark:text-gray-400 opacity-60 uppercase tracking-widest">
-              BAŞVURUNUZ İNCELENDİKTEN SONRA E-POSTA VE SMS YOLUYLA BİLGİLENDİRİLME YAPILACAKTIR.
-           </p>
+           <div className="flex items-center gap-3 p-4 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
+              <div className="w-1.5 h-full bg-blue-500 rounded-full" />
+              <p className="text-[9px] text-armoyu-text-muted uppercase tracking-widest leading-relaxed font-bold">
+                 Başvurunuz incelendikten sonra e-posta ve SMS yoluyla tarafınıza bilgilendirme yapılacaktır. Lütfen bilgilerin doğruluğundan emin olun. ✨
+              </p>
+           </div>
         </form>
       </div>
     </div>

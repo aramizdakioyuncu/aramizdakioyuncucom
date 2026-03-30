@@ -12,6 +12,15 @@ export interface PostStats {
   shares: number;
 }
 
+export interface PostComment {
+  id: string;
+  author: User;
+  content: string;
+  createdAt: string;
+  likes?: number;
+  replies?: PostComment[];
+}
+
 /**
  * Represents a Post (Gönderi/Paylaşım) in the aramizdakioyuncu.com platform.
  */
@@ -23,6 +32,12 @@ export class Post {
   createdAt: string = '';
   stats: PostStats = { likes: 0, comments: 0, reposts: 0, shares: 0 };
   hashtags: string[] = [];
+  isPending: boolean = false;
+
+  // Real-time Lists
+  likeList: User[] = [];
+  repostList: User[] = [];
+  commentList: PostComment[] = [];
 
   constructor(data: Partial<Post>) {
     Object.assign(this, data);
@@ -46,6 +61,13 @@ export class Post {
         shares: json.shareCount || 0,
       },
       hashtags: json.hashtags || [],
+      likeList: Array.isArray(json.likeList) ? json.likeList.map(User.fromJSON) : [],
+      repostList: Array.isArray(json.repostList) ? json.repostList.map(User.fromJSON) : [],
+      commentList: Array.isArray(json.commentList) ? json.commentList.map((c: any) => ({
+        ...c,
+        author: User.fromJSON(c.author),
+        replies: Array.isArray(c.replies) ? c.replies.map((r: any) => ({ ...r, author: User.fromJSON(r.author) })) : []
+      })) : []
     });
   }
 }

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { User } from '@/models/auth/User';
 
 export interface NewsCardProps {
   slug: string;
@@ -10,7 +11,7 @@ export interface NewsCardProps {
   date: string;
   category: string;
   image: string;
-  author: string;
+  author: User;
 }
 
 export function NewsCard({ slug, title, excerpt, date, category, image, author }: NewsCardProps) {
@@ -40,8 +41,8 @@ export function NewsCard({ slug, title, excerpt, date, category, image, author }
                 {date}
              </span>
              <span>•</span>
-             <span className="flex items-center gap-1 uppercase tracking-widest">
-                {author}
+             <span className="flex items-center gap-1 uppercase tracking-widest text-blue-500 font-black">
+                {author.displayName}
              </span>
           </div>
 

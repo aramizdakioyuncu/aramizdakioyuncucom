@@ -3,6 +3,12 @@
 import React, { useState } from 'react';
 import { NewsCard } from '@/components/modules/news/NewsCard';
 import { PageWidth } from '@/components/shared/PageWidth';
+import { userList } from '@/lib/constants/seedData';
+
+// Helper to get user by username for mock data
+const getUserByUsername = (username: string) => {
+  return userList.find(u => u.username === username) || userList[0];
+};
 
 const MOCK_NEWS = [
   {
@@ -12,7 +18,7 @@ const MOCK_NEWS = [
     date: '2 saat önce',
     category: 'Güncelleme',
     image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2670&auto=format&fit=crop',
-    author: 'berkaytikeno'
+    author: getUserByUsername('berkaytikenoglu')
   },
   {
     slug: 'valorant-clove-analiz',
@@ -21,7 +27,7 @@ const MOCK_NEWS = [
     date: '5 saat önce',
     category: 'Oyun Haberleri',
     image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670&auto=format&fit=crop',
-    author: 'alperen_admin'
+    author: getUserByUsername('alperen_admin')
   },
   {
     slug: 'cs-turnuva-sonuclari',
@@ -30,7 +36,7 @@ const MOCK_NEWS = [
     date: '1 gün önce',
     category: 'E-spor',
     image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2671&auto=format&fit=crop',
-    author: 'kaan_arslan'
+    author: getUserByUsername('berkaytikenoglu') // Example reusing Berkay
   },
   {
     slug: 'ets2-1-50-grafik-yeniligi',
@@ -39,7 +45,7 @@ const MOCK_NEWS = [
     date: '2 gün önce',
     category: 'Güncelleme',
     image: 'https://images.unsplash.com/photo-1590333748338-d43cae6a3286?q=80&w=2674&auto=format&fit=crop',
-    author: 'can_demir'
+    author: getUserByUsername('mythx')
   },
   {
     slug: 'minecraft-survival-sezon-acildi',
@@ -48,18 +54,23 @@ const MOCK_NEWS = [
     date: '3 gün önce',
     category: 'Etkinlikler',
     image: 'https://images.unsplash.com/photo-1587573089734-09cb6960951b?q=80&w=2672&auto=format&fit=crop',
-    author: 'zeynocash'
+    author: getUserByUsername('tugra')
   }
 ];
 
 export default function NewsPage() {
   const [activeTab, setActiveTab] = useState('Hepsi');
+  const [searchTerm, setSearchTerm] = useState('');
   
   const categories = ['Hepsi', 'Oyun Haberleri', 'Güncelleme', 'E-spor', 'Etkinlikler'];
   
-  const filteredNews = activeTab === 'Hepsi' 
-    ? MOCK_NEWS 
-    : MOCK_NEWS.filter(n => n.category === activeTab);
+  const filteredNews = MOCK_NEWS.filter(n => {
+    const matchesTab = activeTab === 'Hepsi' || n.category === activeTab;
+    const matchesSearch = n.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          n.author.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          n.author.username.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesTab && matchesSearch;
+  });
 
   return (
     <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -90,7 +101,9 @@ export default function NewsPage() {
         <div className="relative w-full md:w-80">
            <input 
              type="text" 
-             placeholder="Haber ara..." 
+             placeholder="Haber veya yazar ara..." 
+             value={searchTerm}
+             onChange={(e) => setSearchTerm(e.target.value)}
              className="w-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl px-5 py-3 text-sm text-armoyu-text focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium" 
            />
            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="absolute right-4 top-3 text-armoyu-text-muted opacity-40"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>

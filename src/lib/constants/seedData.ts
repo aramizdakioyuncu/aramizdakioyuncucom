@@ -1,4 +1,4 @@
-import { User, Post, Role, Group, Notification } from '@/models';
+import { User, Post, Role, Group, Notification, NotificationSender } from '@/models';
 import { Chat } from '@/models/social/Chat';
 import { ChatMessage } from '@/models/social/ChatMessage';
 
@@ -209,84 +209,107 @@ const BERKAY_MYTHX_MESSAGES_DATA = [
   { id: 'bm5', senderName: 'MythX', senderAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MythX', content: 'Sunucuya reset atıyorum...', timestamp: '10:42' }
 ];
 
-userList.forEach((user, index) => {
+// ---------------------------------------------------------
+// STEP 1: Basic Community & Initial Groups
+// ---------------------------------------------------------
+userList.forEach((user) => {
   // Everyone gets the community room
   if (user.chatList.length === 0) user.chatList.push(TOPLULUK_ODASI);
 
-  // Add 5-10 random FRIENDS for everyone
-  const friendCount = Math.floor(Math.random() * 6) + 5;
-  for (let i = 0; i < friendCount; i++) {
+  // Sync group memberships
+  user.groups.forEach((group: Group) => {
+    if (!group.members.some(m => m.username === user.username)) {
+      group.members.push(user);
+      group.memberCount = group.members.length;
+    }
+    if (group.permissions.length === 0) {
+      group.permissions = ['GÖNDERİ_PAYLAŞ', 'YORUM_YAP', 'ETKİNLİK_GÖR', 'MESAJ_GÖNDER'];
+    }
+  });
+});
+
+// ---------------------------------------------------------
+// STEP 2: Bidirectional Friendships
+// ---------------------------------------------------------
+userList.forEach((user, index) => {
+  // Add 5 random FRIENDS for everyone (bidirectional)
+  const targetFriendCount = 5;
+  for (let i = 0; user.friends.length < targetFriendCount && i < 20; i++) {
     const randomFriend = userList[(index + 10 + i * 13) % userList.length];
     if (randomFriend.username !== user.username) {
-      if (!user.friends.some(f => f.username === randomFriend.username)) {
-        user.friends.push(randomFriend);
-      }
+      if (!user.friends.some(f => f.username === randomFriend.username)) user.friends.push(randomFriend);
+      if (!randomFriend.friends.some(f => f.username === user.username)) randomFriend.friends.push(user);
     }
   }
 
   // Ensure Berkay & MythX are friends
   if (user.username === 'berkaytikenoglu') {
     const myth = userList.find(u => u.username === 'mythx');
-    if (myth && !user.friends.some(f => f.username === 'mythx')) user.friends.push(myth);
-  }
-
-  // Add 3-5 random individual chats for everyone
-  const chatCount = Math.floor(Math.random() * 3) + 3;
-  for (let i = 0; i < chatCount; i++) {
-    const randomUser = userList[(index + 1 + i * 7) % userList.length];
-    if (randomUser.username !== user.username) {
-      const alreadyExists = user.chatList.some(c => c.id === randomUser.username);
-      if (!alreadyExists) {
-        
-        // Check if this is the Berkay-MythX combo
-        const isBerkayMythX = (user.username === 'berkaytikenoglu' && randomUser.username === 'mythx') || 
-                             (user.username === 'mythx' && randomUser.username === 'berkaytikenoglu');
-
-        const messages: ChatMessage[] = isBerkayMythX 
-          ? BERKAY_MYTHX_MESSAGES_DATA.map(m => new ChatMessage({
-              id: m.id,
-              sender: new User({ displayName: m.senderName, avatar: m.senderAvatar, username: m.senderName.toLowerCase() }),
-              content: m.content,
-              timestamp: m.timestamp,
-              isSystem: false
-            }))
-          : [
-            new ChatMessage({ 
-              id: `m-${index}-${i}`, 
-              sender: new User({ displayName: randomUser.displayName, avatar: randomUser.avatar, username: randomUser.username }), 
-              content: possibleMessages[(index + i) % possibleMessages.length], 
-              timestamp: '10:42',
-              isSystem: false
-            })
-          ];
-
-        user.chatList.push(new Chat({
-          id: randomUser.username,
-          name: randomUser.displayName,
-          avatar: randomUser.avatar,
-          lastMessage: messages[messages.length - 1],
-          time: messages[messages.length - 1].timestamp,
-          unreadCount: (index + i) % 7 === 0 ? Math.floor(Math.random() * 5) + 1 : 0,
-          isOnline: (index + i) % 3 === 0,
-          messages: messages,
-          participants: [user, randomUser]
-        }));
-      }
+    if (myth) {
+      if (!user.friends.some(f => f.username === 'mythx')) user.friends.push(myth);
+      if (!myth.friends.some(f => f.username === 'berkaytikenoglu')) myth.friends.push(user);
     }
   }
+});
 
-  // Assign groups to Group.members list
-  user.groups.forEach((group: Group) => {
-    if (!group.members.some(m => m.username === user.username)) {
-      group.members.push(user);
-      group.memberCount = group.members.length;
-    }
-    // Add default permissions to groups if empty
-    if (group.permissions.length === 0) {
-      group.permissions = ['GÖNDERİ_PAYLAŞ', 'YORUM_YAP', 'ETKİNLİK_GÖR', 'MESAJ_GÖNDER'];
-    }
+// ---------------------------------------------------------
+// STEP 3: Bidirectional Chats (Based on Friendships)
+// ---------------------------------------------------------
+const processedChatPairs = new Set<string>();
+
+userList.forEach((user, index) => {
+  user.friends.forEach((friend, fIndex) => {
+    const pairId = [user.username, friend.username].sort().join('-');
+    if (processedChatPairs.has(pairId)) return;
+    processedChatPairs.add(pairId);
+
+    const isBerkayMythX = (user.username === 'berkaytikenoglu' && friend.username === 'mythx') || 
+                         (user.username === 'mythx' && friend.username === 'berkaytikenoglu');
+
+    const messages: ChatMessage[] = isBerkayMythX 
+      ? BERKAY_MYTHX_MESSAGES_DATA.map(m => new ChatMessage({
+          id: m.id,
+          sender: userList.find(u => u.displayName.includes(m.senderName)) || new User({ displayName: m.senderName, username: m.senderName.toLowerCase() }),
+          content: m.content,
+          timestamp: m.timestamp,
+          isSystem: false
+        }))
+      : [
+        new ChatMessage({ 
+          id: `m-${pairId}-0`, 
+          sender: friend, 
+          content: possibleMessages[(index + fIndex) % possibleMessages.length], 
+          timestamp: '10:42',
+          isSystem: false
+        })
+      ];
+
+    // Add to User A's list
+    user.chatList.push(new Chat({
+      id: friend.username,
+      name: friend.displayName,
+      avatar: friend.avatar,
+      lastMessage: messages[messages.length - 1],
+      time: messages[messages.length - 1].timestamp,
+      unreadCount: (index + fIndex) % 7 === 0 ? 1 : 0,
+      isOnline: (index + fIndex) % 3 === 0,
+      messages: messages,
+      participants: [user, friend]
+    }));
+
+    // Add to User B's list (Symmetrical)
+    friend.chatList.push(new Chat({
+      id: user.username,
+      name: user.displayName,
+      avatar: user.avatar,
+      lastMessage: messages[messages.length - 1],
+      time: messages[messages.length - 1].timestamp,
+      unreadCount: 0,
+      isOnline: (index + fIndex) % 2 === 0,
+      messages: messages,
+      participants: [friend, user]
+    }));
   });
-
 });
 
 /**
@@ -298,45 +321,62 @@ export const postList: Post[] = [
     author: userList[0],
     content: 'ARMOYU V3 sistemleri üzerinde çalışmaya devam ediyoruz! Çok yakında yeni özelliklerle karşınızda olacağız. #ARMOYU #V3 #Development',
     createdAt: '2 saat önce',
-    stats: { likes: 124, comments: 12, reposts: 5, shares: 8 },
-    hashtags: ['ARMOYU', 'V3', 'Development']
+    stats: { likes: 124, comments: 2, reposts: 5, shares: 8 },
+    hashtags: ['ARMOYU', 'V3', 'Development'],
+    likeList: [userList[1], userList[2], userList[5], userList[8], userList[15]],
+    repostList: [userList[3], userList[10]],
+    commentList: [
+      { id: 'c1', author: userList[4], content: 'Büyük merakla bekliyoruz! Elinize sağlık.', createdAt: '1 saat önce' },
+      { id: 'c2', author: userList[12], content: 'Dashboard tasarımı çok temiz olmuş.', createdAt: '30 dk önce', replies: [
+        { id: 'c2-1', author: userList[0], content: 'Teşekkürler hocam! 🙏', createdAt: '10 dk önce' }
+      ]}
+    ]
   }),
   new Post({
     id: 'p2',
     author: userList[1],
     content: 'Bu akşam saat 20:00\'de büyük bir çekilişimiz var, sakın kaçırmayın! 🔥',
     createdAt: '5 saat önce',
-    stats: { likes: 85, comments: 45, reposts: 12, shares: 20 },
-    media: [{ type: 'image', url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670&auto=format&fit=crop' }]
+    stats: { likes: 85, comments: 1, reposts: 12, shares: 20 },
+    media: [{ type: 'image', url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670&auto=format&fit=crop' }],
+    likeList: [userList[0], userList[10], userList[22], userList[45]],
+    repostList: [userList[5], userList[8]],
+    commentList: [
+      { id: 'p2-c1', author: userList[5], content: 'Yine efsane bir çekiliş bizi bekliyor!', createdAt: '4 saat önce' }
+    ]
   }),
   new Post({
     id: 'p3',
     author: userList[2],
     content: 'Bugün harika bir day! Herkese iyi oyunlar dilerim. 🤍',
     createdAt: '1 gün önce',
-    stats: { likes: 56, comments: 4, reposts: 1, shares: 2 }
+    stats: { likes: 56, comments: 0, reposts: 1, shares: 2 },
+    likeList: [userList[1], userList[15], userList[18]]
   }),
   new Post({
     id: 'p4',
     author: userList[0], // Berkay
     content: 'Yeni bir blog yazısı paylaştım! "Modern Web Geliştirme Trendleri" hakkındaki düşüncelerimi okuyabilirsiniz. #Blog #WebDev',
     createdAt: '3 saat önce',
-    stats: { likes: 210, comments: 15, reposts: 8, shares: 12 }
+    stats: { likes: 210, comments: 0, reposts: 8, shares: 12 },
+    likeList: [userList[2], userList[14], userList[50], userList[60]]
   }),
   new Post({
     id: 'p5',
-    author: userList[4], // Engin
+    author: userList[14], // Engin (Check userList index)
     content: 'Kod yazarken kahve olmazsa olmaz diyenler? ☕️⌨️',
     createdAt: '6 saat önce',
-    stats: { likes: 45, comments: 8, reposts: 2, shares: 1 },
-    media: [{ type: 'image', url: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2670&auto=format&fit=crop' }]
+    stats: { likes: 45, comments: 0, reposts: 2, shares: 1 },
+    media: [{ type: 'image', url: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2670&auto=format&fit=crop' }],
+    likeList: [userList[0], userList[12]]
   }),
   new Post({
     id: 'p6',
-    author: userList[13], // Metehan
+    author: userList[16], // Metehan (Check userList index)
     content: 'Birazdan yayındayız! Minecraft Survival serisinin yeni bölümü geliyor. Kaçırmayın! 🔴',
     createdAt: '10 dk önce',
-    stats: { likes: 890, comments: 120, reposts: 50, shares: 30 }
+    stats: { likes: 890, comments: 0, reposts: 50, shares: 30 },
+    likeList: [userList[1], userList[2], userList[3], userList[10]]
   })
 ];
 
@@ -358,36 +398,40 @@ if (berkay) {
   berkay.notifications = [
     new Notification({
       id: 'n1',
-      type: 'like',
-      title: 'Gönderin Beğenildi',
-      message: 'MythX gönderini beğendi.',
-      sender: userList[1],
-      createdAt: '2 dk önce',
+      type: 'POST_LIKE',
+      category: 'SOCIAL',
+      title: 'Yeni Beğeni',
+      message: `${userList[5].displayName} bir gönderini beğendi.`,
+      post: postList[0], // OO Approach! Automatically handles context & postId
+      sender: userList[5].toNotificationSender(), // OO from userList!
+      createdAt: '2024-03-29T10:00:00Z',
       isRead: false
     }),
     new Notification({
       id: 'n2',
-      type: 'comment',
+      type: 'POST_COMMENT',
+      category: 'SOCIAL',
       title: 'Yeni Yorum',
-      message: 'EnginCan gönderine yorum yaptı: "Harika görünüyor!"',
-      sender: userList[4],
+      sender: userList[4].toNotificationSender(), // OO from userList!
       createdAt: '1 saat önce',
       isRead: false
     }),
     new Notification({
       id: 'n3',
-      type: 'group_invite',
-      title: 'Grup Daveti',
-      message: 'Code Masters grubuna davet edildin.',
-      sender: userList[2],
+      type: 'GROUP_INVITE',
+      category: 'GROUP',
+      group: groupList[1], // OO Approach!
+      sender: groupList[1].toNotificationSender(), // OO from groupList!
       createdAt: '3 saat önce',
       isRead: true
     }),
     new Notification({
       id: 'n4',
-      type: 'system',
+      type: 'SYSTEM_UPDATE',
+      category: 'SYSTEM',
       title: 'Sistem Güncellemesi',
       message: 'ARMOYU V3 Beta 1.2 sürümüne güncellendi.',
+      sender: NotificationSender.system(), // Standard System Sender
       createdAt: '1 gün önce',
       isRead: true
     })

@@ -9,15 +9,15 @@ import { useAuth } from '@/context/AuthContext';
 import { userList } from '@/lib/constants/seedData';
 
 export default function UserProfilePage() {
-  const { user, setIsLoginModalOpen } = useAuth();
+  const { user, isLoading, setIsLoginModalOpen } = useAuth();
   const params = useParams();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (!user) {
+    if (!isLoading && !user) {
       setIsLoginModalOpen(true);
     }
-  }, [user, setIsLoginModalOpen]);
+  }, [user, isLoading, setIsLoginModalOpen]);
 
   const username = (params?.username as string) || 'oyuncu';
   const urlName = searchParams?.get('name');

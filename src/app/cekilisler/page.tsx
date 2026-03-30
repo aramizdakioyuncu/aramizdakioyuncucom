@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { GiveawayCard } from '@/components/modules/giveaways/GiveawayCard';
 import { PageWidth } from '@/components/shared/PageWidth';
+import { ViewModeToggle, ViewMode } from '@/components/shared/ViewModeToggle';
 
 const MOCK_GIVEAWAYS = [
   {
@@ -49,6 +50,7 @@ const MOCK_GIVEAWAYS = [
 
 export default function GiveawaysPage() {
   const [activeTab, setActiveTab] = useState('Hepsi');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
   
   const categories = ['Hepsi', 'Aktif', 'Sona Erdi'];
   
@@ -69,14 +71,17 @@ export default function GiveawaysPage() {
           </p>
         </div>
         
-        {/* Kesin İfade Barı (Ücretsiz & Kar Amacı Gütmeyen) */}
-        <div className="bg-blue-600/10 border border-blue-500/20 px-6 py-4 rounded-[32px] flex items-center gap-4 max-w-md shadow-lg shadow-blue-500/5 animate-pulse-slow">
-           <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-           </div>
-           <p className="text-[11px] font-black text-blue-600 dark:text-blue-400 leading-tight uppercase tracking-wider">
-              Tüm çekilişlerimiz tamamen <strong>ÜCRETSİZDİR</strong> ve <strong>KAR AMACI GÜTMEMEKTEDİR</strong>. Topluluk ruhunu güçlendirmek için buradayız.
-           </p>
+        {/* View Toggle & Info Bar */}
+        <div className="flex flex-col items-center md:items-end gap-4">
+          <div className="bg-blue-600/10 border border-blue-500/20 px-6 py-4 rounded-[32px] flex items-center gap-4 max-w-md shadow-lg shadow-blue-500/5 animate-pulse-slow">
+            <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </div>
+            <p className="text-[11px] font-black text-blue-600 dark:text-blue-400 leading-tight uppercase tracking-wider text-left">
+                Tüm çekilişlerimiz tamamen <strong>ÜCRETSİZDİR</strong> ve <strong>KAR AMACI GÜTMEMEKTEDİR</strong>.
+            </p>
+          </div>
+          <ViewModeToggle mode={viewMode} onChange={setViewMode} />
         </div>
       </div>
 
@@ -85,11 +90,11 @@ export default function GiveawaysPage() {
         <div className="flex bg-black/5 dark:bg-white/5 p-1.5 rounded-2xl border border-black/5 dark:border-white/5 overflow-x-auto no-scrollbar max-w-full">
            {categories.map((cat) => (
              <button
-               key={cat}
-               onClick={() => setActiveTab(cat)}
-               className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all shrink-0 ${activeTab === cat ? 'bg-white dark:bg-blue-600 text-blue-600 dark:text-white shadow-xl' : 'text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5'}`}
+                key={cat}
+                onClick={() => setActiveTab(cat)}
+                className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all shrink-0 ${activeTab === cat ? 'bg-white dark:bg-blue-600 text-blue-600 dark:text-white shadow-xl' : 'text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5'}`}
              >
-               {cat}
+                {cat}
              </button>
            ))}
         </div>
@@ -104,22 +109,66 @@ export default function GiveawaysPage() {
         </div>
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16">
-        {filteredGiveaways.map((giveaway, idx) => (
-          <GiveawayCard key={idx} {...giveaway} />
-        ))}
-        
-        {/* VIP Section Call-to-action */}
-        <div className="glass-panel p-10 rounded-[40px] border border-yellow-500 bg-gradient-to-br from-yellow-500/10 to-orange-500/5 flex flex-col items-center justify-center text-center group transition-all duration-500">
-           <div className="w-16 h-16 rounded-full bg-yellow-500 text-white flex items-center justify-center mb-6 shadow-xl shadow-yellow-500/20 group-hover:scale-110 transition-transform">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-           </div>
-           <h3 className="font-black text-armoyu-text text-xl mb-3">VIP ÇEKİLİŞLER</h3>
-           <p className="text-sm font-medium text-armoyu-text-muted leading-relaxed mb-8 px-4">Özel VIP üyelik ile sadece sana özel ödülleri yakalama şansını kaçırma.</p>
-           <button className="px-8 py-3 bg-yellow-500 hover:bg-yellow-400 text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-yellow-500/30 transition-all active:scale-95">VIP Ol</button>
+      {/* Content Area */}
+      {viewMode === 'grid' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16">
+          {filteredGiveaways.map((giveaway, idx) => (
+            <GiveawayCard key={idx} {...giveaway} />
+          ))}
+          
+          {/* VIP Section Call-to-action */}
+          <div className="glass-panel p-10 rounded-[40px] border border-yellow-500 bg-gradient-to-br from-yellow-500/10 to-orange-500/5 flex flex-col items-center justify-center text-center group transition-all duration-500">
+            <div className="w-16 h-16 rounded-full bg-yellow-500 text-white flex items-center justify-center mb-6 shadow-xl shadow-yellow-500/20 group-hover:scale-110 transition-transform">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            </div>
+            <h3 className="font-black text-armoyu-text text-xl mb-3">VIP ÇEKİLİŞLER</h3>
+            <p className="text-sm font-medium text-armoyu-text-muted leading-relaxed mb-8 px-4">Özel VIP üyelik ile sadece sana özel ödülleri yakalama şansını kaçırma.</p>
+            <button className="px-8 py-3 bg-yellow-500 hover:bg-yellow-400 text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-yellow-500/30 transition-all active:scale-95">VIP Ol</button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="glass-panel overflow-hidden rounded-[32px] border border-armoyu-card-border shadow-2xl animate-in fade-in slide-in-from-right-8 duration-500">
+          <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-5 bg-black/5 dark:bg-white/5 border-b border-armoyu-card-border">
+            <div className="col-span-1 text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">RESİM</div>
+            <div className="col-span-4 text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">ÖDÜL</div>
+            <div className="col-span-2 text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">KATEGORİ</div>
+            <div className="col-span-1 text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest text-center">KATILIMCI</div>
+            <div className="col-span-2 text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest text-center">KALAN SÜRE</div>
+            <div className="col-span-2 text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest text-right">#</div>
+          </div>
+          <div className="divide-y divide-black/5 dark:divide-white/5">
+            {filteredGiveaways.map((giveaway, idx) => (
+              <div key={idx} className="grid grid-cols-1 md:grid-cols-12 gap-4 px-8 py-5 items-center hover:bg-blue-600/5 transition-all group">
+                <div className="col-span-1">
+                  <img src={giveaway.image} className="w-12 h-12 rounded-xl object-contain bg-white p-1 border border-black/10 dark:border-white/10" alt="" />
+                </div>
+                <div className="col-span-4">
+                  <h4 className="text-sm font-black text-armoyu-text uppercase tracking-tight group-hover:text-blue-500 transition-colors">{giveaway.prize}</h4>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest opacity-60">{giveaway.title}</span>
+                </div>
+                <div className="col-span-1 text-center font-black text-xs text-blue-500 flex items-center justify-center gap-1">
+                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                   {giveaway.participants}
+                </div>
+                <div className="col-span-2 text-center text-[10px] font-bold text-armoyu-text-muted uppercase tracking-widest">
+                  {giveaway.timeLeft}
+                </div>
+                <div className="col-span-2 text-right">
+                  <button className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                    giveaway.status === 'active' 
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20 hover:scale-105 active:scale-95' 
+                    : 'bg-zinc-500/20 text-zinc-500 cursor-not-allowed'
+                  }`}>
+                    {giveaway.status === 'active' ? 'KATIL' : 'BITTI'}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Winners Banner / Announcement */}
       <div className="mt-24 p-8 rounded-[40px] bg-emerald-500/5 border border-emerald-500/10 flex flex-col md:flex-row items-center justify-between gap-8">

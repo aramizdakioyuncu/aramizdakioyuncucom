@@ -4,12 +4,20 @@ import React from 'react';
 import { useParams } from 'next/navigation';
 import { PageWidth } from '@/components/shared/PageWidth';
 import { NewsCard } from '@/components/modules/news/NewsCard';
+import { NewsComments } from '@/components/modules/news/NewsComments';
+import { userList } from '@/lib/constants/seedData';
+import Link from 'next/link';
+
+// Helper to get user by username for mock data
+const getUserByUsername = (username: string) => {
+  return userList.find(u => u.username === username) || userList[0];
+};
 
 const MOCK_ARTICLE = {
   title: 'ARMOYU V3 Güncellemesi Yayında: Yeni Arayüz ve Özellikler!',
   category: 'Güncelleme',
   date: '24 Mart 2024',
-  author: 'Berkay Tikenoğlu',
+  author: getUserByUsername('berkaytikenoglu'),
   image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2670&auto=format&fit=crop',
   content: `
     <p>ARMOYU topluluğu için heyecan verici bir dönemin kapılarını aralıyoruz. Uzun süredir üzerinde çalıştığımız V3 güncellemesi artık tüm sunucularımızda ve web platformumuzda yayında. Bu güncelleme sadece görsel bir değişim değil, aynı zamanda altyapısal bir devrimi de beraberinde getiriyor.</p>
@@ -41,7 +49,7 @@ const SUGGESTED_NEWS = [
     date: '5 saat önce',
     category: 'Oyun Haberleri',
     image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670&auto=format&fit=crop',
-    author: 'alperen_admin'
+    author: getUserByUsername('alperen_admin')
   },
   {
     slug: 'cs-turnuva-sonuclari',
@@ -50,7 +58,7 @@ const SUGGESTED_NEWS = [
     date: '1 gün önce',
     category: 'E-spor',
     image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2671&auto=format&fit=crop',
-    author: 'kaan_arslan'
+    author: getUserByUsername('berkaytikenoglu')
   }
 ];
 
@@ -72,7 +80,7 @@ export default function NewsDetailPage() {
            </span>
            <span className="text-xs font-bold text-armoyu-text-muted">{article.date}</span>
            <span className="text-xs font-bold text-armoyu-text-muted">•</span>
-           <span className="text-xs font-black text-blue-500 uppercase tracking-widest">{article.author}</span>
+           <span className="text-xs font-black text-blue-500 uppercase tracking-widest">{article.author.displayName}</span>
         </div>
         
         <h1 className="text-4xl md:text-6xl font-black text-armoyu-text leading-tight tracking-tighter mb-10 max-w-5xl uppercase">
@@ -113,6 +121,9 @@ export default function NewsDetailPage() {
                   <span className="px-3 py-1.5 rounded-xl border border-armoyu-card-border hover:border-blue-500 transition-colors cursor-pointer">#V3</span>
                </div>
             </div>
+
+            {/* Comments System */}
+            <NewsComments />
          </div>
 
          {/* Sidebar - Trending / Popular */}
@@ -152,8 +163,7 @@ export default function NewsDetailPage() {
             <Link href="/haberler" className="text-sm font-bold text-blue-500 hover:underline">Tüm Haberler</Link>
          </div>
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Burada NewsCard tekrar kullanılabilir */}
-            {[...SUGGESTED_NEWS].map((news, idx) => (
+            {SUGGESTED_NEWS.map((news, idx) => (
               <NewsCard key={idx} {...news} />
             ))}
          </div>
@@ -162,6 +172,3 @@ export default function NewsDetailPage() {
     </div>
   );
 }
-
-// Sidebar için Link ihtiyacı olabilir, o yüzden Import ekleyelim
-import Link from 'next/link';

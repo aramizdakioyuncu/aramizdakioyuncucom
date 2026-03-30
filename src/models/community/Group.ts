@@ -1,4 +1,5 @@
 import { User } from '../auth/User';
+import { NotificationSender } from '../social/NotificationSender';
 
 /**
  * Represents a Group (Grup) in the aramizdakioyuncu.com platform.
@@ -34,6 +35,19 @@ export class Group {
    */
   getGroupUrl(): string {
     return `/gruplar/${this.slug || this.name.toLowerCase().replace(/\s+/g, '-')}`;
+  }
+
+  /**
+   * Converts the group to a standardized notification sender.
+   */
+  toNotificationSender(): NotificationSender {
+    return new NotificationSender({
+      id: this.id,
+      name: this.name,
+      avatar: this.logo,
+      type: 'GROUP',
+      url: this.getGroupUrl()
+    });
   }
 
   /**

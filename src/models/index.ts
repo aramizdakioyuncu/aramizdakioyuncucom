@@ -15,5 +15,6 @@ export * from './store/StoreItem';
 export * from './social/Chat';
 export * from './social/ChatMessage';
 export * from './social/Notification';
+export * from './social/NotificationSender';
 export * from './social/Note';
 export * from './social/Leaderboard';
