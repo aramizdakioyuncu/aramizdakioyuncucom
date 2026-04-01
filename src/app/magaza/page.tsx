@@ -2,27 +2,23 @@
 
 import React from 'react';
 import { PageWidth } from '@/components/shared/PageWidth';
-
-const PRODUCTS = [
-  { id: '1', name: 'Premium VIP Üyelik', category: 'Üyelik', price: '₺149.90', image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80', isFeatured: true, badge: 'EN POPÜLER' },
-  { id: '2', name: '1000 ARMOYU Coin', category: 'Oyun İçi', price: '₺49.00', image: 'https://images.unsplash.com/photo-1621416848469-8c2033bc699b?w=800&q=80' },
-  { id: '3', name: 'Elite Minecraft Paketi', category: 'Oyun İçi', price: '₺89.90', image: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=800&q=80' },
-  { id: '4', name: 'ARMOYU Kapşonlu (Siyah)', category: 'Giyim', price: '₺599.00', image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80' },
-  { id: '5', name: 'Efsanevi Kasa Anahtarı', category: 'Oyun İçi', price: '₺25.00', image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80' },
-  { id: '6', name: 'Discord Özel Rolü', category: 'Üyelik', price: '₺19.90', image: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=800&q=80' }
-];
+import Link from 'next/link';
+import { StoreHeader } from '@/components/modules/magaza/StoreHeader';
+import { useCart } from '@/context/CartContext';
+import { Product } from '@/models';
+import { MOCK_PRODUCTS } from '@/lib/constants/mockData';
 
 export default function StorePage() {
+  const { addToCart } = useCart();
+  
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(price);
+  };
   return (
     <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
       <PageWidth width="max-w-[1440px]" />
       
-      <div className="mb-20 text-center">
-        <h1 className="text-4xl md:text-7xl font-black text-armoyu-text mb-8 uppercase tracking-tighter italic leading-tight">ARMOYU MAĞAZA</h1>
-        <p className="text-armoyu-text-muted text-xl max-w-3xl mx-auto font-medium leading-relaxed opacity-80">
-          Oyun deneyimini bir üst seviyeye taşı. Özel üyelikler, oyun içi paralar ve lisanslı ürünler burada.
-        </p>
-      </div>
+      <StoreHeader />
 
       <div className="flex flex-col lg:flex-row gap-12">
          
@@ -52,7 +48,7 @@ export default function StorePage() {
 
          {/* Products Grid */}
          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-10">
-            {PRODUCTS.map((product) => (
+            {MOCK_PRODUCTS.map((product: Product) => (
               <div key={product.id} className="group glass-panel rounded-[50px] border border-armoyu-card-border overflow-hidden hover:shadow-2xl transition-all duration-500 bg-armoyu-card-bg flex flex-col">
                  <div className="relative h-64 overflow-hidden shrink-0">
                     <img src={product.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={product.name} />
@@ -74,17 +70,20 @@ export default function StorePage() {
                     </h3>
                     
                     <div className="mt-4 flex items-baseline gap-2 mb-8">
-                       <span className="text-3xl font-black text-armoyu-text">{product.price}</span>
-                       <span className="text-[10px] font-bold text-armoyu-text-muted line-through opacity-50">₺{(parseFloat(product.price.replace('₺','')) * 1.2).toFixed(2)}</span>
+                       <span className="text-3xl font-black text-armoyu-text">{formatPrice(product.price)}</span>
+                       <span className="text-[10px] font-bold text-armoyu-text-muted line-through opacity-50">{formatPrice(product.price * 1.2)}</span>
                     </div>
 
                     <div className="mt-auto space-y-3">
-                       <button className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black text-[10px] uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-blue-500/20 active:scale-95">
-                          SEPETE EKLE
-                       </button>
-                       <button className="w-full py-4 bg-black/5 dark:bg-white/5 text-armoyu-text-muted hover:text-armoyu-text font-black text-[9px] uppercase tracking-widest rounded-2xl transition-all border border-transparent hover:border-armoyu-card-border">
+                        <button 
+                          onClick={() => addToCart(product)}
+                          className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black text-[10px] uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-blue-500/20 active:scale-95 text-center flex items-center justify-center"
+                        >
+                           SEPETE EKLE
+                        </button>
+                       <Link href={`/magaza/${product.id}`} className="w-full py-4 bg-black/5 dark:bg-white/5 text-armoyu-text-muted hover:text-armoyu-text font-black text-[9px] uppercase tracking-widest rounded-2xl transition-all border border-transparent hover:border-armoyu-card-border text-center flex items-center justify-center">
                           DETAYLARI GÖR
-                       </button>
+                       </Link>
                     </div>
                  </div>
               </div>

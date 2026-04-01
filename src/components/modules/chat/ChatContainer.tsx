@@ -67,6 +67,7 @@ export function ChatContainer() {
             ...c,
             lastMessage: msgModel,
             time: msgModel.timestamp,
+            updatedAt: Date.now(),
             messages: messageExists ? c.messages : [...(c.messages || []), msgModel],
             unreadCount: (activeContactId !== c.id && incomingMsg.sender?.username !== user?.username) ? c.unreadCount + 1 : c.unreadCount
           });
@@ -151,6 +152,7 @@ export function ChatContainer() {
           ...c,
           lastMessage: newMessage,
           time: newMessage.timestamp,
+          updatedAt: Date.now(),
           messages: [...(c.messages || []), newMessage]
         });
       }

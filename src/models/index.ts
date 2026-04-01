@@ -1,5 +1,6 @@
 export * from './auth/User';
 export * from './auth/Role';
+export * from './auth/Session';
 export * from './social/Post';
 export * from './social/Comment';
 export * from './social/Story';
@@ -12,6 +13,9 @@ export * from './content/Media';
 export * from './content/Mod';
 export * from './content/Project';
 export * from './store/StoreItem';
+export * from './shop/Product';
+export * from './shop/Order';
+export * from './shop/CartItem';
 export * from './social/Chat';
 export * from './social/ChatMessage';
 export * from './social/Notification';

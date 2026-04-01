@@ -8,11 +8,23 @@ export function ChatList({ contacts, activeId, onSelect }: { contacts: Chat[], a
   const { closeChat } = useChat();
   const { isConnected } = useSocket();
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState<'all' | 'unread' | 'favorites' | 'groups'>('all');
 
-  const filteredContacts = contacts.filter(c => 
-    c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (c.lastMessage?.content || '').toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredContacts = contacts
+    .filter(c => {
+      // 1. Search Query Filter
+      const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          (c.lastMessage?.content || '').toLowerCase().includes(searchQuery.toLowerCase());
+      if (!matchesSearch) return false;
+
+      // 2. Category Filter
+      if (activeFilter === 'unread') return c.unreadCount > 0;
+      if (activeFilter === 'favorites') return c.isFavorite;
+      if (activeFilter === 'groups') return c.isGroup;
+      
+      return true; // 'all'
+    })
+    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
 
   return (
     <div className="w-full h-full flex flex-col bg-armoyu-bg border-r border-gray-200 dark:border-white/5">
@@ -46,6 +58,28 @@ export function ChatList({ contacts, activeId, onSelect }: { contacts: Chat[], a
 
       {/* Instagram Stil Notlar Kısmı */}
       <ChatNotes />
+
+      {/* Kategori Filtreleri */}
+      <div className="px-4 pb-4 flex gap-2 overflow-x-auto no-scrollbar shrink-0">
+        {[
+          { id: 'all', label: 'Tümü' },
+          { id: 'unread', label: 'Okunmamış' },
+          { id: 'favorites', label: 'Favoriler' },
+          { id: 'groups', label: 'Gruplar' }
+        ].map((filter) => (
+          <button
+            key={filter.id}
+            onClick={() => setActiveFilter(filter.id as any)}
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all whitespace-nowrap border ${
+              activeFilter === filter.id
+                ? 'bg-blue-500 text-white border-blue-500 shadow-md shadow-blue-500/20 scale-105'
+                : 'bg-black/5 dark:bg-white/5 text-armoyu-text-muted border-transparent hover:bg-black/10 dark:hover:bg-white/10'
+            }`}
+          >
+            {filter.label}
+          </button>
+        ))}
+      </div>
 
       {/* Kullanıcı Listesi */}
       <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-1.5">

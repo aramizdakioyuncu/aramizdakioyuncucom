@@ -1,80 +1,97 @@
-import { GlobalStats } from "@/types/stats";
-import { userList } from './seedData';
-import { User, Story, Note, Leaderboard } from '@/models';
+import { Product } from '@/models';
 
-export const MOCK_STORIES: Story[] = [
-  new Story({
-    id: 'me',
-    user: new User({ 
-      username: 'Hikayen', 
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ArmoyuMe',
-      displayName: 'Hikayen'
-    }),
-    media: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670&auto=format&fit=crop',
-    hasUnseen: false,
-    isMe: true
+export const MOCK_PRODUCTS = [
+  new Product({ 
+    id: '1', 
+    name: 'Premium VIP Üyelik', 
+    category: 'Üyelik', 
+    description: 'ARMOYU platformunda en üst düzey deneyim için tasarlanmıştır. Özel rozetler, öncelikli destek ve %20 daha fazla TP kazanırsınız.', 
+    price: 149.90, 
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80', 
+    isFeatured: true, 
+    badge: 'EN POPÜLER',
+    stock: 999
   }),
-  ...userList.slice(0, 7).map((user, index) => new Story({
-    id: `s${index + 1}`,
-    user: user,
-    media: [
-      'https://images.unsplash.com/photo-1587831990711-23ca6441447b?q=80&w=2698&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?q=80&w=2574&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2672&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2670&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2671&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=2730&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2670&auto=format&fit=crop'
-    ][index % 7],
-    hasUnseen: index % 3 !== 0
-  }))
-];
-
-export const mockGlobalStats: GlobalStats = {
-  totalPlayers: 12540,
-  malePlayers: 8200,
-  femalePlayers: 4340,
-  totalForums: 856,
-  totalPolls: 124,
-  activeUsers24h: 1240,
-  totalMatchesPlayed: 45200,
-  totalGuilds: 156,
-  monthlyVisitors: 85000,
-  totalNews: 342
-};
-
-const possibleNotes = [
-  'CS2 mi Valorant mı? 🤔',
-  'V3 sistemleri hazır! 🔨',
-  'Aramızdaki Oyuncu 🤍',
-  'Kod yazarken müzik...🧨',
-  'Yeni video yayında! 📺',
-  'Bugün çok yorgunum 😴',
-  'Akşam turnuva var! 🏆',
-  'Oyun önerisi olan? 🎮',
-  'Sistem topluyorum 💻',
-  'Herkese iyi oyunlar! ✨'
-];
-
-export const MOCK_NOTES: Note[] = [
-  new Note({
-    id: 'n-me',
-    user: new User({ 
-      username: 'Hikayen', 
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ArmoyuMe',
-      displayName: 'Hikayen'
-    }),
-    note: 'Not bırak...',
-    isMe: true
+  new Product({ 
+    id: '2', 
+    name: '1000 ARMOYU Coin', 
+    category: 'Oyun İçi', 
+    description: 'Market alışverişlerinde ve özel etkinliklerde kullanabileceğiniz dijital para birimidir.', 
+    price: 49.00, 
+    image: 'https://images.unsplash.com/photo-1621416848469-8c2033bc699b?w=800&q=80',
+    stock: 9999
   }),
-  ...userList.slice(0, 9).map((user, index) => new Note({
-    id: `n${index + 1}`,
-    user: user,
-    note: possibleNotes[index % possibleNotes.length],
-    isMe: false
-  }))
+  new Product({ 
+    id: '3', 
+    name: 'Elite Minecraft Paketi', 
+    category: 'Oyun İçi', 
+    description: 'Minecraft sunucularımızda kullanabileceğiniz efsanevi ekipmanlar ve özel bloklar içerir.', 
+    price: 89.90, 
+    image: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=800&q=80',
+    stock: 50
+  }),
+  new Product({ 
+    id: '4', 
+    name: 'ARMOYU Kapşonlu (Siyah)', 
+    category: 'Giyim', 
+    description: 'Yüksek kaliteli pamuklu kumaş, şık ARMOYU nakışı ile günlük giyimde fark yaratın.', 
+    price: 599.00, 
+    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80',
+    stock: 25
+  }),
+  new Product({ 
+    id: '5', 
+    name: 'Efsanevi Kasa Anahtarı', 
+    category: 'Oyun İçi', 
+    price: 25.00, 
+    image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80',
+    stock: 500
+  }),
+  new Product({ 
+    id: '6', 
+    name: 'Discord Özel Rolü', 
+    category: 'Üyelik', 
+    price: 19.90, 
+    image: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=800&q=80',
+    stock: 1000
+  })
 ];
 
-// Globally accessible ranking lists (Expanded to top 100 for 'load more' feature)
-export const MOCK_RANKING_LEVEL = Leaderboard.getLevelRankings(userList, 100);
-export const MOCK_RANKING_POPULARITY = Leaderboard.getPopularityRankings(userList, 100);
+export const MOCK_NEWS = [
+  {
+    slug: 'armoyu-v3-yayinda',
+    title: 'ARMOYU V3 Sistemleri Yayına Girdi!',
+    excerpt: 'Uzun süredir beklenen ARMOYU V3 sistemlerimiz artık yayında. Yepyeni bir dashboard konsepti sizi bekliyor.',
+    content: `
+      <p>ARMOYU topluluğu için heyecan verici bir dönemin kapılarını aralıyoruz. Uzun süredir üzerinde çalıştığımız V3 güncellemesi artık tüm sunucularımızda ve web platformumuzda yayında. Bu güncelleme sadece görsel bir değişim değil, aynı zamanda altyapısal bir devrimi de beraberinde getiriyor.</p>
+      <h2>Yepyeni Bir Kullanıcı Deneyimi</h2>
+      <p>Modern web teknolojilerini kullanarak baştan aşağı yenilediğimiz arayüzümüzle artık çok daha hızlı ve akıcı bir deneyim sunuyoruz. Glassmorphism tasarım dilini benimseyerek hem estetik hem de işlevsel bir yapı oluşturduk.</p>
+      <blockquote>"Bu güncellemenin temel odağı kullanıcılarımızın birbiriyle daha kolay etkileşim kurabilmesi ve içeriklere saniyeler içinde ulaşabilmesiydi."</blockquote>
+      <h2>Öne Çıkan Yeni Özellikler</h2>
+      <ul>
+        <li><strong>Yeni Dashboard:</strong> Tamamen özelleştirilebilir bileşenlerle dolu ana sayfanız.</li>
+        <li><strong>Hızlı Profil Yükleme:</strong> Profil sayfaları artık %40 daha hızlı açılıyor.</li>
+        <li><strong>Gelişmiş Grup Sistemi:</strong> Klan ve takım yönetimleri artık çok daha detaylı.</li>
+      </ul>
+    `,
+    author: 'Berkay Tikenoğlu',
+    authorUsername: 'berkaytikenoglu',
+    date: '31 Mart 2024',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80',
+    category: 'Güncelleme'
+  },
+  {
+    slug: 'yeni-donem-basliyor',
+    title: 'Toplulukta Yeni Bir Dönem Başlıyor',
+    excerpt: 'ARMOYU olarak topluluğumuzu bir üst seviyeye taşımak için yeni stratejilerimizi açıklıyoruz.',
+    content: `
+      <p>ARMOYU olarak topluluğumuzu bir üst seviyeye taşımak için yeni stratejilerimizi açıklıyoruz. Gelecek vizyonumuzda daha fazla oyun sunucusu ve daha geniş bir etkinlik takvimi yer alıyor.</p>
+      <p>Yeni yılda yapacağımız turnuvalar ve özel buluşmalar ile Türkiye'nin en aktif oyun topluluğu olma yolunda ilerliyoruz.</p>
+    `,
+    author: 'Alperen',
+    authorUsername: 'alperen_admin',
+    date: '30 Mart 2024',
+    image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1200&q=80',
+    category: 'Duyuru'
+  }
+];

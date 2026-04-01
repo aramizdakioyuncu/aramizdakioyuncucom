@@ -4,6 +4,7 @@ import './globals.css';
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
 import { AuthProvider } from '@/context/AuthContext';
+import { CartProvider } from '@/context/CartContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { FloatingChatButton } from '@/components/shared/FloatingChatButton';
 import { ChatProvider } from '@/context/ChatContext';
@@ -46,9 +47,10 @@ export default function RootLayout({
       <body className={`${inter.className} bg-armoyu-bg text-armoyu-text min-h-screen flex flex-col antialiased relative transition-colors duration-500`}>
         <ThemeProvider>
           <AuthProvider>
-            <LayoutProvider>
-              <SocketProvider>
-                <ChatProvider>
+            <CartProvider>
+              <LayoutProvider>
+                <SocketProvider>
+                  <ChatProvider>
                   {/* Background Decorative Blobs */}
                   <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none" />
                   <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none" />
@@ -66,8 +68,9 @@ export default function RootLayout({
                 </ChatProvider>
               </SocketProvider>
             </LayoutProvider>
-          </AuthProvider>
-        </ThemeProvider>
+          </CartProvider>
+        </AuthProvider>
+      </ThemeProvider>
       </body>
     </html>
   );

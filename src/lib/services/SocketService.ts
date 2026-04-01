@@ -22,7 +22,8 @@ class SocketService {
     console.log('[SocketService] Connecting to real socket server...');
     
     // Connect to the standalone server
-    this.socket = io('http://localhost:3001', {
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001';
+    this.socket = io(socketUrl, {
       transports: ['websocket'],
       reconnection: true,
       reconnectionAttempts: 10
@@ -66,6 +67,11 @@ class SocketService {
       this.listeners.set(event, []);
     }
     this.listeners.get(event)?.push(callback);
+
+    // If already connected and someone listens for 'connect', fire it immediately
+    if (event === 'connect' && this.isConnected) {
+      callback({ status: 'online', socketId: this.socket?.id, alreadyConnected: true });
+    }
 
     // Return unsubscribe function
     return () => {

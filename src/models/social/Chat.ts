@@ -14,6 +14,9 @@ export class Chat {
   unreadCount: number = 0;
   isOnline: boolean = false;
   lastSeen: string = '';
+  updatedAt: number = 0;
+  isGroup: boolean = false;
+  isFavorite: boolean = false;
   messages: ChatMessage[] = [];
 
   constructor(data: Partial<Chat>) {
@@ -35,6 +38,9 @@ export class Chat {
       unreadCount: json.unreadCount || json.unread_count || 0,
       isOnline: json.isOnline || json.is_online || false,
       lastSeen: json.lastSeen || json.last_seen || '',
+      updatedAt: json.updatedAt || json.updated_at || 0,
+      isGroup: json.isGroup || json.is_group || false,
+      isFavorite: json.isFavorite || json.is_favorite || false,
       messages: Array.isArray(json.messages) ? json.messages.map((m: any) => ChatMessage.fromJSON(m)) : [],
     });
   }

@@ -8,65 +8,30 @@ import { NewsComments } from '@/components/modules/news/NewsComments';
 import { userList } from '@/lib/constants/seedData';
 import Link from 'next/link';
 
+import { MOCK_NEWS } from '@/lib/constants/mockData';
+
 // Helper to get user by username for mock data
 const getUserByUsername = (username: string) => {
   return userList.find(u => u.username === username) || userList[0];
 };
 
-const MOCK_ARTICLE = {
-  title: 'ARMOYU V3 Güncellemesi Yayında: Yeni Arayüz ve Özellikler!',
-  category: 'Güncelleme',
-  date: '24 Mart 2024',
-  author: getUserByUsername('berkaytikenoglu'),
-  image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2670&auto=format&fit=crop',
-  content: `
-    <p>ARMOYU topluluğu için heyecan verici bir dönemin kapılarını aralıyoruz. Uzun süredir üzerinde çalıştığımız V3 güncellemesi artık tüm sunucularımızda ve web platformumuzda yayında. Bu güncelleme sadece görsel bir değişim değil, aynı zamanda altyapısal bir devrimi de beraberinde getiriyor.</p>
-    
-    <h2>Yepyeni Bir Kullanıcı Deneyimi</h2>
-    <p>Modern web teknolojilerini kullanarak baştan aşağı yenilediğimiz arayüzümüzle artık çok daha hızlı ve akıcı bir deneyim sunuyoruz. Glassmorphism tasarım dilini benimseyerek hem estetik hem de işlevsel bir yapı oluşturduk.</p>
-    
-    <blockquote>
-      "Bu güncellemenin temel odağı kullanıcılarımızın birbiriyle daha kolay etkileşim kurabilmesi ve içeriklere saniyeler içinde ulaşabilmesiydi."
-    </blockquote>
-
-    <h2>Öne Çıkan Yeni Özellikler</h2>
-    <ul>
-      <li><strong>Yeni Dashboard:</strong> Tamamen özelleştirilebilir bileşenlerle dolu ana sayfanız.</li>
-      <li><strong>Hızlı Profil Yükleme:</strong> Profil sayfaları artık %40 daha hızlı açılıyor.</li>
-      <li><strong>Gelişmiş Grup Sistemi:</strong> Klan ve takım yönetimleri artık çok daha detaylı.</li>
-      <li><strong>Modüler Galeri:</strong> Oyun içi anlarınızı en yüksek kalitede paylaşabileceğiniz yeni galeri sistemi.</li>
-    </ul>
-
-    <p>Bundan sonraki süreçte topluluğumuzun geri bildirimleriyle V3 sürümünü geliştirmeye ve yeni özellikler eklemeye devam edeceğiz. Siz de düşüncelerinizi forum sayfamız üzerinden bizimle paylaşabilirsiniz.</p>
-  `,
-};
-
-const SUGGESTED_NEWS = [
-  {
-    slug: 'valorant-clove-analiz',
-    title: "Valorant Yeni Ajan 'Clove' Yetenek Analizi",
-    excerpt: 'Ölümden sonra bile takımına destek olabilen yeni ajan Clove, rekabetçi arenalarda dengeleri alt üst etmeye hazırlanıyor.',
-    date: '5 saat önce',
-    category: 'Oyun Haberleri',
-    image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670&auto=format&fit=crop',
-    author: getUserByUsername('alperen_admin')
-  },
-  {
-    slug: 'cs-turnuva-sonuclari',
-    title: 'Haftalık ARMOYU CS Turnuvası Şampiyonu',
-    excerpt: 'Nefes kesen final mücadelesinde RIHTIM Team, rakibini 16-14 yenerek bu haftanın şampiyonluk kupasını kaldırmayı başardı.',
-    date: '1 gün önce',
-    category: 'E-spor',
-    image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2671&auto=format&fit=crop',
-    author: getUserByUsername('berkaytikenoglu')
-  }
-];
-
 export default function NewsDetailPage() {
-  const params = useParams();
+  const { slug } = useParams();
   
-  // Normalde slug'a göre API'den veri çekilir, simülasyon yapıyoruz.
-  const article = MOCK_ARTICLE;
+  const articleData = MOCK_NEWS.find(n => n.slug === slug) || MOCK_NEWS[0];
+  
+  const article = {
+    ...articleData,
+    author: getUserByUsername(articleData.authorUsername || 'berkaytikenoglu')
+  };
+
+  const SUGGESTED_NEWS = MOCK_NEWS
+    .filter(n => n.slug !== slug)
+    .map(n => ({
+      ...n,
+      author: getUserByUsername(n.authorUsername || 'berkaytikenoglu')
+    }))
+    .slice(0, 3);
 
   return (
     <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">

@@ -12,15 +12,12 @@ import { User } from '@/models';
 // Yorumların Tipini (Type) Nested Destekleyecek Şekilde Güncelledik
 interface CommentType {
   id: string;
-  author: string;
-  text: string;
-  date: string;
-  replies?: {
-    id: string;
-    author: string;
-    text: string;
-    date: string;
-  }[];
+  author: string | User;
+  text?: string;
+  content?: string;
+  date?: string;
+  createdAt?: string;
+  replies?: CommentType[];
 }
 
 
@@ -372,7 +369,10 @@ export function PostCard({ id, author, content, imageUrl, media, createdAt, stat
              <div className="flex justify-between items-center mb-2.5 px-2">
                <span className="text-xs font-bold text-blue-500 flex items-center gap-1.5">
                   <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 10 20 15 15 20"></polyline><path d="M4 4v7a4 4 0 0 0 4 4h12"></path></svg>
-                  <span className="text-armoyu-text-muted">Yanıtlanıyor:</span> @{commentsList.find(c => c.id === replyingTo)?.author}
+                  <span className="text-armoyu-text-muted">Yanıtlanıyor:</span> @{(() => {
+                    const author = commentsList.find(c => c.id === replyingTo)?.author;
+                    return typeof author === 'string' ? author : author?.displayName;
+                  })()}
                </span>
                <button onClick={() => setReplyingTo(null)} className="text-[11px] font-black uppercase tracking-wider text-armoyu-text-muted hover:text-red-500 transition-colors bg-black/5 dark:bg-white/5 px-2 py-1 rounded-md">İptal Et</button>
              </div>
@@ -408,16 +408,16 @@ export function PostCard({ id, author, content, imageUrl, media, createdAt, stat
                   
                   {/* Ana Yorum */}
                   <div className="flex gap-3">
-                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${c.author}`} alt={c.author} className="w-8 h-8 rounded-full bg-white/5 border border-black/10 dark:border-white/10 shrink-0 mt-1 shadow-sm" />
+                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${typeof c.author === 'string' ? c.author : c.author?.displayName}`} alt={typeof c.author === 'string' ? c.author : c.author?.displayName} className="w-8 h-8 rounded-full bg-white/5 border border-black/10 dark:border-white/10 shrink-0 mt-1 shadow-sm" />
                     <div className="flex-1">
                       <div className="bg-armoyu-drawer-bg border border-gray-200 dark:border-white/5 rounded-2xl rounded-tl-sm px-4 py-2 shadow-sm inline-block min-w-[30%]">
-                        <div className="text-xs font-black text-armoyu-text mb-0.5">{c.author}</div>
-                        <div className="text-sm font-medium text-armoyu-text-muted">{c.text}</div>
+                        <div className="text-xs font-black text-armoyu-text mb-0.5">{typeof c.author === 'string' ? c.author : c.author?.displayName}</div>
+                        <div className="text-sm font-medium text-armoyu-text-muted">{c.text || c.content}</div>
                       </div>
                       <div className="flex items-center gap-4 mt-1.5 ml-2 text-[11px] font-bold text-armoyu-text-muted">
                          <span className="hover:text-blue-500 cursor-pointer transition-colors">Beğen</span>
                          <span onClick={() => { setReplyingTo(c.id); setCommentText(''); }} className="hover:text-blue-500 cursor-pointer transition-colors">Yanıtla</span>
-                         <span className="opacity-50">{c.date}</span>
+                         <span className="opacity-50">{c.date || c.createdAt}</span>
                       </div>
                     </div>
                   </div>
@@ -427,16 +427,16 @@ export function PostCard({ id, author, content, imageUrl, media, createdAt, stat
                     <div className="mt-3 ml-11 space-y-3 border-l-2 border-black/10 dark:border-white/10 pl-4">
                       {c.replies.map(r => (
                         <div key={r.id} className="flex gap-2.5 animate-in fade-in slide-in-from-left-2 duration-300">
-                          <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${r.author}`} alt={r.author} className="w-6 h-6 rounded-full bg-white/5 border border-black/10 dark:border-white/10 shrink-0 mt-0.5 shadow-sm relative -left-[27px] ring-4 ring-black/5 dark:ring-[#0a0a0e]/60" />
+                          <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${typeof r.author === 'string' ? r.author : r.author?.displayName}`} alt={typeof r.author === 'string' ? r.author : r.author?.displayName} className="w-6 h-6 rounded-full bg-white/5 border border-black/10 dark:border-white/10 shrink-0 mt-0.5 shadow-sm relative -left-[27px] ring-4 ring-black/5 dark:ring-[#0a0a0e]/60" />
                           <div className="flex-1 -ml-[18px]">
                             <div className="bg-armoyu-drawer-bg border border-gray-200 dark:border-white/5 rounded-2xl rounded-tl-sm px-3.5 py-1.5 shadow-sm inline-block">
-                              <span className="text-xs font-black text-armoyu-text mr-2">{r.author}</span>
-                              <span className="text-[13px] font-medium text-armoyu-text-muted">{r.text}</span>
+                              <span className="text-xs font-black text-armoyu-text mr-2">{typeof r.author === 'string' ? r.author : r.author?.displayName}</span>
+                              <span className="text-[13px] font-medium text-armoyu-text-muted">{r.text || r.content}</span>
                             </div>
                             <div className="flex items-center gap-4 mt-1 ml-2 text-[10px] font-bold text-armoyu-text-muted">
                                <span className="hover:text-blue-500 cursor-pointer transition-colors">Beğen</span>
                                <span onClick={() => { setReplyingTo(c.id); setCommentText(''); }} className="hover:text-blue-500 cursor-pointer transition-colors">Yanıtla</span>
-                               <span className="opacity-50">{r.date}</span>
+                               <span className="opacity-50">{r.date || r.createdAt}</span>
                             </div>
                           </div>
                         </div>

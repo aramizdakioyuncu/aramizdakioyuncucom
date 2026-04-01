@@ -48,7 +48,9 @@ const TOPLULUK_ODASI_DATA = {
 // Add lastMessage dynamically
 const TOPLULUK_ODASI = new Chat({
   ...TOPLULUK_ODASI_DATA,
-  lastMessage: TOPLULUK_ODASI_DATA.messages[2]
+  lastMessage: TOPLULUK_ODASI_DATA.messages[2],
+  updatedAt: Date.now(),
+  isGroup: true
 });
 
 /**
@@ -291,6 +293,8 @@ userList.forEach((user, index) => {
       avatar: friend.avatar,
       lastMessage: messages[messages.length - 1],
       time: messages[messages.length - 1].timestamp,
+      updatedAt: Date.now() - (index * 1000 + fIndex * 100),
+      isFavorite: isBerkayMythX,
       unreadCount: (index + fIndex) % 7 === 0 ? 1 : 0,
       isOnline: (index + fIndex) % 3 === 0,
       messages: messages,
@@ -304,6 +308,8 @@ userList.forEach((user, index) => {
       avatar: user.avatar,
       lastMessage: messages[messages.length - 1],
       time: messages[messages.length - 1].timestamp,
+      updatedAt: Date.now() - (index * 1000 + fIndex * 100),
+      isFavorite: isBerkayMythX,
       unreadCount: 0,
       isOnline: (index + fIndex) % 2 === 0,
       messages: messages,
