@@ -22,7 +22,7 @@ class SocketService {
     console.log('[SocketService] Connecting to real socket server...');
     
     // Connect to the standalone server
-    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001';
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || 'https://socket.armoyu.com';
     this.socket = io(socketUrl, {
       transports: ['websocket'],
       reconnection: true,
