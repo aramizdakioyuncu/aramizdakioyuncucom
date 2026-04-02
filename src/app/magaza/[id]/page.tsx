@@ -6,7 +6,7 @@ import { PageWidth } from '@/components/shared/PageWidth';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/models';
-import { MOCK_PRODUCTS } from '@/lib/constants/mockData';
+import { MOCK_PRODUCTS } from '@/lib/constants/seedData';
 import { BackToStore } from '@/components/modules/magaza/BackToStore';
 
 export default function ProductDetailPage() {

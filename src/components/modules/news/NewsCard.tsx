@@ -11,7 +11,7 @@ export interface NewsCardProps {
   date: string;
   category: string;
   image: string;
-  author: User;
+  author: User | null;
 }
 
 export function NewsCard({ slug, title, excerpt, date, category, image, author }: NewsCardProps) {
@@ -42,7 +42,7 @@ export function NewsCard({ slug, title, excerpt, date, category, image, author }
              </span>
              <span>•</span>
              <span className="flex items-center gap-1 uppercase tracking-widest text-blue-500 font-black">
-                {author.displayName}
+                {author?.displayName || 'Armoyu Ekibi'}
              </span>
           </div>
 

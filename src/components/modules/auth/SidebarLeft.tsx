@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { MOCK_RANKING_LEVEL, MOCK_RANKING_POPULARITY } from '@/lib/constants/mockData';
+import { mockGlobalStats, MOCK_RANKING_LEVEL, MOCK_RANKING_POPULARITY } from '@/lib/constants/seedData';
 
 export function SidebarLeft() {
   const [rankingType, setRankingType] = useState<'level' | 'popularity'>('level');
@@ -75,7 +75,7 @@ export function SidebarLeft() {
                  </div>
                  <span className="text-sm font-bold text-armoyu-text-muted group-hover:text-armoyu-text transition-colors truncate max-w-[100px]">{user.displayName}</span>
               </div>
-              <span className="text-[10px] font-black text-blue-500 bg-blue-500/10 px-2 py-1 rounded-md">{user.score}</span>
+              <span className="text-[10px] font-black text-blue-500 bg-blue-500/10 px-2 py-1 rounded-md">{rankingType === 'level' ? user.level : user.popScore}</span>
             </div>
           );
         })}

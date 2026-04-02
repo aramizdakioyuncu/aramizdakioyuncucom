@@ -5,21 +5,15 @@ import { PageWidth } from '@/components/shared/PageWidth';
 import { TopicItem } from '@/components/modules/forum/TopicItem';
 import { NewTopicModal } from '@/components/modules/forum/NewTopicModal';
 import Link from 'next/link';
-
-// Mock data for topics
-const TOPICS = [
-  { id: '1', boardId: 'minecraft', title: 'Sunucuya nasıl girerim?', author: 'MinecraftMaster', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MC', replies: 12, views: 240, lastActivity: '10 dk önce', lastAuthor: 'Berkay Tikenoğlu', isPinned: true, isHot: true },
-  { id: '2', boardId: 'minecraft', title: 'Hala whitelist bekliyorum!', author: 'Oyuncu42', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=42', replies: 4, views: 80, lastActivity: '2 saat önce', lastAuthor: 'Admin_Bey', isSolved: true },
-  { id: '3', boardId: 'minecraft', title: 'Server lag sorunu yaşayan var mı?', author: 'GamerX', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=X', replies: 42, views: 1200, lastActivity: 'Dün 22:30', lastAuthor: 'Barış M.', isHot: true },
-  { id: '4', boardId: 'minecraft', title: 'Modlar ne zaman güncellenecek?', author: 'ModluServer', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mod', replies: 2, views: 45, lastActivity: '3 gün önce', lastAuthor: 'Bey Ev' },
-  { id: '5', boardId: 'minecraft', title: 'Minecraft build yarışması hakkında', author: 'BuilderGözü', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Build', replies: 15, views: 310, lastActivity: '5 gün önce', lastAuthor: 'MythX', isPinned: true }
-];
+import { MOCK_FORUM_TOPICS } from '@/lib/constants/seedData';
 
 export default function BoardPage({ params }: { params: Promise<{ boardId: string }> }) {
   const resolvedParams = React.use(params);
   const boardId = resolvedParams.boardId;
   const [isNewTopicModalOpen, setIsNewTopicModalOpen] = useState(false);
   const boardName = boardId.charAt(0).toUpperCase() + boardId.slice(1);
+  
+  const boardTopics = MOCK_FORUM_TOPICS.filter(t => t.boardId === boardId);
 
   return (
     <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -64,9 +58,13 @@ export default function BoardPage({ params }: { params: Promise<{ boardId: strin
 
             {/* Topic List */}
             <div className="space-y-4">
-               {TOPICS.map((topic) => (
+               {boardTopics.length > 0 ? boardTopics.map((topic) => (
                   <TopicItem key={topic.id} {...topic} />
-               ))}
+               )) : (
+                 <div className="p-8 text-center glass-panel rounded-2xl border border-armoyu-card-border bg-armoyu-card-bg">
+                    <p className="text-sm font-bold text-armoyu-text-muted uppercase tracking-widest">Bu kategoriye henüz konu açılmamış.</p>
+                 </div>
+               )}
             </div>
 
             {/* Pagination Placeholder */}

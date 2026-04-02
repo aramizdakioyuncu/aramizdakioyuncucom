@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { StoreHeader } from '@/components/modules/magaza/StoreHeader';
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/models';
-import { MOCK_PRODUCTS } from '@/lib/constants/mockData';
+import { MOCK_PRODUCTS } from '@/lib/constants/seedData';
 
 export default function StorePage() {
   const { addToCart } = useCart();

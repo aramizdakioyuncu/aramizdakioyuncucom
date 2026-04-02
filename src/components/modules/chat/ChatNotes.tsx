@@ -1,6 +1,6 @@
 'use client';
 
-import { MOCK_NOTES } from '@/lib/constants/mockData';
+import { MOCK_NOTES } from '@/lib/constants/seedData';
 import { Note } from '@/models';
 
 export function ChatNotes() {

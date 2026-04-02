@@ -3,60 +3,7 @@
 import React, { useState } from 'react';
 import { NewsCard } from '@/components/modules/news/NewsCard';
 import { PageWidth } from '@/components/shared/PageWidth';
-import { userList } from '@/lib/constants/seedData';
-
-// Helper to get user by username for mock data
-const getUserByUsername = (username: string) => {
-  return userList.find(u => u.username === username) || userList[0];
-};
-
-const MOCK_NEWS = [
-  {
-    slug: 'armoyu-v3-guncellemesi',
-    title: 'ARMOYU V3 Güncellemesi Yayında: Yeni Arayüz ve Özellikler!',
-    excerpt: 'Topluluğumuzun yeni yüzü olan V3 sürümüyle birlikte artık çok daha hızlı, modern ve interaktif bir deneyim sizi bekliyor.',
-    date: '2 saat önce',
-    category: 'Güncelleme',
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2670&auto=format&fit=crop',
-    author: getUserByUsername('berkaytikenoglu')
-  },
-  {
-    slug: 'valorant-clove-analiz',
-    title: "Valorant Yeni Ajan 'Clove' Yetenek Analizi: Stratejiler Nasıl Değişecek?",
-    excerpt: 'Ölümden sonra bile takımına destek olabilen yeni ajan Clove, rekabetçi arenalarda dengeleri alt üst etmeye hazırlanıyor.',
-    date: '5 saat önce',
-    category: 'Oyun Haberleri',
-    image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670&auto=format&fit=crop',
-    author: getUserByUsername('alperen_admin')
-  },
-  {
-    slug: 'cs-turnuva-sonuclari',
-    title: 'Haftalık ARMOYU CS Turnuvası Şampiyonu: RIHTIM Team!',
-    excerpt: 'Nefes kesen final mücadelesinde RIHTIM Team, rakibini 16-14 yenerek bu haftanın şampiyonluk kupasını kaldırmayı başardı.',
-    date: '1 gün önce',
-    category: 'E-spor',
-    image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2671&auto=format&fit=crop',
-    author: getUserByUsername('berkaytikenoglu') // Example reusing Berkay
-  },
-  {
-    slug: 'ets2-1-50-grafik-yeniligi',
-    title: 'ETS2 1.50 Güncellemesi Detayları: Yeni Grafik Motoru ve Işıklandırma',
-    excerpt: 'SCS Software, beklenen 1.50 güncellemesiyle tır sürme deneyimini gerçekçilikte bir üst seviyeye taşıyor. İşte tüm detaylar.',
-    date: '2 gün önce',
-    category: 'Güncelleme',
-    image: 'https://images.unsplash.com/photo-1590333748338-d43cae6a3286?q=80&w=2674&auto=format&fit=crop',
-    author: getUserByUsername('mythx')
-  },
-  {
-    slug: 'minecraft-survival-sezon-acildi',
-    title: 'Yepyeni Bir Macera: Minecraft Survival 5. Sezon Başlıyor!',
-    excerpt: 'Keşfedilmemiş topraklar, yeni klan bölgeleri ve özel görevlerle dolu Survival sunucumuzun yeni sezonuna hazır mısınız?',
-    date: '3 gün önce',
-    category: 'Etkinlikler',
-    image: 'https://images.unsplash.com/photo-1587573089734-09cb6960951b?q=80&w=2672&auto=format&fit=crop',
-    author: getUserByUsername('tugra')
-  }
-];
+import { MOCK_NEWS } from '@/lib/constants/seedData';
 
 export default function NewsPage() {
   const [activeTab, setActiveTab] = useState('Hepsi');
@@ -67,8 +14,8 @@ export default function NewsPage() {
   const filteredNews = MOCK_NEWS.filter(n => {
     const matchesTab = activeTab === 'Hepsi' || n.category === activeTab;
     const matchesSearch = n.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          n.author.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          n.author.username.toLowerCase().includes(searchTerm.toLowerCase());
+                          (n.author?.displayName?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
+                          (n.author?.username?.toLowerCase().includes(searchTerm.toLowerCase()) || false);
     return matchesTab && matchesSearch;
   });
 

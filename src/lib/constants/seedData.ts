@@ -1,6 +1,7 @@
-import { User, Post, Role, Group, Notification, NotificationSender } from '@/models';
+import { User, Post, Role, Group, Notification, NotificationSender, Product, Note, Story, News, Mod, Forum, Giveaway } from '@/models';
 import { Chat } from '@/models/social/Chat';
 import { ChatMessage } from '@/models/social/ChatMessage';
+import { GlobalStats } from '@/types/stats';
 
 /**
  * Common Roles
@@ -443,3 +444,252 @@ if (berkay) {
     })
   ];
 }
+
+/**
+ * Shop & News Mock Data (Migrated from mockData.ts)
+ */
+export const MOCK_PRODUCTS = [
+  new Product({ 
+    id: '1', 
+    name: 'Premium VIP Üyelik', 
+    category: 'Üyelik', 
+    description: 'ARMOYU platformunda en üst düzey deneyim için tasarlanmıştır. Özel rozetler, öncelikli destek ve %20 daha fazla TP kazanırsınız.', 
+    price: 149.90, 
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80', 
+    isFeatured: true, 
+    badge: 'EN POPÜLER',
+    stock: 999
+  }),
+  new Product({ 
+    id: '2', 
+    name: '1000 ARMOYU Coin', 
+    category: 'Oyun İçi', 
+    description: 'Market alışverişlerinde ve özel etkinliklerde kullanabileceğiniz dijital para birimidir.', 
+    price: 49.00, 
+    image: 'https://images.unsplash.com/photo-1621416848469-8c2033bc699b?w=800&q=80',
+    stock: 9999
+  }),
+  new Product({ 
+    id: '3', 
+    name: 'Elite Minecraft Paketi', 
+    category: 'Oyun İçi', 
+    description: 'Minecraft sunucularımızda kullanabileceğiniz efsanevi ekipmanlar ve özel bloklar içerir.', 
+    price: 89.90, 
+    image: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=800&q=80',
+    stock: 50
+  }),
+  new Product({ 
+    id: '4', 
+    name: 'ARMOYU Kapşonlu (Siyah)', 
+    category: 'Giyim', 
+    description: 'Yüksek kaliteli pamuklu kumaş, şık ARMOYU nakışı ile günlük giyimde fark yaratın.', 
+    price: 599.00, 
+    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80',
+    stock: 25
+  }),
+  new Product({ 
+    id: '5', 
+    name: 'Efsanevi Kasa Anahtarı', 
+    category: 'Oyun İçi', 
+    price: 25.00, 
+    image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80',
+    stock: 500
+  }),
+  new Product({ 
+    id: '6', 
+    name: 'Discord Özel Rolü', 
+    category: 'Üyelik', 
+    price: 19.90, 
+    image: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=800&q=80',
+    stock: 1000
+  })
+];
+
+export const MOCK_NEWS = [
+  new News({
+    slug: 'armoyu-v3-yayinda',
+    title: 'ARMOYU V3 Sistemleri Yayına Girdi!',
+    excerpt: 'Uzun süredir beklenen ARMOYU V3 sistemlerimiz artık yayında. Yepyeni bir dashboard konsepti sizi bekliyor.',
+    content: `
+      <p>ARMOYU topluluğu için heyecan verici bir dönemin kapılarını aralıyoruz. Uzun süredir üzerinde çalıştığımız V3 güncellemesi artık tüm sunucularımızda ve web platformumuzda yayında. Bu güncelleme sadece görsel bir değişim değil, aynı zamanda altyapısal bir devrimi de beraberinde getiriyor.</p>
+      <h2>Yepyeni Bir Kullanıcı Deneyimi</h2>
+      <p>Modern web teknolojilerini kullanarak baştan aşağı yenilediğimiz arayüzümüzle artık çok daha hızlı ve akıcı bir deneyim sunuyoruz. Glassmorphism tasarım dilini benimseyerek hem estetik hem de işlevsel bir yapı oluşturduk.</p>
+      <blockquote>"Bu güncellemenin temel odağı kullanıcılarımızın birbiriyle daha kolay etkileşim kurabilmesi ve içeriklere saniyeler içinde ulaşabilmesiydi."</blockquote>
+      <h2>Öne Çıkan Yeni Özellikler</h2>
+      <ul>
+        <li><strong>Yeni Dashboard:</strong> Tamamen özelleştirilebilir bileşenlerle dolu ana sayfanız.</li>
+        <li><strong>Hızlı Profil Yükleme:</strong> Profil sayfaları artık %40 daha hızlı açılıyor.</li>
+        <li><strong>Gelişmiş Grup Sistemi:</strong> Klan ve takım yönetimleri artık çok daha detaylı.</li>
+      </ul>
+    `,
+    author: userList[0], // Berkay
+    date: '31 Mart 2024',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80',
+    category: 'Güncelleme'
+  }),
+  new News({
+    slug: 'yeni-donem-basliyor',
+    title: 'Toplulukta Yeni Bir Dönem Başlıyor',
+    excerpt: 'ARMOYU olarak topluluğumuzu bir üst seviyeye taşımak için yeni stratejilerimizi açıklıyoruz.',
+    content: `
+      <p>ARMOYU olarak topluluğumuzu bir üst seviyeye taşımak için yeni stratejilerimizi açıklıyoruz. Gelecek vizyonumuzda daha fazla oyun sunucusu ve daha geniş bir etkinlik takvimi yer alıyor.</p>
+      <p>Yeni yılda yapacağımız turnuvalar ve özel buluşmalar ile Türkiye'nin en aktif oyun topluluğu olma yolunda ilerliyoruz.</p>
+    `,
+    author: userList[1], // Alperen -> MythX'i admin olarak kullanabiliriz veya index 1
+    date: '30 Mart 2024',
+    image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1200&q=80',
+    category: 'Duyuru'
+  })
+];
+
+export const MOCK_NOTES = [
+  new Note({
+    id: 'note-1',
+    user: userList[0], // Berkay
+    note: 'Not bırak...',
+    isMe: true
+  }),
+  new Note({
+    id: 'note-2',
+    user: userList[1], // MythX
+    note: 'V3 sistemleri efsane oldu! 🚀',
+    isMe: false
+  }),
+  new Note({
+    id: 'note-3',
+    user: userList[14], // Efe
+    note: 'Akşam turnuva var, hazır mısınız? 🏆',
+    isMe: false
+  }),
+  new Note({
+    id: 'note-4',
+    user: userList[9], // Engin
+    note: 'Kahve & Kod keyfi... ☕️⌨️',
+    isMe: false
+  }),
+  new Note({
+    id: 'note-5',
+    user: userList[13], // Metehan
+    note: 'Birazdan yayındayız! 🔴',
+    isMe: false
+  })
+];
+
+/**
+ * Global Statistics (Migrated from mockData.ts)
+ */
+export const mockGlobalStats: GlobalStats = {
+  totalPlayers: 15420,
+  malePlayers: 8950,
+  femalePlayers: 6470,
+  totalForums: 1245,
+  totalPolls: 452,
+  activeUsers24h: 3120,
+  totalMatchesPlayed: 85600,
+  totalGuilds: 342,
+  monthlyVisitors: 45000,
+  totalNews: 156
+};
+
+/**
+ * Rankings (Derived from userList)
+ */
+export const MOCK_RANKING_LEVEL = [...userList]
+  .sort((a, b) => (b.level || 0) - (a.level || 0))
+  .slice(0, 10);
+
+export const MOCK_RANKING_POPULARITY = [...userList]
+  .sort((a, b) => (b.popScore || 0) - (a.popScore || 0))
+  .slice(0, 10);
+
+/**
+ * Stories Mock Data (Migrated and Reconstructed)
+ */
+export const MOCK_STORIES = [
+  new Story({ id: 's1', user: userList[0], hasUnseen: false, isMe: true }),
+  new Story({ id: 's2', user: userList[1], hasUnseen: true, media: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670' }),
+  new Story({ id: 's3', user: userList[14], hasUnseen: true, media: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200' }),
+  new Story({ id: 's4', user: userList[9], hasUnseen: false, media: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800' }),
+  new Story({ id: 's5', user: userList[13], hasUnseen: true, media: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2670' }),
+  new Story({ id: 's6', user: userList[5], hasUnseen: false }),
+  new Story({ id: 's7', user: userList[10], hasUnseen: true }),
+];
+
+/**
+ * Game Mods Mock Data
+ */
+export const MOCK_MODS = [
+  new Mod({ id: '1', name: 'ARMOYU Realistic Minecraft Pack', game: 'Minecraft', version: '1.20.1', author: userList[0], downloads: '1.2k', image: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=800&q=80', isFeatured: true, description: 'Minecraft görselliğini kökünden değiştiren, en gerçekçi shader ve doku paketleriyle entegre edilmiş ARMOYU özel mod paketi. Su yansımalarından, güneş ışınlarına kadar her detayı hisset.' }),
+  new Mod({ id: '2', name: 'Tofaş Doğan SLX Drift Mod', game: 'Assetto Corsa', version: 'v2.4', author: userList[2], downloads: '4.5k', image: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800&q=80', description: 'Gelişmiş fizikler, ayarlanabilir süspansiyon ve tam uyumlu direksiyon hasasiyeti ile Tofaş Doğan SLX keyfini Assetto Corsa\'da yaşayın.' }),
+  new Mod({ id: '3', name: 'Medieval Kingdom Pack', game: 'Minecraft', version: '1.19.2', author: userList[3], downloads: '850', image: 'https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?w=800&q=80', description: 'Orta Çağ Krallığı temasına sahip bu devasa mod paketi, yeni silahlar, şatolar ve yepyeni düşmanlarla dolu zorlu bir hayatta kalma macerası.' }),
+  new Mod({ id: '4', name: 'Nürburgring Night Edition', game: 'Assetto Corsa', version: '1.0', author: userList[5], downloads: '2.1k', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80', description: 'Efsanevi Nürburgring pistini karanlık çöktüğünde gece aydınlatmalarıyla oynamak için optimize edilmiş yüksek kaliteli harita modu.' }),
+  new Mod({ id: '5', name: 'ARMOYU Voice Chat Integration', game: 'Minecraft', version: 'v1.5', author: userList[4], downloads: '3.2k', image: 'https://images.unsplash.com/photo-1614850523296-d8c1af93d400?w=800&q=80', description: 'Oyuncuların 3D ses konumu sistemiyle oyun içinde Discord olmadan direkt iletişim kurmasını sağlayan eşsiz ARMOYU plugini.' }),
+  new Mod({ id: '6', name: 'Ultra Shader Pack V2', game: 'Genel', version: 'v5.0', author: userList[11], downloads: '12k', image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80', description: 'Işın izleme (Ray Tracing) teknolojisine benzeyen özel gölgelendirmeleri ile en çok tercih edilen ultra gerçekçi grafik motoru pakedi.' })
+];
+
+/**
+ * Forum Categories Mock Data
+ */
+export const MOCK_FORUM_CATEGORIES = [
+  {
+    title: 'ARMOYU TOPLULUĞU',
+    boards: [
+      new Forum({ id: 'duyurular', name: 'Duyurular & Haberler', desc: 'ARMOYU hakkında en güncel haberler ve resmi duyurular.', topicCount: 124, postCount: 2540 }),
+      new Forum({ id: 'kurallar', name: 'Kurallar & Rehberler', desc: 'Topluluğumuzda uymanız gereken kurallar ve kullanım rehberleri.', topicCount: 12, postCount: 150 })
+    ]
+  },
+  {
+    title: 'OYUN DÜNYASI',
+    boards: [
+      new Forum({ id: 'minecraft', name: 'Minecraft', desc: 'Minecraft sunucularımız, buildler ve teknik destek.', topicCount: 540, postCount: 8400, lastPost: { topicTitle: 'Sunucuya nasıl girerim?', author: 'MinecraftMaster', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MC', time: '10 dk önce' } }),
+      new Forum({ id: 'csgo', name: 'Counter-Strike', desc: 'CS2 taktikleri, skin piyasası ve topluluk maçları.', topicCount: 320, postCount: 4200 }),
+      new Forum({ id: 'assetto', name: 'Assetto Corsa', desc: 'Simülasyon dünyası, modlar ve drift etkinlikleri.', topicCount: 210, postCount: 1800 })
+    ]
+  },
+  {
+    title: 'YAZILIM VE TEKNOLOJİ',
+    boards: [
+      new Forum({ id: 'web-dev', name: 'Web Geliştirme', desc: 'React, Next.js, CSS ve Web teknolojileri üzerine tartışmalar.', topicCount: 85, postCount: 740 }),
+      new Forum({ id: 'python', name: 'Python & AI', desc: 'Python projeleri, veri bilimi ve yapay zeka.', topicCount: 42, postCount: 320 })
+    ]
+  }
+];
+
+/**
+ * Giveaways Mock Data
+ */
+export const MOCK_GIVEAWAYS = [
+  new Giveaway({ id: 'g1', title: 'Aylık ARMOYU Plus Aboneliği', prize: '1 Aylık Plus + Discord Rolü', status: 'active', participants: 450, timeLeft: '3 Gün Kaldı', image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80' }),
+  new Giveaway({ id: 'g2', title: '500 ARMOYU Coin (Oyun İçi)', prize: '500 AC', status: 'active', participants: 210, timeLeft: '10 Saat Kaldı', image: 'https://images.unsplash.com/photo-1621416848469-8c2033bc699b?w=800&q=80' }),
+  new Giveaway({ id: 'g3', title: 'Steam $10 Cüzdan Kodu', prize: '$10 Cüzdan', status: 'ended', participants: 1200, timeLeft: 'Sona Erdi', image: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=800&q=80' })
+];
+
+/**
+ * Forum Topics Mock Data
+ */
+export const MOCK_FORUM_TOPICS = [
+  // Minecraft Board Topics
+  { id: '1', boardId: 'minecraft', title: 'Sunucuya nasıl girerim?', author: 'MinecraftMaster', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MC', replies: 12, views: 240, lastActivity: '10 dk önce', lastAuthor: 'Berkay Tikenoğlu', isPinned: true, isHot: true },
+  { id: '2', boardId: 'minecraft', title: 'Hala whitelist bekliyorum!', author: 'Oyuncu42', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=42', replies: 4, views: 80, lastActivity: '2 saat önce', lastAuthor: 'Admin_Bey', isSolved: true },
+  { id: '3', boardId: 'minecraft', title: 'Server lag sorunu yaşayan var mı?', author: 'GamerX', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=X', replies: 42, views: 1200, lastActivity: 'Dün 22:30', lastAuthor: 'Barış M.', isHot: true },
+  { id: '4', boardId: 'minecraft', title: 'Modlar ne zaman güncellenecek?', author: 'ModluServer', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mod', replies: 2, views: 45, lastActivity: '3 gün önce', lastAuthor: 'Bey Ev' },
+  { id: '5', boardId: 'minecraft', title: 'Minecraft build yarışması hakkında', author: 'BuilderGözü', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Build', replies: 15, views: 310, lastActivity: '5 gün önce', lastAuthor: 'MythX', isPinned: true },
+
+  // Duyurular Board Topics
+  { id: '6', boardId: 'duyurular', title: 'ARMOYU V3 Geliyor! Yenilikler Neler?', author: 'Armoyu Ekibi', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Armoyu', replies: 254, views: 5600, lastActivity: '2 dk önce', lastAuthor: 'Berkay Tikenoğlu', isPinned: true, isHot: true },
+  { id: '7', boardId: 'duyurular', title: 'Topluluk Yöneticisi Alımları Başladı', author: 'Armoyu Ekibi', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Armoyu', replies: 45, views: 1200, lastActivity: '1 gün önce', lastAuthor: 'Admin_Bey', isPinned: true },
+  { id: '8', boardId: 'duyurular', title: 'Sunucu Bakımı (12 Nisan)', author: 'Sistem Yöneticisi', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sys', replies: 12, views: 450, lastActivity: '5 gün önce', lastAuthor: 'Ahmet Y.', isSolved: true },
+
+  // CSGO Board Topics
+  { id: '9', boardId: 'csgo', title: 'CS2 Dust 2 Yeni Smoke Taktikleri', author: 'GlobalElite', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=CS', replies: 34, views: 890, lastActivity: '1 saat önce', lastAuthor: 'KralSlayer', isHot: true },
+  { id: '10', boardId: 'csgo', title: 'Prime fiyatları çok arttı', author: 'SilverGamer', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Silver', replies: 56, views: 1400, lastActivity: '3 saat önce', lastAuthor: 'TraderPro' },
+  { id: '11', boardId: 'csgo', title: 'Kelebek bıçak takaslamak isteyen var mı?', author: 'SkinCollector', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Skin', replies: 8, views: 210, lastActivity: 'Dün', lastAuthor: 'ScammerNo1' },
+
+  // Assetto Board Topics
+  { id: '12', boardId: 'assetto', title: 'Tofaş modu nereden iner?', author: 'DriftKralı_34', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=34', replies: 5, views: 120, lastActivity: '15 dk önce', lastAuthor: 'ModDeveloper', isSolved: true },
+  { id: '13', boardId: 'assetto', title: 'Direksiyon seti önerisi (Logitech G29 vs Thrustmaster)', author: 'RacerBoi', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Race', replies: 28, views: 650, lastActivity: '2 gün önce', lastAuthor: 'SimSim' },
+
+  // Web Dev Board Topics
+  { id: '14', boardId: 'web-dev', title: 'Next.js App Router Sorunsalı', author: 'Frontend_Ninja', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=FE', replies: 18, views: 400, lastActivity: '45 dk önce', lastAuthor: 'FullstackG', isHot: true },
+  { id: '15', boardId: 'web-dev', title: 'Tailwind CSS ile karanlık mod yapımı', author: 'CSS_Büyücüsü', authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=CSS', replies: 7, views: 180, lastActivity: 'Dün', lastAuthor: 'Berkay Tikenoğlu', isSolved: true }
+];

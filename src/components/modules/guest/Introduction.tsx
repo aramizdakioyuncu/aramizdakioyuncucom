@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { GenderStatsBar } from "@/components/ui/GenderStatsBar";
 import { StatsGrid } from "@/components/ui/StatsGrid";
-import { mockGlobalStats } from "@/lib/constants/mockData";
+import { MOCK_NEWS, mockGlobalStats } from "@/lib/constants/seedData";
 
 export function Introduction() {
   return (

@@ -1,3 +1,5 @@
+import { User } from '../auth/User';
+
 /**
  * Represents a Game Mod (Oyun Modu) in the aramizdakioyuncu.com platform.
  */
@@ -6,7 +8,8 @@ export class Mod {
   name: string = '';
   game: string = '';
   version: string = '';
-  author: string = '';
+  author: User | null = null;
+  description: string = '';
   downloads: string = '';
   image: string = '';
   isFeatured: boolean = false;
@@ -25,7 +28,8 @@ export class Mod {
       name: json.name || json.title || '',
       game: json.game || '',
       version: json.version || '',
-      author: json.author || '',
+      author: json.author ? (json.author instanceof User ? json.author : User.fromJSON(json.author)) : (json.authorUsername ? new User({ username: json.authorUsername, displayName: json.authorName }) : null),
+      description: json.description || json.desc || '',
       downloads: json.downloads || '0',
       image: json.image || '',
       isFeatured: json.isFeatured || false,

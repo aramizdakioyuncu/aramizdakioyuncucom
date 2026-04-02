@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { EditProfileModal } from './EditProfileModal';
 import { User } from '@/models/auth/User';
-import { MOCK_RANKING_POPULARITY } from '@/lib/constants/mockData';
+import { MOCK_RANKING_POPULARITY } from '@/lib/constants/seedData';
 
 interface ProfileHeaderProps {
   user: User | any;

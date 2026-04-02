@@ -8,29 +8,19 @@ import { NewsComments } from '@/components/modules/news/NewsComments';
 import { userList } from '@/lib/constants/seedData';
 import Link from 'next/link';
 
-import { MOCK_NEWS } from '@/lib/constants/mockData';
+import { MOCK_NEWS } from '@/lib/constants/seedData';
 
-// Helper to get user by username for mock data
-const getUserByUsername = (username: string) => {
-  return userList.find(u => u.username === username) || userList[0];
-};
+// MOCK_NEWS is now returning filled News models.
 
 export default function NewsDetailPage() {
   const { slug } = useParams();
   
   const articleData = MOCK_NEWS.find(n => n.slug === slug) || MOCK_NEWS[0];
   
-  const article = {
-    ...articleData,
-    author: getUserByUsername(articleData.authorUsername || 'berkaytikenoglu')
-  };
+  const article = articleData;
 
   const SUGGESTED_NEWS = MOCK_NEWS
     .filter(n => n.slug !== slug)
-    .map(n => ({
-      ...n,
-      author: getUserByUsername(n.authorUsername || 'berkaytikenoglu')
-    }))
     .slice(0, 3);
 
   return (
@@ -45,7 +35,7 @@ export default function NewsDetailPage() {
            </span>
            <span className="text-xs font-bold text-armoyu-text-muted">{article.date}</span>
            <span className="text-xs font-bold text-armoyu-text-muted">•</span>
-           <span className="text-xs font-black text-blue-500 uppercase tracking-widest">{article.author.displayName}</span>
+           <span className="text-xs font-black text-blue-500 uppercase tracking-widest">{article.author?.displayName || 'Armoyu Ekibi'}</span>
         </div>
         
         <h1 className="text-4xl md:text-6xl font-black text-armoyu-text leading-tight tracking-tighter mb-10 max-w-5xl uppercase">
