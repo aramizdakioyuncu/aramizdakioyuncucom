@@ -1,4 +1,4 @@
-import { ArmoyuEvent, Game, Station, StationProduct, WorkstationEquipment, StationCoupon } from '@/models';
+import { ArmoyuEvent, Game, Station, StationProduct, WorkstationEquipment, StationCoupon } from '../../models';
 
 /**
  * GAMES (gameList)

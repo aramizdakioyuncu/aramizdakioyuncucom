@@ -1,3 +1,7 @@
+import { Game, ArmoyuEvent, Station, StationProduct, WorkstationEquipment, StationCoupon, News, Giveaway, Project, Session } from '../src/models';
+
+const MOCK_NEWS: News[] = [];
+const MOCK_GIVEAWAYS: Giveaway[] = [];
 
 /**
  * GAMES (gameList)

@@ -201,13 +201,12 @@ import { MOCK_SURVEYS_DATA } from './surveyData';
 export const MOCK_SURVEYS = MOCK_SURVEYS_DATA(userList);
 export const surveyList: Survey[] = MOCK_SURVEYS;
 
-/**
- * Mock Education Data
- */
 import { MOCK_EDUCATION_DATA } from './educationData';
 const edu = MOCK_EDUCATION_DATA(userList);
-export const MOCK_SCHOOLS = edu.schools;
-export const schoolList: School[] = MOCK_SCHOOLS;
+export const schoolList: School[] = edu.schools;
+export const facultyList: Faculty[] = edu.faculties;
+export const schoolTeamList: SchoolTeam[] = edu.teams;
+export const classroomList: Classroom[] = edu.classrooms;
 
 // Global Networking (Friends & Chats)
 const possibleMessages = [
