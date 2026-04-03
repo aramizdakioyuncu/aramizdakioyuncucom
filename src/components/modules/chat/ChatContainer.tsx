@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { ChatList } from './ChatList';
 import { Chat } from '@/models/social/Chat';
-import { User } from '@/models/auth/User';
+import { User, Session } from '@/models';
 import { ChatMessage as ChatMessageModel } from '@/models/social/ChatMessage';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
@@ -16,7 +16,7 @@ import { userList, postList, groupList } from '@/lib/constants/seedData';
 
 
 export function ChatContainer() {
-  const { user } = useAuth();
+  const { user, session, updateSession } = useAuth();
   const { closeChat } = useChat();
   const { emit, on, isConnected } = useSocket();
 
@@ -37,55 +37,83 @@ export function ChatContainer() {
     scrollToBottom();
   }, [localMessages, isTyping]);
 
-  // Sync with user's chatList
+  // Sync with session's chatList (chatList lives on Session, not User)
   useEffect(() => {
-    if (user?.chatList) {
-      setLocalContacts(user.chatList);
+    if (session?.chatList) {
+      setLocalContacts(session.chatList);
     }
-  }, [user?.chatList]);
+  }, [session?.chatList]);
 
   // Socket Connection for Real-time Messages & Typing
   useEffect(() => {
     const offMsg = on('message', (incomingMsg: any) => {
       console.log('[ChatContainer] Incoming socket message:', incomingMsg);
       
-      // Update contacts list last message
-      setLocalContacts(prev => prev.map(c => {
-        if (c.id === incomingMsg.chatId || c.id === incomingMsg.sender?.username) {
-          const msgModel = new ChatMessageModel({
-            id: incomingMsg.id,
-            sender: incomingMsg.sender ? new User(incomingMsg.sender) : undefined,
-            content: incomingMsg.content,
-            timestamp: incomingMsg.timestamp,
-            isSystem: incomingMsg.isSystem || false
-          });
+      const msgModel = new ChatMessageModel({
+        id: incomingMsg.id,
+        sender: incomingMsg.sender ? new User(incomingMsg.sender) : undefined,
+        content: incomingMsg.content,
+        timestamp: incomingMsg.timestamp,
+        isSystem: incomingMsg.isSystem || false
+      });
 
-          // Only add if not already in messages to avoid duplicates from echo
-          const messageExists = c.messages.some(m => m.id === msgModel.id);
-          
-          return new Chat({
-            ...c,
+      // Update contacts list
+      setLocalContacts(prev => {
+        const contactId = incomingMsg.chatId || incomingMsg.sender?.username;
+        const contactExists = prev.some(c => c.id === contactId);
+
+        if (!contactExists && incomingMsg.sender?.username !== user?.username) {
+          // CREATE NEW CHAT: If sender isn't in our list, create the chat box for them!
+          const newChat = new Chat({
+            id: contactId,
+            name: incomingMsg.sender?.displayName || incomingMsg.sender?.username || 'Bilinmeyen',
+            avatar: incomingMsg.sender?.avatar || '',
             lastMessage: msgModel,
             time: msgModel.timestamp,
             updatedAt: Date.now(),
-            messages: messageExists ? c.messages : [...(c.messages || []), msgModel],
-            unreadCount: (activeContactId !== c.id && incomingMsg.sender?.username !== user?.username) ? c.unreadCount + 1 : c.unreadCount
+            messages: [msgModel],
+            unreadCount: (activeContactId !== contactId) ? 1 : 0,
+            isOnline: true // Assume online since they just sent a message
           });
+
+          // PERSIST to Session!
+          if (session) {
+             const updatedChatList = [newChat, ...(session.chatList || [])];
+             updateSession(new Session({ ...session, chatList: updatedChatList }));
+          }
+
+          return [newChat, ...prev];
         }
-        return c;
-      }));
+
+        // UPDATE EXISTING CHAT
+        return prev.map(c => {
+          if (c.id === contactId) {
+            // Only add if not already in messages to avoid duplicates from echo
+            const messageExists = c.messages.some(m => m.id === msgModel.id);
+            
+            const updatedChat = new Chat({
+              ...c,
+              lastMessage: msgModel,
+              time: msgModel.timestamp,
+              updatedAt: Date.now(),
+              messages: messageExists ? c.messages : [...(c.messages || []), msgModel],
+              unreadCount: (activeContactId !== c.id && incomingMsg.sender?.username !== user?.username) ? c.unreadCount + 1 : c.unreadCount
+            });
+
+            // Note: We don't necessarily need to update the whole session on every message to avoid excessive renders,
+            // as local state handles the UI. But for NEW chats, we must.
+            
+            return updatedChat;
+          }
+          return c;
+        });
+      });
 
       // If this is the active chat, update visible messages
       if (activeContactId === incomingMsg.chatId || activeContactId === incomingMsg.sender?.username) {
         setLocalMessages(prev => {
           if (prev.some(m => m.id === incomingMsg.id)) return prev;
-          return [...prev, new ChatMessageModel({
-            id: incomingMsg.id,
-            sender: incomingMsg.sender ? new User(incomingMsg.sender) : undefined,
-            content: incomingMsg.content,
-            timestamp: incomingMsg.timestamp,
-            isSystem: incomingMsg.isSystem || false
-          })];
+          return [...prev, msgModel];
         });
         setIsTyping(false); // Stop typing on message receive
       }

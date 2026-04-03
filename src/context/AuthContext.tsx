@@ -1,23 +1,26 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User } from '@/models';
-import { userList } from '@/lib/constants/seedData';
+import { User, Session } from '@/models';
+import { userList, MOCK_SESSION } from '@/lib/constants/seedData';
 
 interface AuthContextType {
   user: User | null;
+  session: Session | null;
   login: (userData: User) => void;
   logout: () => void;
   isLoading: boolean;
   isLoginModalOpen: boolean;
   setIsLoginModalOpen: (open: boolean) => void;
   updateUser: (updatedUser: User) => void;
+  updateSession: (updatedSession: Session) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
@@ -30,14 +33,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const savedData = JSON.parse(savedUserStr);
         const username = savedData.username;
         
-        // Find user in seedData to maintain all object references (friends, groups, notifications)
+        // Find user in seedData to maintain all object references
         const foundUser = userList.find(u => u.username === username);
         
         if (foundUser) {
           setUser(foundUser);
-        } else {
-          // If not in seedData (unlikely in this demo), try to use the stored JSON
-          setUser(User.fromJSON(savedData));
+          // If it's Berkay, use the mock session with notifications
+          if (username === 'berkaytikenoglu') {
+            setSession(MOCK_SESSION);
+          } else {
+            setSession(new Session({ user: foundUser, token: 'mock-token' }));
+          }
         }
       } catch (e) {
         console.error('Failed to restore session', e);
@@ -51,22 +57,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = (userData: User) => {
     setUser(userData);
+    
+    // Handle session initialization
+    if (userData.username === 'berkaytikenoglu') {
+      setSession(MOCK_SESSION);
+    } else {
+      setSession(new Session({ user: userData, token: 'mock-token' }));
+    }
+
     localStorage.setItem('armoyu_user', JSON.stringify({ username: userData.username }));
     setIsLoginModalOpen(false); // Close modal on success
   };
 
   const logout = () => {
     setUser(null);
+    setSession(null);
     localStorage.removeItem('armoyu_user');
   };
 
   const updateUser = (updatedUser: User) => {
     setUser(updatedUser);
-    // Optionally update local storage if sensitive data changed
+    if (session) {
+      setSession(new Session({ ...session, user: updatedUser }));
+    }
+  };
+
+  const updateSession = (updatedSession: Session) => {
+    setSession(updatedSession);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading, isLoginModalOpen, setIsLoginModalOpen, updateUser }}>
+    <AuthContext.Provider value={{ user, session, login, logout, isLoading, isLoginModalOpen, setIsLoginModalOpen, updateUser, updateSession }}>
       {children}
     </AuthContext.Provider>
   );

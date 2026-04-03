@@ -1,6 +1,4 @@
 import { Role } from './Role';
-import { Chat } from '../social/Chat';
-import { Notification } from '../social/Notification';
 import { NotificationSender } from '../social/NotificationSender';
 
 /**
@@ -19,10 +17,8 @@ export class User {
   xp: number = 0;
   popScore: number = 0;
   groups: any[] = []; 
-  chatList: Chat[] = [];
   friends: User[] = [];
   myPosts: any[] = []; // Use any[] temporarily to avoid circular dependency issues during initialization if needed, or import Post properly
-  notifications: Notification[] = []; // Notification list
 
   constructor(data: Partial<User>) {
     Object.assign(this, data);
@@ -66,7 +62,6 @@ export class User {
       xp: json.xp || json.experience || 0,
       popScore: json.popScore || 0,
       groups: json.groups || [],
-      chatList: Array.isArray(json.chatList) ? json.chatList.map((c: any) => Chat.fromJSON(c)) : [],
       friends: Array.isArray(json.friends) ? json.friends.map((f: any) => {
         // Shallow conversion to avoid infinite recursion
         if (f instanceof User) return f;
@@ -80,7 +75,6 @@ export class User {
           level: f.level || 1
         });
       }) : [],
-      notifications: Array.isArray(json.notifications) ? json.notifications.map((n: any) => Notification.fromJSON(n)) : [],
     });
   }
 }

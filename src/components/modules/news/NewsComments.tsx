@@ -26,7 +26,7 @@ export function NewsComments() {
     {
       id: '2',
       user: userList.find(u => u.username === 'alperen_admin') || userList[2],
-      text: 'Yeni klan sistemini sabırsızlıkla bekliyoruz. Topluluk için harika bir adım.',
+      text: 'Yeni grup sistemini sabırsızlıkla bekliyoruz. Topluluk için harika bir adım.',
       date: '45 dakika önce',
       likes: 8,
       isLiked: true

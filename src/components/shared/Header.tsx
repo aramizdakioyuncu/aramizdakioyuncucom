@@ -1,13 +1,15 @@
 'use client';
 
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { LoginModal } from './LoginModal';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useChat } from '@/context/ChatContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { userList, groupList, schoolList } from '@/lib/constants/seedData';
+import { Search, X, Users, MessageSquare, Bell, User, Flag, ShieldAlert, Crown, LogOut, Moon, Sun, ArrowRight, Menu, ArrowLeft, GraduationCap } from 'lucide-react';
 
 interface NavItem {
   name: string;
@@ -23,7 +25,7 @@ const navItems: NavItem[] = [
   { name: 'Galeriler', href: '/galeriler' },
   { name: 'Haberler', href: '/haberler' },
   { name: 'Çekilişler', href: '/cekilisler' },
-  { name: 'Projeler', href: '#' },
+  { name: 'Projeler', href: '/projeler' },
   { 
     name: 'Ekibimiz', 
     href: '#',
@@ -42,49 +44,74 @@ const navItems: NavItem[] = [
 ];
 
 export function Header() {
-  const { user, login, logout, isLoading, isLoginModalOpen, setIsLoginModalOpen } = useAuth();
+  const { user, session, login, logout, isLoading, isLoginModalOpen, setIsLoginModalOpen } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isGroupsSubmenuOpen, setIsGroupsSubmenuOpen] = useState(false);
+  
+  // Search States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState<{ users: any[], groups: any[], schools: any[] }>({ users: [], groups: [], schools: [] });
+
   const { theme, toggleTheme } = useTheme();
   const { openChat } = useChat();
   const router = useRouter();
 
-  const unreadCount = user?.notifications?.filter((n: any) => !n.isRead).length || 0;
+  // Search Logic
+  useEffect(() => {
+    if (searchQuery.trim().length < 2) {
+      setSearchResults({ users: [], groups: [], schools: [] });
+      return;
+    }
+
+    const query = searchQuery.toLocaleLowerCase('tr-TR');
+    const filteredUsers = userList.filter(u => 
+      u.displayName.toLocaleLowerCase('tr-TR').includes(query) || 
+      u.username.toLocaleLowerCase('tr-TR').includes(query)
+    ).slice(0, 5);
+
+    const filteredGroups = groupList.filter(g => 
+      g.name.toLocaleLowerCase('tr-TR').includes(query)
+    ).slice(0, 5);
+
+    const filteredSchools = schoolList.filter(s => 
+      s.name.toLocaleLowerCase('tr-TR').includes(query)
+    ).slice(0, 5);
+
+    setSearchResults({ users: filteredUsers, groups: filteredGroups, schools: filteredSchools });
+  }, [searchQuery]);
+
+  const unreadCount = session?.notifications?.filter((n: any) => !n.isRead).length || 0;
 
   const markAllAsRead = () => {
-    if (user?.notifications) {
-      user.notifications.forEach((n: any) => n.isRead = true);
-      // Force a re-render or state update if needed, but since it's an object reference in seedData, 
-      // simple state toggle might suffice for the demo.
+    if (session?.notifications) {
+      session.notifications.forEach((n: any) => n.isRead = true);
       setIsNotificationOpen(false);
       setTimeout(() => setIsNotificationOpen(true), 10);
     }
   };
 
+  const closeSearch = () => {
+    setSearchQuery('');
+    setIsSearchOpen(false);
+  };
+
   const goToMyProfile = () => {
     if (user?.username) {
-      const params = new URLSearchParams();
-      if (user.displayName) params.set('name', user.displayName);
-      if (user.avatar) params.set('avatar', user.avatar);
-
-      router.push(`/oyuncular/${user.username}?${params.toString()}`);
+      router.push(`/oyuncular/${user.username}`);
       setIsUserMenuOpen(false);
       setIsMobileMenuOpen(false);
     }
   };
 
   const handleNotificationClick = (notif: any) => {
-    // 1. Mark as read (mock update)
     notif.isRead = true;
-    
-    // 2. Navigate if clickable and link exists
     if (notif.isClickable && notif.link) {
       router.push(notif.link);
-      setIsNotificationOpen(false); // Only close if navigating
+      setIsNotificationOpen(false);
     } else {
-      // Just refresh UI to show as read
       setIsNotificationOpen(false);
       setTimeout(() => setIsNotificationOpen(true), 10);
     }
@@ -92,7 +119,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-armoyu-header-border bg-armoyu-header-bg transition-colors duration-500">
+      <header className="sticky top-0 z-40 w-full border-b border-armoyu-header-border bg-armoyu-header-bg transition-all duration-500 backdrop-blur-md">
         <div className="flex items-center justify-between px-4 md:px-8 h-16 w-full max-w-[100vw]">
 
           {/* Mobile Hamburger Button */}
@@ -101,40 +128,43 @@ export function Header() {
             onClick={() => setIsMobileMenuOpen(true)}
             title="Menü"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            <Menu size={24} />
           </button>
 
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center pr-4 md:pr-8 md:border-r border-armoyu-header-border ml-auto md:ml-0">
-            <Link href="/" className="text-xl font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-white dark:to-gray-300 hover:opacity-80 transition-opacity">
+          <div className="flex-shrink-0 flex items-center pr-4 md:pr-8 md:border-r border-armoyu-header-border ml-2 md:ml-0">
+            <Link href="/" className="text-xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-white dark:to-gray-400 hover:opacity-80 transition-opacity uppercase italic">
               ARMOYU
             </Link>
           </div>
 
+
+
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1 xl:gap-2 mx-4 md:mx-8">
+          <nav className="hidden md:flex items-center gap-1 xl:gap-2 mx-4">
             {navItems.map((item) => (
               <div key={item.name} className="relative group">
                 <Link
                   href={item.href}
-                  className="px-3 xl:px-4 py-2 rounded-xl text-sm font-bold text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 transition-all flex items-center gap-1.5"
+                  className="px-3 xl:px-4 py-2 rounded-xl text-sm font-bold text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 transition-all flex items-center gap-1.5 whitespace-nowrap"
                 >
                   {item.name}
                   {item.submenu && (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="opacity-50 group-hover:rotate-180 transition-transform"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <Menu size={14} className="opacity-50 group-hover:rotate-90 transition-transform" />
                   )}
                 </Link>
 
-                {/* Dropdown Menu (Submenu) */}
+                {/* Submenu Dropdown */}
                 {item.submenu && (
-                  <div className="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
-                    <div className="bg-white dark:bg-[#1a1a24] border border-gray-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden w-48 p-1.5 flex flex-col gap-0.5">
+                  <div className="absolute top-full left-0 pt-3 opacity-0 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 z-50">
+                    <div className="bg-white dark:bg-[#12121a] border border-gray-200 dark:border-white/10 rounded-[24px] shadow-2xl p-1.5 w-52 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                       {item.submenu.map((sub) => (
                         <Link
                           key={sub.name}
                           href={sub.href}
-                          className="px-4 py-2.5 rounded-xl text-sm font-bold text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 transition-colors block"
+                          className="flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-bold text-armoyu-text-muted hover:text-armoyu-text hover:bg-blue-500/10 transition-all decoration-0"
                         >
+                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500 opacity-0 group-hover/sub:opacity-100 transition-opacity" />
                           {sub.name}
                         </Link>
                       ))}
@@ -145,9 +175,132 @@ export function Header() {
             ))}
           </nav>
 
+          {/* Search Bar (Desktop) - Aligned to Right */}
+          <div className="hidden lg:flex items-center flex-1 max-w-[280px] ml-auto relative">
+             <div className="relative w-full group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                   <Search size={16} className="text-armoyu-text-muted group-focus-within:text-blue-500 transition-colors" />
+                </div>
+                <input
+                   type="text"
+                   className="block w-full pl-11 pr-4 py-2.5 bg-black/5 dark:bg-white/5 border border-transparent focus:border-blue-500/50 rounded-2xl text-sm font-bold text-armoyu-text placeholder:text-armoyu-text-muted/50 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all"
+                   placeholder="Ara..."
+                   value={searchQuery}
+                   onChange={(e) => setSearchQuery(e.target.value)}
+                   onFocus={() => setIsSearchOpen(true)}
+                />
+                
+                {/* Desktop Search Results */}
+                {isSearchOpen && (searchQuery.length > 0) && (
+                   <>
+                      <div className="fixed inset-0 z-40" onClick={() => setIsSearchOpen(false)} />
+                      <div className="absolute top-full right-0 mt-3 bg-white dark:bg-[#12121a] border border-gray-200 dark:border-white/10 rounded-[28px] shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 w-[350px]">
+                         {searchResults.users.length === 0 && searchResults.groups.length === 0 && searchResults.schools.length === 0 ? (
+                            <div className="p-8 text-center">
+                               <div className="w-12 h-12 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-3">
+                                  <Search size={20} className="text-armoyu-text-muted opacity-50" />
+                               </div>
+                               <p className="text-xs font-black text-armoyu-text uppercase tracking-widest">Sonuç Bulunamadı</p>
+                               <p className="text-[10px] text-armoyu-text-muted mt-1">Farklı bir anahtar kelime dene.</p>
+                            </div>
+                         ) : (
+                            <div className="max-h-[70vh] overflow-y-auto p-2 space-y-4 py-4">
+                               {searchResults.users.length > 0 && (
+                                  <div>
+                                     <h5 className="px-4 mb-2 text-[10px] font-black text-armoyu-text-muted uppercase tracking-[0.2em] flex items-center gap-2">
+                                        <User size={12} /> Oyuncular
+                                     </h5>
+                                     <div className="space-y-1">
+                                        {searchResults.users.map((u) => (
+                                           <Link 
+                                              key={u.username} 
+                                              href={`/oyuncular/${u.username}`}
+                                              onClick={closeSearch}
+                                              className="flex items-center gap-3 p-3 rounded-2xl hover:bg-blue-500/10 transition-colors group"
+                                           >
+                                              <img src={u.avatar} className="w-10 h-10 rounded-xl object-cover ring-2 ring-transparent group-hover:ring-blue-500/30 transition-all" alt={u.displayName} />
+                                              <div>
+                                                 <div className="text-sm font-black text-armoyu-text group-hover:text-blue-500 transition-colors">{u.displayName}</div>
+                                                 <div className="text-[10px] font-bold text-armoyu-text-muted uppercase tracking-widest">@{u.username}</div>
+                                              </div>
+                                              <ArrowRight size={14} className="ml-auto opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all text-blue-500" />
+                                           </Link>
+                                        ))}
+                                     </div>
+                                  </div>
+                               )}
+                               
+                               {searchResults.groups.length > 0 && (
+                                  <div>
+                                     <h5 className="px-4 mb-2 text-[10px] font-black text-armoyu-text-muted uppercase tracking-[0.2em] flex items-center gap-2">
+                                        <Users size={12} /> Gruplar
+                                     </h5>
+                                     <div className="space-y-1">
+                                        {searchResults.groups.map((g) => (
+                                           <Link 
+                                              key={g.id} 
+                                              href={`/gruplar/${g.id}`}
+                                              onClick={closeSearch}
+                                              className="flex items-center gap-3 p-3 rounded-2xl hover:bg-emerald-500/10 transition-colors group"
+                                           >
+                                              <img src={g.logo} className="w-10 h-10 rounded-xl object-cover ring-2 ring-transparent group-hover:ring-emerald-500/30 transition-all" alt={g.name} />
+                                              <div>
+                                                 <div className="text-sm font-black text-armoyu-text group-hover:text-emerald-500 transition-colors">{g.name}</div>
+                                                 <div className="text-[10px] font-bold text-armoyu-text-muted uppercase tracking-widest">{g.memberCount || 0} Üye</div>
+                                              </div>
+                                              <ArrowRight size={14} className="ml-auto opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all text-emerald-500" />
+                                           </Link>
+                                        ))}
+                                     </div>
+                                  </div>
+                               )}
+
+                               {searchResults.schools.length > 0 && (
+                                  <div>
+                                     <h5 className="px-4 mb-2 text-[10px] font-black text-armoyu-text-muted uppercase tracking-[0.2em] flex items-center gap-2">
+                                        <GraduationCap size={12} /> Okullar
+                                     </h5>
+                                     <div className="space-y-1">
+                                        {searchResults.schools.map((s) => (
+                                           <Link 
+                                              key={s.id} 
+                                              href={`/egitim/${s.slug}`}
+                                              onClick={closeSearch}
+                                              className="flex items-center gap-3 p-3 rounded-2xl hover:bg-blue-500/10 transition-colors group"
+                                           >
+                                              <img src={s.logo} className="w-10 h-10 rounded-xl object-contain bg-white p-1 ring-2 ring-transparent group-hover:ring-blue-500/30 transition-all" alt={s.name} />
+                                              <div>
+                                                 <div className="text-sm font-black text-armoyu-text group-hover:text-blue-500 transition-colors">{s.name}</div>
+                                                 <div className="text-[10px] font-bold text-armoyu-text-muted uppercase tracking-widest">{s.memberCount || 0} Üye</div>
+                                              </div>
+                                              <ArrowRight size={14} className="ml-auto opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all text-blue-500" />
+                                           </Link>
+                                        ))}
+                                     </div>
+                                  </div>
+                               )}
+                            </div>
+                         )}
+                         <div className="p-3 bg-black/5 dark:bg-white/5 border-t border-gray-200 dark:border-white/10 text-center">
+                            <span className="text-[10px] font-bold text-armoyu-text-muted uppercase tracking-widest">Arama modunu kapatmak için dışarı tıkla</span>
+                         </div>
+                      </div>
+                   </>
+                )}
+             </div>
+          </div>
+
           {/* User Actions */}
-          <div className="flex-shrink-0 pl-4 md:pl-8 border-l border-armoyu-header-border flex items-center gap-4 h-full ml-auto">
+          <div className="flex-shrink-0 pl-4 md:pl-8 border-l border-armoyu-header-border flex items-center gap-2 md:gap-4 h-full ml-auto md:ml-0">
             
+            {/* Mobile Search Trigger */}
+            <button 
+               className="lg:hidden p-2 rounded-xl text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+               onClick={() => setIsSearchOpen(true)}
+            >
+               <Search size={22} />
+            </button>
+
             {user && (
               <div className="relative">
                 <button
@@ -155,7 +308,7 @@ export function Header() {
                   className={`relative p-2 rounded-xl transition-all ${isNotificationOpen ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5'}`}
                   title="Bildirimler"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+                  <Bell size={22} />
                   {unreadCount > 0 && (
                     <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-red-500 text-white text-[10px] font-black flex items-center justify-center rounded-full border-2 border-armoyu-header-bg animate-bounce">
                       {unreadCount}
@@ -167,65 +320,51 @@ export function Header() {
                 {isNotificationOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsNotificationOpen(false)} />
-                    <div className="absolute right-0 mt-3 w-80 md:w-96 bg-white/90 dark:bg-[#1a1a24]/90 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-3xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                      <div className="p-4 border-b border-armoyu-drawer-border flex justify-between items-center bg-black/5 dark:bg-white/5">
-                        <h4 className="text-sm font-black text-armoyu-text uppercase tracking-widest">BİLDİRİMLER</h4>
+                    <div className="absolute right-0 mt-3 w-80 md:w-96 bg-white dark:bg-[#12121a] border border-gray-200 dark:border-white/10 rounded-[32px] shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                      <div className="p-5 border-b border-gray-200 dark:border-white/10 flex justify-between items-center bg-black/5 dark:bg-white/5">
+                        <h4 className="text-xs font-black text-armoyu-text uppercase tracking-[0.2em]">BİLDİRİMLER</h4>
                         <button 
                           onClick={markAllAsRead}
-                          className="text-[10px] font-bold text-blue-500 hover:underline"
+                          className="text-[10px] font-bold text-blue-500 hover:text-blue-400 transition-colors uppercase tracking-widest"
                         >
-                          Hepsini Okundu İşaretle
+                          Hepsini Oku
                         </button>
                       </div>
                       
-                      <div className="max-h-[400px] overflow-y-auto hide-scrollbar">
-                        {(user.notifications || []).length > 0 ? (
-                          (user.notifications || []).map((notif: any) => (
+                      <div className="max-h-[450px] overflow-y-auto p-1.5">
+                        {(session?.notifications || []).length > 0 ? (
+                          (session?.notifications || []).map((notif: any) => (
                             <div 
                               key={notif.id} 
                               onClick={() => handleNotificationClick(notif)}
-                              className={`p-4 border-b border-armoyu-drawer-border last:border-none hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${notif.isClickable ? 'cursor-pointer' : 'cursor-default'} group flex gap-3 ${!notif.isRead ? 'bg-blue-500/5' : ''}`}
+                              className={`p-4 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition-all group flex gap-4 ${!notif.isRead ? 'bg-blue-500/5' : ''}`}
                             >
-                              <div className="relative shrink-0 group-hover:scale-110 transition-transform">
-                                <img 
-                                  src={notif.sender?.avatar || "https://armoyu.com/assets/img/armoyu_logo.png"} 
-                                  alt="Sender"
-                                  className="w-10 h-10 rounded-2xl object-cover border border-black/5 dark:border-white/5 bg-white/10"
-                                />
-                                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-blue-500 border-2 border-white dark:border-[#1a1a24] flex items-center justify-center text-white shadow-lg">
-                                  {(notif.type === 'POST_LIKE' || notif.type === 'like') && <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>}
-                                  {(notif.type === 'POST_COMMENT' || notif.type === 'comment') && <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>}
-                                  {(notif.type === 'GROUP_INVITE' || notif.type === 'group_invite') && <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>}
-                                  {(notif.category === 'SYSTEM' || notif.type === 'system') && <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M12 22v-4M12 12V8M12 4V2M18 17l-3-3M6 17l3-3M18 7l-3 3M6 7l3-3"></path></svg>}
-                                </div>
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex justify-between items-start gap-2">
-                                  <p className="text-xs font-black text-armoyu-text truncate">{notif.title}</p>
-                                  <span className="text-[9px] font-bold text-armoyu-text-muted whitespace-nowrap uppercase tracking-tighter">{notif.createdAt}</span>
-                                </div>
-                                <p className="text-[11px] font-medium text-armoyu-text-muted mt-0.5 line-clamp-2 leading-relaxed">{notif.message}</p>
-                                {notif.context && (
-                                  <div className="mt-1 px-2 py-1 bg-black/5 dark:bg-white/5 border-l-2 border-blue-500 rounded text-[9px] italic text-armoyu-text-muted">
-                                    "{notif.context}"
+                               <div className="relative shrink-0">
+                                 <img src={notif.sender?.avatar} className="w-11 h-11 rounded-2xl object-cover ring-2 ring-white/5" alt="Sender" />
+                                 <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-blue-500 border-2 border-[#12121a] flex items-center justify-center text-white">
+                                    {(notif.type === 'POST_LIKE') && <Flag size={10} fill="currentColor" />}
+                                    {(notif.type === 'POST_COMMENT') && <MessageSquare size={10} fill="currentColor" />}
+                                    {(notif.type === 'GROUP_INVITE') && <Users size={10} fill="currentColor" />}
+                                    {(notif.category === 'SYSTEM') && <ShieldAlert size={10} fill="currentColor" />}
+                                 </div>
+                               </div>
+                               <div className="flex-1 min-w-0">
+                                  <div className="flex justify-between items-start mb-0.5">
+                                     <p className="text-sm font-black text-armoyu-text truncate">{notif.title}</p>
+                                     <span className="text-[9px] font-bold text-armoyu-text-muted uppercase tracking-tighter">{notif.createdAt}</span>
                                   </div>
-                                )}
-                              </div>
-                              {!notif.isRead && <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shadow-[0_0_8px_rgba(59,130,246,0.8)]" />}
+                                  <p className="text-[11px] font-medium text-armoyu-text-muted leading-relaxed line-clamp-2">{notif.message}</p>
+                               </div>
+                               {!notif.isRead && <div className="w-2.5 h-2.5 rounded-full bg-blue-500 mt-2 shadow-[0_0_10px_rgba(59,130,246,0.6)]" />}
                             </div>
                           ))
                         ) : (
-                          <div className="py-12 px-6 text-center">
-                            <div className="w-12 h-12 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-armoyu-text-muted mx-auto mb-3">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                            </div>
-                            <p className="text-sm font-bold text-armoyu-text">Bildirim bulunmuyor</p>
-                            <p className="text-xs text-armoyu-text-muted mt-1">Her şey güncel görünüyor!</p>
+                          <div className="py-16 text-center">
+                             <Bell size={40} className="mx-auto text-armoyu-text-muted/20 mb-4" />
+                             <p className="text-xs font-black text-armoyu-text uppercase tracking-widest">Bildirim Bulunmuyor</p>
                           </div>
                         )}
                       </div>
-                      
-                      <button className="w-full py-3.5 text-xs font-black text-armoyu-text-muted hover:text-blue-500 bg-black/5 dark:bg-white/5 border-t border-armoyu-drawer-border transition-colors uppercase tracking-widest">Tüm Geçmişi Gör</button>
                     </div>
                   </>
                 )}
@@ -266,6 +405,122 @@ export function Header() {
 
         </div>
       </header>
+
+      {/* Mobile Search Overlay */}
+      {isSearchOpen && (
+         <div className="fixed inset-0 z-[100] bg-white dark:bg-[#0a0a0b] flex flex-col lg:hidden animate-in fade-in slide-in-from-top duration-300">
+            <div className="flex items-center gap-4 p-4 border-b border-gray-200 dark:border-white/10">
+               <button onClick={closeSearch} className="p-2 text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors">
+                  <ArrowLeft size={24} />
+               </button>
+               <input 
+                  autoFocus
+                  type="text"
+                  className="flex-1 bg-transparent border-none text-lg font-bold text-armoyu-text focus:outline-none placeholder:text-armoyu-text-muted/30"
+                  placeholder="Kimi aramıştın?"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+               />
+               {searchQuery.length > 0 && (
+                  <button onClick={() => setSearchQuery('')} className="p-2 text-armoyu-text-muted hover:text-red-500 transition-colors">
+                     <X size={20} />
+                  </button>
+               )}
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4 hide-scrollbar">
+               {searchQuery.length > 0 ? (
+                  searchResults.users.length === 0 && searchResults.groups.length === 0 && searchResults.schools.length === 0 ? (
+                     <div className="py-20 text-center">
+                        <Search size={48} className="mx-auto text-armoyu-text-muted/10 mb-4" />
+                        <p className="text-sm font-black text-armoyu-text uppercase tracking-widest">Sonuç Bulunamadı</p>
+                     </div>
+                  ) : (
+                     <div className="space-y-8">
+                        {searchResults.users.length > 0 && (
+                           <div>
+                              <h5 className="mb-4 text-[11px] font-black text-armoyu-text-muted uppercase tracking-[0.3em] flex items-center gap-2">
+                                 <User size={14} /> Oyuncular ({searchResults.users.length})
+                              </h5>
+                              <div className="space-y-2">
+                                 {searchResults.users.map((u) => (
+                                    <Link 
+                                       key={u.username} 
+                                       href={`/oyuncular/${u.username}`}
+                                       onClick={closeSearch}
+                                       className="flex items-center gap-4 p-3 rounded-[24px] bg-black/5 dark:bg-white/5 border border-transparent active:scale-95 transition-all"
+                                    >
+                                       <img src={u.avatar} className="w-12 h-12 rounded-2xl object-cover shadow-lg" alt={u.displayName} />
+                                       <div className="flex-1 min-w-0">
+                                          <div className="font-black text-armoyu-text truncate">{u.displayName}</div>
+                                          <div className="text-[10px] font-bold text-armoyu-text-muted uppercase tracking-widest">@{u.username}</div>
+                                       </div>
+                                       <ArrowRight size={18} className="text-blue-500" />
+                                    </Link>
+                                 ))}
+                              </div>
+                           </div>
+                        )}
+                        
+                        {searchResults.groups.length > 0 && (
+                           <div>
+                              <h5 className="mb-4 text-[11px] font-black text-armoyu-text-muted uppercase tracking-[0.3em] flex items-center gap-2">
+                                 <Users size={14} /> Gruplar ({searchResults.groups.length})
+                              </h5>
+                              <div className="space-y-2">
+                                 {searchResults.groups.map((g) => (
+                                    <Link 
+                                       key={g.id} 
+                                       href={`/gruplar/${g.id}`}
+                                       onClick={closeSearch}
+                                       className="flex items-center gap-4 p-3 rounded-[24px] bg-black/5 dark:bg-white/5 border border-transparent active:scale-95 transition-all"
+                                    >
+                                       <img src={g.logo} className="w-12 h-12 rounded-2xl object-cover shadow-lg" alt={g.name} />
+                                       <div className="flex-1 min-w-0">
+                                          <div className="font-black text-armoyu-text truncate">{g.name}</div>
+                                          <div className="text-[10px] font-bold text-armoyu-text-muted uppercase tracking-widest">{g.memberCount || 0} Üye</div>
+                                       </div>
+                                       <ArrowRight size={18} className="text-emerald-500" />
+                                    </Link>
+                                 ))}
+                              </div>
+                           </div>
+                        )}
+
+                        {searchResults.schools.length > 0 && (
+                           <div>
+                              <h5 className="mb-4 text-[11px] font-black text-armoyu-text-muted uppercase tracking-[0.3em] flex items-center gap-2">
+                                 <GraduationCap size={14} /> Okullar ({searchResults.schools.length})
+                              </h5>
+                              <div className="space-y-2">
+                                 {searchResults.schools.map((s) => (
+                                    <Link 
+                                       key={s.id} 
+                                       href={`/egitim/${s.slug}`}
+                                       onClick={closeSearch}
+                                       className="flex items-center gap-4 p-3 rounded-[32px] bg-black/5 dark:bg-white/5 border border-transparent active:scale-95 transition-all"
+                                    >
+                                       <img src={s.logo} className="w-14 h-14 rounded-2xl object-contain bg-white p-2 shadow-lg" alt={s.name} />
+                                       <div className="flex-1 min-w-0">
+                                          <div className="font-black text-armoyu-text truncate italic">{s.name}</div>
+                                          <div className="text-[10px] font-bold text-armoyu-text-muted uppercase tracking-widest">{s.memberCount || 0} Üye</div>
+                                       </div>
+                                       <ArrowRight size={20} className="text-blue-500" />
+                                    </Link>
+                                 ))}
+                              </div>
+                           </div>
+                        )}
+                     </div>
+                  )
+               ) : (
+                  <div className="py-12 text-center text-armoyu-text-muted">
+                     <p className="text-xs font-bold uppercase tracking-widest">Aramak için yazmaya başla...</p>
+                  </div>
+               )}
+            </div>
+         </div>
+      )}
 
       {/* Mobile Menu Drawer Overlay */}
       {isMobileMenuOpen && (
@@ -383,26 +638,28 @@ export function Header() {
                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                  Profilime Git
                </button>
-               <a href="#" className="flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border">
+               <Link href="/yazilarim" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border">
                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                  Yazılarım
-               </a>
+               </Link>
 
-               <a href="#" className="flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border">
+               <Link 
+                 href="/yazilarim" 
+                 onClick={() => setIsUserMenuOpen(false)} 
+                 className="flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border"
+               >
                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                  Yorumlarım
-               </a>
+               </Link>
 
-               <button onClick={() => { setIsUserMenuOpen(false); openChat(); }} className="w-full flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border text-left focus:outline-none">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                 Gelen Mesajlar
-                 <span className="ml-auto bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm">3</span>
-               </button>
-
-               <a href="#" className="flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="8" y2="16"></line><line x1="16" y1="10" x2="16" y2="16"></line></svg>
+               <Link 
+                 href="/anketler" 
+                 onClick={() => setIsUserMenuOpen(false)} 
+                 className="flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border"
+               >
+                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="12" y2="16"></line><line x1="16" y1="10" x2="16" y2="16"></line></svg>
                  Anketler
-               </a>
+               </Link>
 
                <div className="space-y-1">
                  <button 
@@ -444,15 +701,23 @@ export function Header() {
                  )}
                </div>
 
-               <a href="#" className="flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border">
+               <Link 
+                 href="/cekilisler" 
+                 onClick={() => setIsUserMenuOpen(false)} 
+                 className="flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border"
+               >
                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
                  Çekiliş
-               </a>
+               </Link>
 
-               <a href="#" className="flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border">
+               <Link 
+                 href="/egitim" 
+                 onClick={() => setIsUserMenuOpen(false)} 
+                 className="flex items-center gap-3 p-3 text-armoyu-text-muted hover:text-armoyu-text hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all font-medium border border-transparent hover:border-armoyu-drawer-border"
+               >
                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                  Eğitim
-               </a>
+               </Link>
 
                <Link 
                  href="/destek"

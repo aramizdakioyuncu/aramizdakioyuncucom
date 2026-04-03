@@ -9,6 +9,7 @@ import { CloudStorageModal } from '../profile/CloudStorageModal';
 import Link from 'next/link';
 import { userList, postList, groupList } from '@/lib/constants/seedData';
 import { Post, Group } from '@/models';
+import { CheckCircle2, ArrowLeft } from 'lucide-react';
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -403,17 +404,65 @@ export function Dashboard() {
 
       {/* Sağ Yan Panel (Sidebar Widget Area) */}
       <div className="hidden lg:flex w-[320px] flex-col gap-6">
-        {/* Kullanıcı Profili Widget */}
-        <div className="glass-panel p-6 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg">
-          <h3 className="font-extrabold text-armoyu-text mb-2 text-lg">Hoş Geldin, <span className="text-blue-500">{user?.displayName?.split(' ')[0]}</span></h3>
-          <p className="text-sm text-armoyu-text-muted font-medium leading-relaxed">Profilini tamamlayarak daha fazla rozet kazanabilir ve toplulukta öne çıkabilirsin.</p>
-          <button className="mt-5 w-full px-4 py-2.5 bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-armoyu-text text-sm font-bold rounded-xl hover:bg-black/10 dark:hover:bg-white/10 transition-colors">Profili Düzenle</button>
+        {/* Kullanıcı Profili Widget - Gelişmiş */}
+        <div className="glass-panel p-6 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg group overflow-hidden relative">
+          {/* Arkaplan Süsü */}
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl group-hover:bg-blue-500/10 transition-all duration-700" />
+          
+          <div className="relative z-10">
+            <h3 className="font-extrabold text-armoyu-text text-xl tracking-tight mb-6">
+              Hoş Geldin, <span className="text-blue-500">{user?.displayName?.split(' ')[0]}</span>
+            </h3>
+            
+            {/* Görev Sistemi */}
+            {(() => {
+              const steps = [
+                { id: 'avatar', label: 'Profil Fotoğrafı Ekle', completed: !!user?.avatar && !user.avatar.includes('seed=Armoyu'), icon: '🖼️' },
+                { id: 'bio', label: 'Hakkında Yazısı Yaz', completed: !!user?.bio && user.bio.length > 5, icon: '✍️' },
+                { id: 'verified', label: 'E-posta Onayla', completed: !!user?.verified, icon: '📧' },
+                { id: 'groups', label: 'Bir Gruba Katıl', completed: (user?.groups?.length || 0) > 0, icon: '🛡️' }
+              ];
+              const totalPercentage = steps.reduce((acc, step) => acc + (step.completed ? 25 : 0), 0);
+              const nextStep = steps.find(s => !s.completed);
+
+              if (totalPercentage === 100) {
+                 return (
+                    <div className="flex items-center gap-2 animate-in fade-in duration-700">
+                       <CheckCircle2 size={16} className="text-emerald-500" />
+                       <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Tüm görevler tamamlandı</span>
+                    </div>
+                 );
+              }
+
+              return (
+                <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+                   <div className="flex items-center justify-between mb-4">
+                      <span className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">Aktif Görevin</span>
+                      <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest bg-blue-500/10 px-2 py-0.5 rounded">%{totalPercentage} Tamamlandı</span>
+                   </div>
+                   
+                   <Link 
+                     href="/ayarlar/profil"
+                     className="flex items-center gap-4 p-4 bg-black/20 hover:bg-blue-600 border border-white/5 rounded-2xl group/task transition-all active:scale-95 shadow-xl"
+                   >
+                      <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-2xl group-hover/task:bg-white/20 transition-colors">
+                         {nextStep?.icon}
+                      </div>
+                      <div className="flex-1">
+                         <h4 className="text-sm font-black text-armoyu-text group-hover/task:text-white uppercase tracking-tight">{nextStep?.label}</h4>
+                         <p className="text-[10px] font-bold text-armoyu-text-muted group-hover/task:text-white/80 uppercase tracking-widest mt-1 italic">Hemen Tamamla →</p>
+                      </div>
+                   </Link>
+                </div>
+              );
+            })()}
+          </div>
         </div>
 
-        {/* Benim Gruplarım Widget (Dynamic) */}
+        {/* Gruplarım Widget (Dynamic) */}
         <div className="glass-panel p-6 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="font-extrabold text-armoyu-text text-lg">Benim Gruplarım</h3>
+            <h3 className="font-extrabold text-armoyu-text text-lg">Gruplarım</h3>
             <span className="bg-blue-500/10 text-blue-500 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">{(user?.groups?.length || 0)} Grup</span>
           </div>
 

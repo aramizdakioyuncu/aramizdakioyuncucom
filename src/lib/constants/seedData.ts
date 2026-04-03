@@ -1,7 +1,13 @@
-import { User, Post, Role, Group, Notification, NotificationSender, Product, Note, Story, News, Mod, Forum, Giveaway } from '@/models';
+import { User, Post, Role, Group, Notification, NotificationSender, Product, Note, Story, News, Mod, Forum, Giveaway, ArmoyuEvent, Game, Station, StationProduct, WorkstationEquipment, StationCoupon, Project, Survey, SurveyAnswer, School, Faculty, Classroom, SchoolTeam } from '@/models';
 import { Chat } from '@/models/social/Chat';
 import { ChatMessage } from '@/models/social/ChatMessage';
 import { GlobalStats } from '@/types/stats';
+import { Session } from '@/models/auth/Session';
+
+// Modular data imports
+export * from './stationData';
+export * from './surveyData';
+export * from './educationData';
 
 /**
  * Common Roles
@@ -131,38 +137,38 @@ export const groupList: Group[] = [
  */
 export const userList: User[] = [
   // YÖNETİM EKİBİ
-  new User({ displayName: 'Berkay Tikenoğlu', role: roles.admin, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Berkay', username: 'berkaytikenoglu', verified: true, bio: 'ARMOYU Kurucusu & Yazılım Geliştirici', level: 99, xp: 5000, popScore: 15000, groups: [groupList[0], groupList[1], groupList[5]], chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'MythX', role: roles.memberMgmt, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MythX', username: 'mythx', verified: true, level: 85, xp: 3200, popScore: 12500, groups: [groupList[1], groupList[2]], chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Barış Müftüoğlu', role: roles.discipline, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Baris', username: 'barismuftuoglu', verified: true, level: 82, xp: 2800, popScore: 11000, groups: [groupList[3]], chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Bey Ev', role: roles.eventMgmt, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Beytullah', username: 'beyev', verified: true, level: 80, xp: 2500, popScore: 10500, chatList: [TOPLULUK_ODASI] }),
+  new User({ displayName: 'Berkay Tikenoğlu', role: roles.admin, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Berkay', username: 'berkaytikenoglu', verified: true, bio: 'ARMOYU Kurucusu & Yazılım Geliştirici', level: 99, xp: 5000, popScore: 15000, groups: [groupList[0], groupList[1], groupList[5]] }),
+  new User({ displayName: 'MythX', role: roles.memberMgmt, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MythX', username: 'mythx', verified: true, level: 85, xp: 3200, popScore: 12500, groups: [groupList[1], groupList[2]] }),
+  new User({ displayName: 'Barış Müftüoğlu', role: roles.discipline, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Baris', username: 'barismuftuoglu', verified: true, level: 82, xp: 2800, popScore: 11000, groups: [groupList[3]] }),
+  new User({ displayName: 'Bey Ev', role: roles.eventMgmt, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Beytullah', username: 'beyev', verified: true, level: 80, xp: 2500, popScore: 10500 }),
 
   // SORUMLULAR
-  new User({ displayName: 'Yılmaz Akşahin', role: roles.assettoOfficial, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Yilmaz', username: 'yilmazaksahin', level: 65, popScore: 8500, chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Orkun Atılgan', role: roles.mcOfficial, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Orkun', username: 'orkunatilgan', level: 68, popScore: 9200, chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Furkan Sarıdiken', role: roles.responsible, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Furkan', username: 'furkansaridiken', level: 60, popScore: 7800, chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Burakcan TOPAL', role: roles.responsible, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Burakcan', username: 'burakcantopal', level: 58, popScore: 7500, chatList: [TOPLULUK_ODASI] }),
+  new User({ displayName: 'Yılmaz Akşahin', role: roles.assettoOfficial, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Yilmaz', username: 'yilmazaksahin', level: 65, popScore: 8500 }),
+  new User({ displayName: 'Orkun Atılgan', role: roles.mcOfficial, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Orkun', username: 'orkunatilgan', level: 68, popScore: 9200 }),
+  new User({ displayName: 'Furkan Sarıdiken', role: roles.responsible, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Furkan', username: 'furkansaridiken', level: 60, popScore: 7800 }),
+  new User({ displayName: 'Burakcan TOPAL', role: roles.responsible, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Burakcan', username: 'burakcantopal', level: 58, popScore: 7500 }),
 
   // YAZILIM VE GELİŞTİRME
-  new User({ displayName: 'Burak Erel', role: roles.gameDev, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Burak', username: 'burakerel', level: 75, popScore: 9800, groups: [groupList[0]], chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Engin Kuşkovan', role: roles.softwareDev, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Engin', username: 'enginkuskovan', level: 72, popScore: 9400, chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Nariman Rustamli', role: roles.softwareDev, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nariman', username: 'narimanrustamli', level: 70, popScore: 9000, chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Ersan Güvenç', role: roles.qualified, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ersan', username: 'ersanguvenc', level: 70, popScore: 8900, chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Oğuzhan Seslikaya', role: roles.qualified, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oguzhan', username: 'oguzhanseslikaya', level: 70, popScore: 8850, chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Ömer Efe Dikici', role: roles.frontendDev, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Efe', username: 'omerefedikici', level: 78, popScore: 10200, chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Ömer Faruk Sayın', role: roles.backendDev, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Faruk', username: 'omerfaruksayin', level: 77, popScore: 10100, chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Emre Sandal', role: roles.fullstackDev, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emre', username: 'emresandal', level: 79, popScore: 10300, chatList: [TOPLULUK_ODASI] }),
+  new User({ displayName: 'Burak Erel', role: roles.gameDev, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Burak', username: 'burakerel', level: 75, popScore: 9800, groups: [groupList[0]] }),
+  new User({ displayName: 'Engin Kuşkovan', role: roles.softwareDev, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Engin', username: 'enginkuskovan', level: 72, popScore: 9400 }),
+  new User({ displayName: 'Nariman Rustamli', role: roles.softwareDev, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nariman', username: 'narimanrustamli', level: 70, popScore: 9000 }),
+  new User({ displayName: 'Ersan Güvenç', role: roles.qualified, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ersan', username: 'ersanguvenc', level: 70, popScore: 8900 }),
+  new User({ displayName: 'Oğuzhan Seslikaya', role: roles.qualified, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oguzhan', username: 'oguzhanseslikaya', level: 70, popScore: 8850 }),
+  new User({ displayName: 'Ömer Efe Dikici', role: roles.frontendDev, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Efe', username: 'omerefedikici', level: 78, popScore: 10200 }),
+  new User({ displayName: 'Ömer Faruk Sayın', role: roles.backendDev, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Faruk', username: 'omerfaruksayin', level: 77, popScore: 10100 }),
+  new User({ displayName: 'Emre Sandal', role: roles.fullstackDev, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emre', username: 'emresandal', level: 79, popScore: 10300 }),
 
   // YAYINCILAR
-  new User({ displayName: 'Metehan Çakır', role: roles.streamerContent, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Metehan', username: 'metehancakir', level: 88, popScore: 13500, chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Bartu Başaran', role: roles.streamerGaming, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Bartu', username: 'bartubasaran', level: 86, popScore: 12800, chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Erhan', role: roles.streamer, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Erhan', username: 'erhan', level: 84, popScore: 12200, chatList: [TOPLULUK_ODASI] }),
+  new User({ displayName: 'Metehan Çakır', role: roles.streamerContent, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Metehan', username: 'metehancakir', level: 88, popScore: 13500 }),
+  new User({ displayName: 'Bartu Başaran', role: roles.streamerGaming, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Bartu', username: 'bartubasaran', level: 86, popScore: 12800 }),
+  new User({ displayName: 'Erhan', role: roles.streamer, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Erhan', username: 'erhan', level: 84, popScore: 12200 }),
 
   // E-SPOR LİSANSLI OYUNCULAR
-  new User({ displayName: 'Gabriel Eren Gümüşdal', role: roles.esports, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Gabriel', username: 'gabrieleren', level: 92, popScore: 14200, chatList: [TOPLULUK_ODASI] }),
+  new User({ displayName: 'Gabriel Eren Gümüşdal', role: roles.esports, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Gabriel', username: 'gabrieleren', level: 92, popScore: 14200 }),
 
   // Nitelikli Oyuncular
-  new User({ displayName: 'Emir K.', role: roles.esports, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=EmirK', username: 'emir', level: 92, popScore: 14200, chatList: [TOPLULUK_ODASI] }),
-  new User({ displayName: 'Tuğra', role: roles.esports, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tugra', username: 'tugra', level: 92, popScore: 14200, chatList: [TOPLULUK_ODASI] })
+  new User({ displayName: 'Emir K.', role: roles.esports, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=EmirK', username: 'emir', level: 92, popScore: 14200 }),
+  new User({ displayName: 'Tugra', role: roles.esports, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tugra', username: 'tugra', level: 92, popScore: 14200 })
 ];
 
 // Generate 100 additional mock users
@@ -184,10 +190,24 @@ for (let i = 0; i < 100; i++) {
     popScore: Math.floor(Math.random() * 5000),
     bio: `Ben ${fName}, aramizdakioyuncu.com topluluğunun bir üyesiyim! Herkese selamlar. 👋`,
     groups: [],
-    chatList: [TOPLULUK_ODASI],
     friends: []
   }));
 }
+
+/**
+ * Mock Surveys Data
+ */
+import { MOCK_SURVEYS_DATA } from './surveyData';
+export const MOCK_SURVEYS = MOCK_SURVEYS_DATA(userList);
+export const surveyList: Survey[] = MOCK_SURVEYS;
+
+/**
+ * Mock Education Data
+ */
+import { MOCK_EDUCATION_DATA } from './educationData';
+const edu = MOCK_EDUCATION_DATA(userList);
+export const MOCK_SCHOOLS = edu.schools;
+export const schoolList: School[] = MOCK_SCHOOLS;
 
 // Global Networking (Friends & Chats)
 const possibleMessages = [
@@ -216,8 +236,6 @@ const BERKAY_MYTHX_MESSAGES_DATA = [
 // STEP 1: Basic Community & Initial Groups
 // ---------------------------------------------------------
 userList.forEach((user) => {
-  // Everyone gets the community room
-  if (user.chatList.length === 0) user.chatList.push(TOPLULUK_ODASI);
 
   // Sync group memberships
   user.groups.forEach((group: Group) => {
@@ -255,70 +273,6 @@ userList.forEach((user, index) => {
   }
 });
 
-// ---------------------------------------------------------
-// STEP 3: Bidirectional Chats (Based on Friendships)
-// ---------------------------------------------------------
-const processedChatPairs = new Set<string>();
-
-userList.forEach((user, index) => {
-  user.friends.forEach((friend, fIndex) => {
-    const pairId = [user.username, friend.username].sort().join('-');
-    if (processedChatPairs.has(pairId)) return;
-    processedChatPairs.add(pairId);
-
-    const isBerkayMythX = (user.username === 'berkaytikenoglu' && friend.username === 'mythx') || 
-                         (user.username === 'mythx' && friend.username === 'berkaytikenoglu');
-
-    const messages: ChatMessage[] = isBerkayMythX 
-      ? BERKAY_MYTHX_MESSAGES_DATA.map(m => new ChatMessage({
-          id: m.id,
-          sender: userList.find(u => u.displayName.includes(m.senderName)) || new User({ displayName: m.senderName, username: m.senderName.toLowerCase() }),
-          content: m.content,
-          timestamp: m.timestamp,
-          isSystem: false
-        }))
-      : [
-        new ChatMessage({ 
-          id: `m-${pairId}-0`, 
-          sender: friend, 
-          content: possibleMessages[(index + fIndex) % possibleMessages.length], 
-          timestamp: '10:42',
-          isSystem: false
-        })
-      ];
-
-    // Add to User A's list
-    user.chatList.push(new Chat({
-      id: friend.username,
-      name: friend.displayName,
-      avatar: friend.avatar,
-      lastMessage: messages[messages.length - 1],
-      time: messages[messages.length - 1].timestamp,
-      updatedAt: Date.now() - (index * 1000 + fIndex * 100),
-      isFavorite: isBerkayMythX,
-      unreadCount: (index + fIndex) % 7 === 0 ? 1 : 0,
-      isOnline: (index + fIndex) % 3 === 0,
-      messages: messages,
-      participants: [user, friend]
-    }));
-
-    // Add to User B's list (Symmetrical)
-    friend.chatList.push(new Chat({
-      id: user.username,
-      name: user.displayName,
-      avatar: user.avatar,
-      lastMessage: messages[messages.length - 1],
-      time: messages[messages.length - 1].timestamp,
-      updatedAt: Date.now() - (index * 1000 + fIndex * 100),
-      isFavorite: isBerkayMythX,
-      unreadCount: 0,
-      isOnline: (index + fIndex) % 2 === 0,
-      messages: messages,
-      participants: [friend, user]
-    }));
-  });
-});
-
 /**
  * Seed data for posts
  */
@@ -334,9 +288,11 @@ export const postList: Post[] = [
     repostList: [userList[3], userList[10]],
     commentList: [
       { id: 'c1', author: userList[4], content: 'Büyük merakla bekliyoruz! Elinize sağlık.', createdAt: '1 saat önce' },
-      { id: 'c2', author: userList[12], content: 'Dashboard tasarımı çok temiz olmuş.', createdAt: '30 dk önce', replies: [
-        { id: 'c2-1', author: userList[0], content: 'Teşekkürler hocam! 🙏', createdAt: '10 dk önce' }
-      ]}
+      {
+        id: 'c2', author: userList[12], content: 'Dashboard tasarımı çok temiz olmuş.', createdAt: '30 dk önce', replies: [
+          { id: 'c2-1', author: userList[0], content: 'Teşekkürler hocam! 🙏', createdAt: '10 dk önce' }
+        ]
+      }
     ]
   }),
   new Post({
@@ -399,18 +355,22 @@ postList.forEach(post => {
   }
 });
 
-// Seed some notifications for Berkay
-const berkay = userList[0];
-if (berkay) {
-  berkay.notifications = [
+/**
+ * Mock Session for Auto-Login
+ * notifications and chatList live on Session, not User.
+ */
+export const MOCK_SESSION = new Session({
+  user: userList[0],
+  token: 'mock-jwt-token-berkay',
+  notifications: [
     new Notification({
       id: 'n1',
       type: 'POST_LIKE',
       category: 'SOCIAL',
       title: 'Yeni Beğeni',
       message: `${userList[5].displayName} bir gönderini beğendi.`,
-      post: postList[0], // OO Approach! Automatically handles context & postId
-      sender: userList[5].toNotificationSender(), // OO from userList!
+      post: postList[0],
+      sender: userList[5].toNotificationSender(),
       createdAt: '2024-03-29T10:00:00Z',
       isRead: false
     }),
@@ -419,7 +379,7 @@ if (berkay) {
       type: 'POST_COMMENT',
       category: 'SOCIAL',
       title: 'Yeni Yorum',
-      sender: userList[4].toNotificationSender(), // OO from userList!
+      sender: userList[4].toNotificationSender(),
       createdAt: '1 saat önce',
       isRead: false
     }),
@@ -427,8 +387,8 @@ if (berkay) {
       id: 'n3',
       type: 'GROUP_INVITE',
       category: 'GROUP',
-      group: groupList[1], // OO Approach!
-      sender: groupList[1].toNotificationSender(), // OO from groupList!
+      group: groupList[1],
+      sender: groupList[1].toNotificationSender(),
       createdAt: '3 saat önce',
       isRead: true
     }),
@@ -438,68 +398,106 @@ if (berkay) {
       category: 'SYSTEM',
       title: 'Sistem Güncellemesi',
       message: 'ARMOYU V3 Beta 1.2 sürümüne güncellendi.',
-      sender: NotificationSender.system(), // Standard System Sender
+      sender: NotificationSender.system(),
       createdAt: '1 gün önce',
       isRead: true
     })
-  ];
-}
+  ],
+  chatList: [
+    new Chat({
+      id: 'c1',
+      name: userList[1].displayName,
+      avatar: userList[1].avatar,
+      participants: [userList[0], userList[1]],
+      lastMessage: new ChatMessage({ content: 'V3 sistemleri efsane oldu!', timestamp: '10:45' }),
+      time: '10:45',
+      unreadCount: 1,
+      isOnline: true
+    }),
+    new Chat({
+      id: 'c2',
+      name: userList[14].displayName,
+      avatar: userList[14].avatar,
+      participants: [userList[0], userList[14]],
+      lastMessage: new ChatMessage({ content: 'Aksam turnuva var mi?', timestamp: 'Dun' }),
+      time: 'Dun',
+      unreadCount: 0,
+      isOnline: false
+    }),
+    new Chat({
+      id: 'c3',
+      name: 'ARMOYU Yonetim',
+      avatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=Admin',
+      isGroup: true,
+      participants: [userList[0], userList[1], userList[2]],
+      lastMessage: new ChatMessage({ content: 'Yeni istasyonlar eklendi.', timestamp: '2 gun once' }),
+      time: '2 gun once',
+      unreadCount: 5,
+      isOnline: true
+    })
+  ]
+});
+
+
+
+
+
 
 /**
  * Shop & News Mock Data (Migrated from mockData.ts)
  */
 export const MOCK_PRODUCTS = [
-  new Product({ 
-    id: '1', 
-    name: 'Premium VIP Üyelik', 
-    category: 'Üyelik', 
-    description: 'ARMOYU platformunda en üst düzey deneyim için tasarlanmıştır. Özel rozetler, öncelikli destek ve %20 daha fazla TP kazanırsınız.', 
-    price: 149.90, 
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80', 
-    isFeatured: true, 
+  new Product({
+    id: '1',
+    name: 'Premium VIP Üyelik',
+    category: 'Üyelik',
+    description: 'ARMOYU platformunda en üst düzey deneyim için tasarlanmıştır. Özel rozetler, öncelikli destek ve %20 daha fazla TP kazanırsınız.',
+    price: 149.90,
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80',
+    isFeatured: true,
     badge: 'EN POPÜLER',
     stock: 999
   }),
-  new Product({ 
-    id: '2', 
-    name: '1000 ARMOYU Coin', 
-    category: 'Oyun İçi', 
-    description: 'Market alışverişlerinde ve özel etkinliklerde kullanabileceğiniz dijital para birimidir.', 
-    price: 49.00, 
+  new Product({
+    id: '2',
+    name: '1000 ARMOYU Coin',
+    category: 'Oyun İçi',
+    description: 'Market alışverişlerinde ve özel etkinliklerde kullanabileceğiniz dijital para birimidir.',
+    price: 49.00,
     image: 'https://images.unsplash.com/photo-1621416848469-8c2033bc699b?w=800&q=80',
     stock: 9999
   }),
-  new Product({ 
-    id: '3', 
-    name: 'Elite Minecraft Paketi', 
-    category: 'Oyun İçi', 
-    description: 'Minecraft sunucularımızda kullanabileceğiniz efsanevi ekipmanlar ve özel bloklar içerir.', 
-    price: 89.90, 
+  new Product({
+    id: '3',
+    name: 'Elite Minecraft Paketi',
+    category: 'Oyun İçi',
+    description: 'Minecraft sunucularımızda kullanabileceğiniz efsanevi ekipmanlar ve özel bloklar içerir.',
+    price: 89.90,
     image: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=800&q=80',
     stock: 50
   }),
-  new Product({ 
-    id: '4', 
-    name: 'ARMOYU Kapşonlu (Siyah)', 
-    category: 'Giyim', 
-    description: 'Yüksek kaliteli pamuklu kumaş, şık ARMOYU nakışı ile günlük giyimde fark yaratın.', 
-    price: 599.00, 
+  new Product({
+    id: '4',
+    name: 'ARMOYU Kapşonlu (Siyah)',
+    category: 'Giyim',
+    description: 'Yüksek kaliteli pamuklu kumaş, şık ARMOYU nakışı ile günlük giyimde fark yaratın.',
+    price: 599.00,
     image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80',
     stock: 25
   }),
-  new Product({ 
-    id: '5', 
-    name: 'Efsanevi Kasa Anahtarı', 
-    category: 'Oyun İçi', 
-    price: 25.00, 
+  new Product({
+    id: '5',
+    name: 'Efsanevi Kasa Anahtarı',
+    category: 'Oyun İçi',
+    price: 25.00,
     image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80',
     stock: 500
   }),
-  new Product({ 
-    id: '6', 
-    name: 'Discord Özel Rolü', 
-    category: 'Üyelik', 
-    price: 19.90, 
+  new Product({
+    id: '6',
+    name: 'Discord Özel Rolü',
+    category: 'Üyelik',
+    price: 19.90,
     image: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=800&q=80',
     stock: 1000
   })
@@ -541,6 +539,8 @@ export const MOCK_NEWS = [
     category: 'Duyuru'
   })
 ];
+
+export const newsList: News[] = MOCK_NEWS;
 
 export const MOCK_NOTES = [
   new Note({
@@ -663,6 +663,60 @@ export const MOCK_GIVEAWAYS = [
   new Giveaway({ id: 'g2', title: '500 ARMOYU Coin (Oyun İçi)', prize: '500 AC', status: 'active', participants: 210, timeLeft: '10 Saat Kaldı', image: 'https://images.unsplash.com/photo-1621416848469-8c2033bc699b?w=800&q=80' }),
   new Giveaway({ id: 'g3', title: 'Steam $10 Cüzdan Kodu', prize: '$10 Cüzdan', status: 'ended', participants: 1200, timeLeft: 'Sona Erdi', image: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=800&q=80' })
 ];
+
+export const giveawayList: Giveaway[] = MOCK_GIVEAWAYS;
+/**
+ * Mock Projects Data
+ */
+export const MOCK_PROJECTS: Project[] = [
+  new Project({
+    id: 'p1',
+    name: 'ARMOYU V3 Dashboard',
+    description: 'Yeni nesil ARMOYU topluluk yönetim platformu. Glassmorphism tasarımı, gerçek zamanlı bildirimler ve optimize edilmiş kullanıcı deneyimi sunar.',
+    status: 'Geliştiriliyor',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80',
+    techStack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Socket.io'],
+    authors: [
+      { user: userList[0], role: 'Proje Lideri' },
+      { user: userList[1], role: 'UI/UX Tasarımcı' }
+    ],
+    group: groupList[1], // CODE MASTERS
+    url: 'https://v3.armoyu.com',
+    githubUrl: 'https://github.com/armoyu/v3-dashboard'
+  }),
+  new Project({
+    id: 'p2',
+    name: 'Realistic Minecraft Launcher',
+    description: 'Modlu Minecraft oyuncuları için özel olarak geliştirilmiş, performans odaklı ve otomatik güncelleme özellikli launcher.',
+    status: 'Tamamlandı',
+    image: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=1200&q=80',
+    techStack: ['Electron', 'React', 'Node.js'],
+    authors: [
+      { user: userList[14], role: 'Baş Geliştirici' }
+    ],
+    group: groupList[0], // RIHTIM
+    url: 'https://launcher.armoyu.com'
+  }),
+  new Project({
+    id: 'p3',
+    name: 'ARMOYU Mobile App',
+    description: 'Toplulukla her zaman bağlantıda kalmanızı sağlayan, Flutter ile geliştirilen modern mobil uygulama projesi.',
+    status: 'Geliştiriliyor',
+    image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80',
+    techStack: ['Flutter', 'Dart', 'Firebase'],
+    authors: [
+      { user: userList[11], role: 'Mobile Dev' },
+      { user: userList[0], role: 'API Architect' }
+    ],
+    group: groupList[1],
+    githubUrl: 'https://github.com/armoyu/mobile-app'
+  })
+];
+
+export const projectList: Project[] = MOCK_PROJECTS;
+export const sessionList: Session[] = [];
+export const armoyuProjects: Project[] = MOCK_PROJECTS;
+export const armoyuGiveaways: Giveaway[] = giveawayList;
 
 /**
  * Forum Topics Mock Data

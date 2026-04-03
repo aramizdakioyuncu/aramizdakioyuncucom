@@ -7,7 +7,7 @@ export function StatsGrid({ stats }: { stats: GlobalStats }) {
     { label: 'Aktif Kullanıcı (24s)', value: stats.activeUsers24h.toLocaleString('tr-TR'), icon: '🔥', color: 'text-orange-400' },
     { label: 'Açılan Forum', value: stats.totalForums.toLocaleString('tr-TR'), icon: '💬', color: 'text-purple-400' },
     { label: 'Oynanan Maç', value: stats.totalMatchesPlayed.toLocaleString('tr-TR'), icon: '⚔️', color: 'text-red-400' },
-    { label: 'Kurulan Klan', value: stats.totalGuilds.toLocaleString('tr-TR'), icon: '🛡️', color: 'text-yellow-400' },
+    { label: 'Kurulan Grup', value: stats.totalGuilds.toLocaleString('tr-TR'), icon: '🛡️', color: 'text-yellow-400' },
     { label: 'Düzenlenen Anket', value: stats.totalPolls.toLocaleString('tr-TR'), icon: '📊', color: 'text-emerald-400' },
   ];
 

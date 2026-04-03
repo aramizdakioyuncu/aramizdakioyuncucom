@@ -31,7 +31,7 @@ export default function GroupsPage() {
       <div className="mb-10 text-center lg:text-left">
         <h1 className="text-4xl md:text-5xl font-black text-armoyu-text mb-4 tracking-tighter">GRUP TOPLULUKLARI</h1>
         <p className="text-armoyu-text-muted text-lg font-medium max-w-2xl">
-          ARMOYU dünyasındaki klanlara, takımlara ve çalışma gruplarına katılarak oyun deneyimini zirveye taşı.
+          ARMOYU dünyasındaki gruplara, takımlara ve çalışma gruplarına katılarak oyun deneyimini zirveye taşı.
         </p>
       </div>
 

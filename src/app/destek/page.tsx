@@ -169,29 +169,7 @@ export default function SupportTicketsPage() {
         </div>
       </div>
 
-      {/* Help Banner */}
-      <div className="mt-20 p-8 md:p-12 rounded-[60px] bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl shadow-blue-500/20 overflow-hidden relative">
-         <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-         </div>
-         <div className="relative z-10 text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight uppercase italic">Hala Yardıma mı İhtiyacın Var?</h2>
-            <p className="text-white/80 font-medium text-lg max-w-xl italic">
-               Destek ekibimiz 7/24 hizmetinizde. Discord sunucumuza katılarak da hızlı destek alabilirsiniz.
-            </p>
-         </div>
-         <div className="relative z-10 flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-            <button className="px-10 py-5 bg-white text-blue-600 font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all">S.S.S. GÖRÜNTÜLE</button>
-            <button className="px-10 py-5 bg-indigo-900/40 backdrop-blur-md border border-white/20 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-indigo-900/60 transition-all">DİSCORD SUNUCUSU</button>
-         </div>
-      </div>
+
     </div>
   );
 }
