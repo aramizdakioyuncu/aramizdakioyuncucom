@@ -28,13 +28,15 @@ jobs:
           # İşlem dizinine git
           cd /app
           
-          # 1. Önce çakışan veya eski konteyneri zorla kaldır (Hata alsa bile devam etmesi için || true)
-          # Bu adım, aldığın "Conflict" hatasını engelleyecektir.
+          # 1. Önce çakışan veya eski konteyneri zorla kaldır
           docker rm -f next_aramizdakioyuncucom || true
 
-          # 2. Docker compose ile build et ve ayağa kaldır
-          # --force-recreate ekleyerek her seferinde taze bir konteyner garantiliyoruz
+          # 2. Bozuk buildkit snapshot cache'ini temizle (ana hata bu yüzden oluşuyor)
+          docker buildx prune -f || true
+          docker builder prune -f || true
+
+          # 3. Docker compose ile build et ve ayağa kaldır
           docker compose up -d --build --force-recreate next
           
-          # 3. Temizlik
+          # 4. Temizlik (dangling image'lar)
           docker image prune -f
