@@ -33,6 +33,7 @@ export class Post {
   stats: PostStats = { likes: 0, comments: 0, reposts: 0, shares: 0 };
   hashtags: string[] = [];
   isPending: boolean = false;
+  repostOf?: Post; // Original post if this is a repost
 
   // Real-time Lists
   likeList: User[] = [];
@@ -67,7 +68,8 @@ export class Post {
         ...c,
         author: User.fromJSON(c.author),
         replies: Array.isArray(c.replies) ? c.replies.map((r: any) => ({ ...r, author: User.fromJSON(r.author) })) : []
-      })) : []
+      })) : [],
+      repostOf: json.repostOf ? Post.fromJSON(json.repostOf) : undefined
     });
   }
 }

@@ -11,11 +11,25 @@ import { MOCK_PRODUCTS } from '@/lib/constants/seedData';
 export default function StorePage() {
   const { addToCart } = useCart();
   const [activeCategory, setActiveCategory] = useState('Tüm Ürünler');
+  const [searchQuery, setSearchQuery] = useState('');
   
   const filteredProducts = useMemo(() => {
-    if (activeCategory === 'Tüm Ürünler') return MOCK_PRODUCTS;
-    return MOCK_PRODUCTS.filter((p: Product) => p.category === activeCategory);
-  }, [activeCategory]);
+    let filtered = MOCK_PRODUCTS;
+
+    if (activeCategory !== 'Tüm Ürünler') {
+      filtered = filtered.filter((p: Product) => p.category === activeCategory);
+    }
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter((p: Product) => 
+        p.name.toLowerCase().includes(query) || 
+        p.category.toLowerCase().includes(query)
+      );
+    }
+
+    return filtered;
+  }, [activeCategory, searchQuery]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(price);
@@ -24,7 +38,7 @@ export default function StorePage() {
     <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
       <PageWidth width="max-w-[1440px]" />
       
-      <StoreHeader />
+      <StoreHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
       <div className="flex flex-col lg:flex-row gap-12">
          

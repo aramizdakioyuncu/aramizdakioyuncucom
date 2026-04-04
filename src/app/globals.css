@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* 
+ * TAILWIND V4 DARK MODE STRATEGY FIX
+ * Varsayılan olarak Tailwind v4 sistem temasına (@media prefers-color-scheme) bakar.
+ * Aşağıdaki kural ile Tailwind'in sadece .dark class'ı varken çalışmasını sağlıyoruz.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /*
  * GLOBAL TEMALANDIRMA DEĞİŞKENLERİ
  * Bu yapı sayesinde gelecekte yüzlerce farklı renk/tema (Kırmızı Mod, RGB Modu vb.) tanımlanabilir.
@@ -20,6 +27,7 @@
 
     --armoyu-text: #1e293b;       /* Slate 800 */
     --armoyu-text-muted: #64748b; /* Slate 500 */
+    --armoyu-panel-width: 90%;
   }
 
   .dark {
@@ -83,6 +91,7 @@
   --color-armoyu-card-border: var(--armoyu-card-border);
   --color-armoyu-text: var(--armoyu-text);
   --color-armoyu-text-muted: var(--armoyu-text-muted);
+  --spacing-armoyu-panel: var(--armoyu-panel-width);
 }
 
 /* Glassmorphism Classes */

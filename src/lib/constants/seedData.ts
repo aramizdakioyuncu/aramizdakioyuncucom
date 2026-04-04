@@ -3,6 +3,7 @@ import { Chat } from '@/models/social/Chat';
 import { ChatMessage } from '@/models/social/ChatMessage';
 import { GlobalStats } from '@/types/stats';
 import { Session } from '@/models/auth/Session';
+import { SUPER_LEAGUE_TEAMS } from './teamData';
 
 // Modular data imports
 export * from './stationData';
@@ -137,15 +138,15 @@ export const groupList: Group[] = [
  */
 export const userList: User[] = [
   // YÖNETİM EKİBİ
-  new User({ displayName: 'Berkay Tikenoğlu', role: roles.admin, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Berkay', username: 'berkaytikenoglu', verified: true, bio: 'ARMOYU Kurucusu & Yazılım Geliştirici', level: 99, xp: 5000, popScore: 15000, groups: [groupList[0], groupList[1], groupList[5]] }),
-  new User({ displayName: 'MythX', role: roles.memberMgmt, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MythX', username: 'mythx', verified: true, level: 85, xp: 3200, popScore: 12500, groups: [groupList[1], groupList[2]] }),
-  new User({ displayName: 'Barış Müftüoğlu', role: roles.discipline, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Baris', username: 'barismuftuoglu', verified: true, level: 82, xp: 2800, popScore: 11000, groups: [groupList[3]] }),
-  new User({ displayName: 'Bey Ev', role: roles.eventMgmt, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Beytullah', username: 'beyev', verified: true, level: 80, xp: 2500, popScore: 10500 }),
+  new User({ displayName: 'Berkay Tikenoğlu', role: roles.admin, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Berkay', username: 'berkaytikenoglu', verified: true, bio: 'ARMOYU Kurucusu & Yazılım Geliştirici', level: 99, xp: 5000, popScore: 15000, groups: [groupList[0], groupList[1], groupList[5]], favoriteTeam: SUPER_LEAGUE_TEAMS[1], zodiac: 'Akrep', punishmentCount: 0, distrustScore: 1.0, odp: 90 }),
+  new User({ displayName: 'MythX', role: roles.memberMgmt, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MythX', username: 'mythx', verified: true, level: 85, xp: 3200, popScore: 12500, groups: [groupList[1], groupList[2]], punishmentCount: 2, distrustScore: 1.2, odp: 75 }),
+  new User({ displayName: 'Barış Müftüoğlu', role: roles.discipline, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Baris', username: 'barismuftuoglu', verified: true, level: 82, xp: 2800, popScore: 11000, groups: [groupList[3]], punishmentCount: 5, distrustScore: 1.5, odp: 45 }),
+  new User({ displayName: 'Bey Ev', role: roles.eventMgmt, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Beytullah', username: 'beyev', verified: true, level: 80, xp: 2500, popScore: 10500, punishmentCount: 0, odp: 80 }),
 
   // SORUMLULAR
-  new User({ displayName: 'Yılmaz Akşahin', role: roles.assettoOfficial, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Yilmaz', username: 'yilmazaksahin', level: 65, popScore: 8500 }),
-  new User({ displayName: 'Orkun Atılgan', role: roles.mcOfficial, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Orkun', username: 'orkunatilgan', level: 68, popScore: 9200 }),
-  new User({ displayName: 'Furkan Sarıdiken', role: roles.responsible, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Furkan', username: 'furkansaridiken', level: 60, popScore: 7800 }),
+  new User({ displayName: 'Yılmaz Akşahin', role: roles.assettoOfficial, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Yilmaz', username: 'yilmazaksahin', level: 65, popScore: 8500, punishmentCount: 0 }),
+  new User({ displayName: 'Orkun Atılgan', role: roles.mcOfficial, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Orkun', username: 'orkunatilgan', level: 68, popScore: 9200, punishmentCount: 0 }),
+  new User({ displayName: 'Furkan Sarıdiken', role: roles.responsible, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Furkan', username: 'furkansaridiken', level: 60, popScore: 7800, punishmentCount: 9, distrustScore: 3.0 }),
   new User({ displayName: 'Burakcan TOPAL', role: roles.responsible, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Burakcan', username: 'burakcantopal', level: 58, popScore: 7500 }),
 
   // YAZILIM VE GELİŞTİRME
@@ -190,7 +191,10 @@ for (let i = 0; i < 100; i++) {
     popScore: Math.floor(Math.random() * 5000),
     bio: `Ben ${fName}, aramizdakioyuncu.com topluluğunun bir üyesiyim! Herkese selamlar. 👋`,
     groups: [],
-    friends: []
+    friends: [],
+    punishmentCount: i % 10 === 0 ? Math.floor(Math.random() * 10) : 0,
+    distrustScore: 1.0,
+    odp: Math.floor(Math.random() * 100)
   }));
 }
 
@@ -301,8 +305,8 @@ export const postList: Post[] = [
     createdAt: '5 saat önce',
     stats: { likes: 85, comments: 1, reposts: 12, shares: 20 },
     media: [{ type: 'image', url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670&auto=format&fit=crop' }],
-    likeList: [userList[0], userList[10], userList[22], userList[45]],
-    repostList: [userList[5], userList[8]],
+    likeList: [userList[0], userList[10], userList[22], userList[45], userList[12], userList[5], userList[8]],
+    repostList: [userList[5], userList[8], userList[14], userList[16]],
     commentList: [
       { id: 'p2-c1', author: userList[5], content: 'Yine efsane bir çekiliş bizi bekliyor!', createdAt: '4 saat önce' }
     ]
@@ -313,7 +317,8 @@ export const postList: Post[] = [
     content: 'Bugün harika bir day! Herkese iyi oyunlar dilerim. 🤍',
     createdAt: '1 gün önce',
     stats: { likes: 56, comments: 0, reposts: 1, shares: 2 },
-    likeList: [userList[1], userList[15], userList[18]]
+    likeList: [userList[1], userList[15], userList[18], userList[0], userList[5], userList[10]],
+    repostList: [userList[1]]
   }),
   new Post({
     id: 'p4',
@@ -321,24 +326,26 @@ export const postList: Post[] = [
     content: 'Yeni bir blog yazısı paylaştım! "Modern Web Geliştirme Trendleri" hakkındaki düşüncelerimi okuyabilirsiniz. #Blog #WebDev',
     createdAt: '3 saat önce',
     stats: { likes: 210, comments: 0, reposts: 8, shares: 12 },
-    likeList: [userList[2], userList[14], userList[50], userList[60]]
+    likeList: [userList[2], userList[14], userList[50], userList[60], userList[1], userList[5], userList[10], userList[11], userList[12]],
+    repostList: [userList[14], userList[5], userList[2]]
   }),
   new Post({
     id: 'p5',
-    author: userList[14], // Engin (Check userList index)
+    author: userList[14], // Engin
     content: 'Kod yazarken kahve olmazsa olmaz diyenler? ☕️⌨️',
     createdAt: '6 saat önce',
     stats: { likes: 45, comments: 0, reposts: 2, shares: 1 },
     media: [{ type: 'image', url: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2670&auto=format&fit=crop' }],
-    likeList: [userList[0], userList[12]]
+    likeList: [userList[0], userList[12], userList[1], userList[2], userList[3], userList[4]]
   }),
   new Post({
     id: 'p6',
-    author: userList[16], // Metehan (Check userList index)
+    author: userList[16], // Metehan
     content: 'Birazdan yayındayız! Minecraft Survival serisinin yeni bölümü geliyor. Kaçırmayın! 🔴',
     createdAt: '10 dk önce',
     stats: { likes: 890, comments: 0, reposts: 50, shares: 30 },
-    likeList: [userList[1], userList[2], userList[3], userList[10]]
+    likeList: [userList[1], userList[2], userList[3], userList[10], userList[11], userList[12], userList[14], userList[0], userList[5]],
+    repostList: [userList[0], userList[1], userList[14]]
   })
 ];
 

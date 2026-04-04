@@ -140,13 +140,42 @@ export function ChatContainer() {
   }, [on, activeContactId, user?.username]);
 
   const handleSelectContact = (id: string) => {
+    // Check if the contact is already in our list
+    let contact = localContacts.find((c: Chat) => c.id === id);
+    
+    // If NOT in our list (clicked from "New Contacts" search), we must create it!
+    if (!contact) {
+      const newUser = userList.find(u => u.username === id);
+      if (newUser) {
+        contact = new Chat({
+          id: newUser.username,
+          name: newUser.displayName,
+          avatar: newUser.avatar,
+          updatedAt: Date.now(),
+          messages: [],
+          isOnline: true, // Mock online status for now
+          unreadCount: 0
+        });
+
+        const updatedContacts = [contact, ...localContacts];
+        setLocalContacts(updatedContacts);
+
+        // Persist to session so it stays in the list!
+        if (session) {
+          const updatedChatList = [contact, ...(session.chatList || [])];
+          updateSession(new Session({ ...session, chatList: updatedChatList }));
+        }
+      }
+    }
+
     setActiveContactId(id);
-    const contact = localContacts.find((c: Chat) => c.id === id);
     setLocalMessages(contact?.messages || []);
     setIsTyping(false);
     
-    // Clear unread on select
-    setLocalContacts(prev => prev.map(c => c.id === id ? { ...c, unreadCount: 0 } as Chat : c));
+    // Clear unread on select (if it was an existing contact)
+    if (contact && contact.unreadCount > 0) {
+      setLocalContacts(prev => prev.map(c => c.id === id ? { ...c, unreadCount: 0 } as Chat : c));
+    }
   };
 
   const handleSendMessage = (text: string) => {

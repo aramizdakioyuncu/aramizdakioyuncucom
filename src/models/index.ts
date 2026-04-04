@@ -31,3 +31,6 @@ export * from './community/School';
 export * from './community/Faculty';
 export * from './community/Classroom';
 export * from './community/SchoolTeam';
+export * from './core/PlatformStats';
+export * from './core/SystemSettings';
+export * from './community/Team';

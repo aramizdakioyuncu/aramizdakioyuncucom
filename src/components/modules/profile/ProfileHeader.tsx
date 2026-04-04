@@ -55,8 +55,6 @@ export function ProfileHeader({ user, isOwnProfile }: ProfileHeaderProps) {
                 <span className="text-[10px] md:text-xs font-black text-white leading-none">#{rank}</span>
                 <span className="text-[6px] md:text-[8px] font-bold text-white/80 uppercase tracking-tighter">POP</span>
                 
-                {/* Parıltı Efekti */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/30 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
               </div>
             )}
           </div>

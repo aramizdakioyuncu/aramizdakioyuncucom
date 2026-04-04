@@ -20,17 +20,30 @@ export function Dashboard() {
   const focusedPostId = searchParams.get('post');
 
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
+  const [isBioModalOpen, setIsBioModalOpen] = useState(false);
+  const [tempBio, setTempBio] = useState(user?.bio || '');
   const [selectedMedia, setSelectedMedia] = useState<{ url: string, type: 'image' | 'video' }[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(10);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
+  const { updateUser } = useAuth();
   const [posts, setPosts] = useState<Post[]>(postList);
   const [newPostsBuffer, setNewPostsBuffer] = useState<Post[]>([]);
   const [isAtTop, setIsAtTop] = useState(true);
   const [postContent, setPostContent] = useState('');
   const [isPosting, setIsPosting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleBioSave = () => {
+    if (user) {
+      updateUser({
+        ...user,
+        bio: tempBio
+      } as any);
+      setIsBioModalOpen(false);
+    }
+  };
 
   // Gündemdeki Etiketleri Dinamik Hesapla
   const trendingTags = useMemo(() => {
@@ -128,9 +141,25 @@ export function Dashboard() {
       );
     });
 
+    const offRepostCount = on('post_repost_count', (data: any) => {
+      const { postId } = data;
+      setPosts(currentPosts => 
+        currentPosts.map(p => {
+          if (p.id === postId) {
+            return {
+              ...p,
+              stats: { ...p.stats, reposts: (p.stats.reposts || 0) + 1 }
+            };
+          }
+          return p;
+        })
+      );
+    });
+
     return () => {
       offPost();
       offLike();
+      offRepostCount();
     };
   }, [on]);
 
@@ -434,41 +463,49 @@ export function Dashboard() {
                  );
               }
 
-              return (
-                <div className="animate-in fade-in slide-in-from-top-4 duration-500">
-                   <div className="flex items-center justify-between mb-4">
-                      <span className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">Aktif Görevin</span>
-                      <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest bg-blue-500/10 px-2 py-0.5 rounded">%{totalPercentage} Tamamlandı</span>
-                   </div>
-                   
-                   <Link 
-                     href="/ayarlar/profil"
-                     className="flex items-center gap-4 p-4 bg-black/20 hover:bg-blue-600 border border-white/5 rounded-2xl group/task transition-all active:scale-95 shadow-xl"
-                   >
-                      <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-2xl group-hover/task:bg-white/20 transition-colors">
-                         {nextStep?.icon}
-                      </div>
-                      <div className="flex-1">
-                         <h4 className="text-sm font-black text-armoyu-text group-hover/task:text-white uppercase tracking-tight">{nextStep?.label}</h4>
-                         <p className="text-[10px] font-bold text-armoyu-text-muted group-hover/task:text-white/80 uppercase tracking-widest mt-1 italic">Hemen Tamamla →</p>
-                      </div>
-                   </Link>
-                </div>
-              );
+                             return (
+                                <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+                                   <div className="flex items-center justify-between mb-4">
+                                      <span className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">Aktif Görevin</span>
+                                      <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest bg-blue-500/10 px-2 py-0.5 rounded">%{totalPercentage} Tamamlandı</span>
+                                   </div>
+                                   
+                                   <button 
+                                     onClick={() => {
+                                       if (nextStep?.id === 'bio') {
+                                         setIsBioModalOpen(true);
+                                       } else if (nextStep?.id === 'groups') {
+                                         router.push('/gruplar');
+                                       } else {
+                                         router.push('/ayarlar/profil');
+                                       }
+                                     }}
+                                     className="w-full flex items-center gap-4 p-4 bg-black/20 hover:bg-blue-600 border border-white/5 rounded-2xl group/task transition-all active:scale-95 shadow-xl text-left"
+                                   >
+                                      <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-2xl group-hover/task:bg-white/20 transition-colors">
+                                         {nextStep?.icon}
+                                      </div>
+                                      <div className="flex-1">
+                                         <h4 className="text-sm font-black text-armoyu-text group-hover/task:text-white uppercase tracking-tight">{nextStep?.label}</h4>
+                                         <p className="text-[10px] font-bold text-armoyu-text-muted group-hover/task:text-white/80 uppercase tracking-widest mt-1 italic">Hemen Tamamla →</p>
+                                      </div>
+                                   </button>
+                                </div>
+                              );
             })()}
           </div>
         </div>
 
-        {/* Gruplarım Widget (Dynamic) */}
-        <div className="glass-panel p-6 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg">
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="font-extrabold text-armoyu-text text-lg">Gruplarım</h3>
-            <span className="bg-blue-500/10 text-blue-500 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">{(user?.groups?.length || 0)} Grup</span>
-          </div>
+        {/* Gruplarım Widget (Dynamic) - Sadece grupları varsa göster */}
+        {(user?.groups?.length || 0) > 0 && (
+          <div className="glass-panel p-6 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg transition-all animate-in fade-in zoom-in duration-500">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="font-extrabold text-armoyu-text text-lg">Gruplarım</h3>
+              <span className="bg-blue-500/10 text-blue-500 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">{(user?.groups?.length || 0)} Grup</span>
+            </div>
 
-          <div className="space-y-4">
-            {(user?.groups?.length || 0) > 0 ? (
-              user?.groups?.map((group: any, idx: number) => (
+            <div className="space-y-4">
+              {user?.groups?.map((group: any, idx: number) => (
                 <Link
                   key={idx}
                   href={`/gruplar/${group.name.toLowerCase().replace(/\s+/g, '-')}`}
@@ -483,17 +520,10 @@ export function Dashboard() {
                     </div>
                   </div>
                 </Link>
-              ))
-            ) : (
-              <div className="text-center py-6 px-4 bg-black/5 dark:bg-white/5 rounded-2xl border border-dashed border-armoyu-card-border">
-                <p className="text-[11px] font-bold text-armoyu-text-muted uppercase tracking-widest leading-relaxed">
-                  Henüz bir gruba<br />dahil değilsiniz
-                </p>
-                <Link href="/gruplar" className="inline-block mt-3 text-[10px] font-black text-blue-500 hover:text-blue-400 uppercase tracking-tighter">Grupları Kesfet →</Link>
-              </div>
-            )}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Gündemdekiler Widget */}
         <div className="glass-panel p-6 rounded-3xl border border-armoyu-card-border bg-armoyu-card-bg">
@@ -570,6 +600,49 @@ export function Dashboard() {
           setIsCloudModalOpen(false);
         }}
       />
+
+      {/* Bio Güncelleme Modalı */}
+      {isBioModalOpen && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6">
+           <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setIsBioModalOpen(false)} />
+           <div className="bg-armoyu-card-bg border border-armoyu-card-border rounded-[40px] w-full max-w-lg relative z-10 shadow-2xl animate-in zoom-in-95 duration-300 overflow-hidden">
+              <div className="p-8 border-b border-armoyu-card-border flex items-center justify-between bg-black/5">
+                 <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 text-2xl">
+                       ✍️
+                    </div>
+                    <div>
+                       <h3 className="text-xl font-black text-armoyu-text uppercase tracking-tight italic">Hakkında Yazısı Yaz</h3>
+                       <p className="text-xs font-medium text-armoyu-text-muted">Profilinde kendini ifade et.</p>
+                    </div>
+                 </div>
+                 <button onClick={() => setIsBioModalOpen(false)} className="p-2 text-armoyu-text-muted hover:text-armoyu-text bg-black/10 rounded-xl transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                 </button>
+              </div>
+
+              <div className="p-8 space-y-6">
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest ml-4">SENİ TANIYALIM</label>
+                    <textarea 
+                      className="w-full bg-black/10 border border-armoyu-card-border rounded-3xl px-6 py-5 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all min-h-[150px] resize-none"
+                      placeholder="Örneğin: Merhaba! Ben bir ARMOYU üyesiyim ve oyun geliştirmeyi seviyorum..."
+                      value={tempBio}
+                      onChange={(e) => setTempBio(e.target.value)}
+                      autoFocus
+                    />
+                 </div>
+
+                 <button 
+                   onClick={handleBioSave}
+                   className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-[20px] text-xs uppercase tracking-widest shadow-xl shadow-blue-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 italic"
+                 >
+                    BİYOGRAFİMİ KAYDET
+                 </button>
+              </div>
+           </div>
+        </div>
+      )}
     </div>
   );
 }

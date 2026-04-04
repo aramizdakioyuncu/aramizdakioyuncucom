@@ -1,5 +1,15 @@
 import { Role } from './Role';
 import { NotificationSender } from '../social/NotificationSender';
+import { Team } from '../community/Team';
+
+export interface CareerEvent {
+  id: string;
+  date: string;
+  title: string;
+  description: string;
+  type: 'JOIN' | 'RANK' | 'GROUP' | 'AWARD' | 'SYSTEM';
+  icon?: string;
+}
 
 /**
  * Represents a User in the aramizdakioyuncu.com platform.
@@ -18,10 +28,31 @@ export class User {
   popScore: number = 0;
   groups: any[] = []; 
   friends: User[] = [];
-  myPosts: any[] = []; // Use any[] temporarily to avoid circular dependency issues during initialization if needed, or import Post properly
+  myPosts: any[] = [];
+  career: CareerEvent[] = [];
+  zodiac?: string;
+  favoriteTeam?: any; // To avoid circular dependency if needed, or use Team
+  punishmentCount: number = 0;
+  distrustScore: number = 1.0; // Starts at 1.0 (Safe)
+  odp: number = 50; // Player Rating Score (0-100)
 
   constructor(data: Partial<User>) {
     Object.assign(this, data);
+    // Ensure numeric defaults
+    this.punishmentCount = data.punishmentCount || 0;
+    this.distrustScore = data.distrustScore || 1.0;
+    this.odp = data.odp || 50;
+  }
+
+  /**
+   * Adds a new event to the user's career timeline.
+   */
+  addCareerEvent(event: Omit<CareerEvent, 'id'>) {
+    const newEvent: CareerEvent = {
+      ...event,
+      id: `CR-${Math.random().toString(36).substr(2, 5).toUpperCase()}`
+    };
+    this.career = [newEvent, ...(this.career || [])];
   }
 
   /**

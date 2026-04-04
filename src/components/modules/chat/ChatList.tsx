@@ -3,14 +3,17 @@ import { useSocket } from '@/context/SocketContext';
 import { ChatNotes } from './ChatNotes';
 import { useState } from 'react';
 import { Chat } from '@/models/social/Chat';
+import { userList } from '@/lib/constants/seedData';
+import { useAuth } from '@/context/AuthContext';
 
 export function ChatList({ contacts, activeId, onSelect }: { contacts: Chat[], activeId: string, onSelect: (id: string) => void }) {
+  const { user } = useAuth();
   const { closeChat } = useChat();
   const { isConnected } = useSocket();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<'all' | 'unread' | 'favorites' | 'groups'>('all');
 
-  const filteredContacts = contacts
+  const filteredActiveContacts = contacts
     .filter(c => {
       // 1. Search Query Filter
       const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -25,6 +28,17 @@ export function ChatList({ contacts, activeId, onSelect }: { contacts: Chat[], a
       return true; // 'all'
     })
     .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+  // 3. New Contact Search (Only when searching)
+  const additionalContacts = searchQuery.length >= 2 
+    ? userList.filter(u => {
+        const matchesSearch = u.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           u.username.toLowerCase().includes(searchQuery.toLowerCase());
+        const isNotSelf = u.username !== user?.username;
+        const notInContacts = !contacts.some(c => c.id === u.username);
+        return matchesSearch && isNotSelf && notInContacts;
+      }).slice(0, 10)
+    : [];
 
   return (
     <div className="w-full h-full flex flex-col bg-armoyu-bg border-r border-gray-200 dark:border-white/5">
@@ -83,43 +97,80 @@ export function ChatList({ contacts, activeId, onSelect }: { contacts: Chat[], a
 
       {/* Kullanıcı Listesi */}
       <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-1.5">
-        {filteredContacts.map(c => (
-          <button 
-            key={c.id}
-            onClick={() => onSelect(c.id)}
-            className={`w-full flex items-center gap-4 p-3 rounded-2xl transition-all cursor-pointer text-left ${
-              activeId === c.id 
-                ? 'bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/20 shadow-inner' 
-                : 'hover:bg-black/5 dark:hover:bg-white/5 border border-transparent'
-            }`}
-          >
-            {/* Avatar Durumu */}
-            <div className="relative shrink-0">
-              <img src={c.avatar} alt={c.name} className="w-12 h-12 rounded-full object-cover border border-white/10 shadow-sm" />
-              {c.isOnline && (
-                <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white dark:border-[#0a0a0e] shadow-sm" />
-              )}
-            </div>
+        {/* Active Conversations Container */}
+        <div className="space-y-1.5">
+           {searchQuery.length > 0 && filteredActiveContacts.length > 0 && (
+             <div className="px-3 py-1 text-[10px] font-black text-armoyu-text-muted uppercase tracking-[0.2em] opacity-50">Sohbet Geçmişi</div>
+           )}
+           {filteredActiveContacts.map(c => (
+             <button 
+               key={c.id}
+               onClick={() => onSelect(c.id)}
+               className={`w-full flex items-center gap-4 p-3 rounded-2xl transition-all cursor-pointer text-left ${
+                 activeId === c.id 
+                   ? 'bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/20 shadow-inner' 
+                   : 'hover:bg-black/5 dark:hover:bg-white/5 border border-transparent'
+               }`}
+             >
+               {/* Avatar Durumu */}
+               <div className="relative shrink-0">
+                 <img src={c.avatar} alt={c.name} className="w-12 h-12 rounded-full object-cover border border-white/10 shadow-sm" />
+                 {c.isOnline && (
+                   <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white dark:border-[#0a0a0e] shadow-sm" />
+                 )}
+               </div>
 
-            {/* Kişi Bilgisi */}
-            <div className="flex-1 overflow-hidden">
-              <div className="flex justify-between items-center mb-1">
-                <span className="font-black text-slate-900 dark:text-gray-200 text-sm truncate max-w-[130px]">{c.name}</span>
-                <span className="text-xs text-gray-500 font-black">{c.time}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className={`text-xs truncate max-w-[120px] font-bold ${c.unreadCount ? 'text-slate-950 dark:text-white' : 'text-slate-500'}`}>
-                  {c.lastMessage?.content || 'Mesaj yok'}
-                </span>
-                {c.unreadCount && (
-                  <span className="bg-blue-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-md leading-none shadow-md">
-                    {c.unreadCount > 9 ? '9+' : c.unreadCount}
-                  </span>
-                )}
-              </div>
-            </div>
-          </button>
-        ))}
+               {/* Kişi Bilgisi */}
+               <div className="flex-1 overflow-hidden">
+                 <div className="flex justify-between items-center mb-1">
+                   <span className="font-black text-slate-900 dark:text-gray-200 text-sm truncate max-w-[130px]">{c.name}</span>
+                   <span className="text-xs text-gray-500 font-black">{c.time}</span>
+                 </div>
+                 <div className="flex justify-between items-center">
+                   <span className={`text-xs truncate max-w-[120px] font-bold ${c.unreadCount > 0 ? 'text-slate-950 dark:text-white' : 'text-slate-500'}`}>
+                     {c.lastMessage?.content || 'Mesaj yok'}
+                   </span>
+                   {c.unreadCount > 0 && (
+                     <span className="bg-blue-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-md leading-none shadow-md animate-in zoom-in duration-300">
+                       {c.unreadCount > 9 ? '9+' : c.unreadCount}
+                     </span>
+                   )}
+                 </div>
+               </div>
+             </button>
+           ))}
+        </div>
+
+        {/* New Contact Search Results */}
+        {additionalContacts.length > 0 && (
+          <div className="space-y-1.5 mt-6 animate-in fade-in slide-in-from-top-2 duration-500">
+             <div className="px-3 py-1 text-[10px] font-black text-blue-500 uppercase tracking-[0.2em]">Yeni Sohbet Başlat</div>
+             {additionalContacts.map(u => (
+               <button 
+                 key={u.username}
+                 onClick={() => onSelect(u.username)}
+                 className="w-full flex items-center gap-4 p-3 rounded-2xl hover:bg-white/5 border border-transparent transition-all group"
+               >
+                 <div className="relative shrink-0">
+                   <img src={u.avatar} alt={u.displayName} className="w-12 h-12 rounded-full object-cover border border-white/10 shadow-sm opacity-60 group-hover:opacity-100 transition-opacity" />
+                 </div>
+                 <div className="flex-1 min-w-0">
+                    <div className="font-black text-slate-900 dark:text-gray-200 text-sm truncate">{u.displayName}</div>
+                    <div className="text-[10px] font-bold text-armoyu-text-muted uppercase tracking-tighter">@{u.username}</div>
+                 </div>
+                 <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500 scale-0 group-hover:scale-100 transition-all duration-300">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                 </div>
+               </button>
+             ))}
+          </div>
+        )}
+
+        {searchQuery.length > 0 && filteredActiveContacts.length === 0 && additionalContacts.length === 0 && (
+          <div className="py-12 text-center">
+             <div className="text-armoyu-text-muted text-sm font-bold opacity-30">Sonuç bulunamadı</div>
+          </div>
+        )}
       </div>
     </div>
   );

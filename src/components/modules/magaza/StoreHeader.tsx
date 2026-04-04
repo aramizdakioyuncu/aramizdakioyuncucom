@@ -4,18 +4,19 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 
-export function StoreHeader() {
-  const [searchQuery, setSearchQuery] = useState('');
+export interface StoreHeaderProps {
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+}
+
+export function StoreHeader({ searchQuery, setSearchQuery }: StoreHeaderProps) {
   const { totalItems } = useCart();
 
   return (
     <div className="mb-12 space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="flex-1">
-          <h1 className="text-4xl md:text-7xl font-black text-armoyu-text mb-4 uppercase tracking-tighter italic leading-tight">
-            ARMOYU <span className="text-blue-600">MAĞAZA</span>
-          </h1>
-          <p className="text-armoyu-text-muted text-lg max-w-2xl font-medium leading-relaxed opacity-80">
+          <p className="text-armoyu-text-muted text-lg max-w-2xl font-medium leading-relaxed opacity-80 mb-2">
             Oyun deneyimini bir üst seviyeye taşı. Özel üyelikler ve lisanslı ürünler burada.
           </p>
         </div>

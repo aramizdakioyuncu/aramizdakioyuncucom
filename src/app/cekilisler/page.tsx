@@ -127,8 +127,8 @@ export default function GiveawaysPage() {
           </div>
         </div>
       ) : (
-        <div className="glass-panel overflow-hidden rounded-[32px] border border-armoyu-card-border shadow-2xl animate-in fade-in slide-in-from-right-8 duration-500">
-          <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-5 bg-black/5 dark:bg-white/5 border-b border-armoyu-card-border">
+        <div className="glass-panel overflow-hidden rounded-[32px] border border-armoyu-card-border shadow-xl shadow-black/[0.02] dark:shadow-2xl animate-in fade-in slide-in-from-right-8 duration-500">
+          <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-5 bg-gray-50/50 dark:bg-white/5 border-b border-armoyu-card-border">
             <div className="col-span-1 text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">RESİM</div>
             <div className="col-span-4 text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">ÖDÜL</div>
             <div className="col-span-2 text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">KATEGORİ</div>

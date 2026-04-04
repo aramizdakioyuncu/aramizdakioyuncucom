@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 
-export type SocketEvent = 'message' | 'status' | 'typing' | 'notification' | 'post' | 'post_like' | 'connect' | 'disconnect';
+export type SocketEvent = 'message' | 'status' | 'typing' | 'notification' | 'post' | 'post_like' | 'post_repost_count' | 'connect' | 'disconnect';
 
 /**
  * A production-ready WebSocket service for the aramizdakioyuncu.com platform.
@@ -42,7 +42,7 @@ class SocketService {
     });
 
     // Proxy all incoming events from the real socket to our internal event bus
-    const events: SocketEvent[] = ['message', 'typing', 'notification', 'status', 'post', 'post_like'];
+    const events: SocketEvent[] = ['message', 'typing', 'notification', 'status', 'post', 'post_like', 'post_repost_count'];
     events.forEach(event => {
       this.socket?.on(event, (data: any) => {
         console.log(`[SocketService] Incoming event: ${event}`, data);
