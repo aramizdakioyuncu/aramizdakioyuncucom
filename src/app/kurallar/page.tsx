@@ -17,7 +17,7 @@ import {
   LayoutGrid,
   List
 } from 'lucide-react';
-import { PUNISHMENT_RULES, PunishmentRule, getRestrictionLabel, RuleCategory, getCommunityComplianceLevel } from '@/lib/constants/punishmentData';
+import { PUNISHMENT_RULES, PunishmentRule, getRestrictionLabel, RuleCategory, getCommunityComplianceLevel } from '@armoyu/ui';
 
 export default function RulesPage() {
   const [searchQuery, setSearchQuery] = useState('');

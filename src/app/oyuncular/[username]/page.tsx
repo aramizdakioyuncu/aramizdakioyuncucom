@@ -2,11 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import { ProfileHeader } from '@/components/modules/profile/ProfileHeader';
-import { ProfileStats } from '@/components/modules/profile/ProfileStats';
-import { ProfileContent } from '@/components/modules/profile/ProfileContent';
-import { useAuth } from '@/context/AuthContext';
-import { userList } from '@/lib/constants/seedData';
+import { ProfileHeader, ProfileStats, ProfileContent, useAuth, userList } from '@armoyu/ui';
 
 export default function UserProfilePage() {
   const { user, isLoading, setIsLoginModalOpen } = useAuth();

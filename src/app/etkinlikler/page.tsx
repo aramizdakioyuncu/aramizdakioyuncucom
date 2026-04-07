@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { ViewModeToggle, ViewMode } from '@/components/shared/ViewModeToggle';
+import { PageWidth } from '@armoyu/ui';
+import { ViewModeToggle, ViewMode } from '@armoyu/ui';
 import Link from 'next/link';
-import { eventList, gameList } from '@/lib/constants/seedData';
+import { eventList, gameList } from '@armoyu/ui';
 import { Gamepad2, Users, Trophy, Radio, Target, Sparkles, ChevronRight, Layers } from 'lucide-react';
 
 export default function EventsPage() {
@@ -173,9 +173,9 @@ export default function EventsPage() {
                          </div>
    
                          <Link href={`/etkinlikler/${event.id}`}>
-                           <h3 className="text-xl font-black text-armoyu-text uppercase tracking-tight mb-6 group-hover:text-blue-500 transition-colors leading-tight italic truncate">
-                              {event.title}
-                           </h3>
+                            <h3 className="text-xl font-black text-armoyu-text uppercase tracking-tight mb-6 group-hover:text-blue-500 transition-colors leading-tight italic truncate">
+                               {event.title}
+                            </h3>
                          </Link>
    
                          <div className="grid grid-cols-2 gap-4 pt-6 border-t border-armoyu-card-border mt-auto">

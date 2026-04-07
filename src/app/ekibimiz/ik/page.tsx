@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { ApplicationModal } from '@/components/modules/groups/ApplicationModal';
+import { PageWidth, GroupApplicationModal as ApplicationModal } from '@armoyu/ui';
 
 const BENEFITS = [
   { icon: '🚀', title: 'Hızlı Yükselme', desc: 'Performansınıza göre yönetim ekibine ve üst rollere kısa sürede yükselebilirsiniz.' },

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
+import { PageWidth } from '@armoyu/ui';
 import Link from 'next/link';
-import { BackToStore } from '@/components/modules/magaza/BackToStore';
+import { BackToStore } from '@armoyu/ui';
 
 export default function CheckoutPage() {
   const [step, setStep] = useState(1);

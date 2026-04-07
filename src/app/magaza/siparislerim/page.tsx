@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
+import { PageWidth } from '@armoyu/ui';
 import Link from 'next/link';
-import { BackToStore } from '@/components/modules/magaza/BackToStore';
+import { BackToStore } from '@armoyu/ui';
 
 const MOCK_ORDERS = [
   { id: 'AR-2024-812', date: '31 Mart 2024', total: '₺297.48', status: 'Hazırlanıyor', color: '#3b82f6', items: ['Premium VIP Üyelik', '1000 ARMOYU Coin (x2)'] },

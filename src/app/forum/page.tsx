@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { ForumBoard } from '@/components/modules/forum/ForumBoard';
-import { NewTopicModal } from '@/components/modules/forum/NewTopicModal';
+import { PageWidth } from '@armoyu/ui';
+import { ForumBoard } from '@armoyu/ui';
+import { NewTopicModal } from '@armoyu/ui';
 import { useState } from 'react';
 
-import { MOCK_FORUM_CATEGORIES } from '@/lib/constants/seedData';
+import { MOCK_FORUM_CATEGORIES } from '@armoyu/ui';
 
 export default function ForumPage() {
   const [isNewTopicModalOpen, setIsNewTopicModalOpen] = useState(false);

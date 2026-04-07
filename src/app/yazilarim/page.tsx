@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { useAuth } from '@/context/AuthContext';
+import { PageWidth } from '@armoyu/ui';
+import { useAuth } from '@armoyu/ui';
 import { 
   PenSquare, 
   FileText, 

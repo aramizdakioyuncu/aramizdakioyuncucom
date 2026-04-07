@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { ApplicationModal } from '@/components/modules/groups/ApplicationModal';
-import { User } from '@/models';
-import { roles } from '@/lib/constants/seedData';
+import { PageWidth, GroupApplicationModal as ApplicationModal, roles } from '@armoyu/ui';
+import { User } from '@armoyu/core';
 
 interface TeamCategory {
   category: string;
@@ -86,9 +84,9 @@ export default function TeamPage() {
 
       <div className="mb-16 text-center">
         <h1 className="text-4xl md:text-6xl font-black text-armoyu-text mb-6 uppercase tracking-tighter italic">ÇALIŞMA EKİBİMİZ</h1>
-          <p className="text-armoyu-text-muted text-lg max-w-2xl mx-auto font-medium leading-relaxed">
-            ARMOYU&apos;yu daha ileriye taşımak için hiyerarşik bir düzende, profesyonelce çalışan ekibimizle tanışın.
-          </p>
+        <p className="text-armoyu-text-muted text-lg max-w-2xl mx-auto font-medium leading-relaxed">
+          ARMOYU&apos;yu daha ileriye taşımak için hiyerarşik bir düzende, profesyonelce çalışan ekibimizle tanışın.
+        </p>
       </div>
 
       <div className="space-y-20">
@@ -141,3 +139,4 @@ export default function TeamPage() {
     </div>
   );
 }
+

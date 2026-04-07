@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { MOCK_GIVEAWAYS } from '@/lib/constants/seedData';
+import { MOCK_GIVEAWAYS } from '@armoyu/ui';
 import { notFound } from 'next/navigation';
 import { Gift, Clock, Users, ShieldCheck, Trophy, Sparkles } from 'lucide-react';
 

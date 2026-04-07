@@ -1,4 +1,4 @@
-import { ChatContainer } from "@/components/modules/chat/ChatContainer";
+import { ChatContainer } from "@armoyu/ui";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

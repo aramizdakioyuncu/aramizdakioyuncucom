@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { ViewModeToggle, ViewMode} from '@/components/shared/ViewModeToggle';
-import { MOCK_MODS as MODS } from '@/lib/constants/seedData';
+import { PageWidth } from '@armoyu/ui';
+import { ViewModeToggle, ViewMode} from '@armoyu/ui';
+import { MOCK_MODS as MODS } from '@armoyu/ui';
 
 export default function ModsPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');

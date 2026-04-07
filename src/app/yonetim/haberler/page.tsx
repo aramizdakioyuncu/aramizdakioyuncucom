@@ -19,7 +19,7 @@ import {
   X,
   Play
 } from 'lucide-react';
-import { newsList } from '@/lib/constants/seedData';
+import { newsList } from '@armoyu/ui';
 import Link from 'next/link';
 
 export default function NewsManagementPage() {

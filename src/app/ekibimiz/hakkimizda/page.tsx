@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
+import { PageWidth } from '@armoyu/ui';
 
 const STATS = [
   { label: 'Aktif Üye', count: '10.000+', icon: '👥' },

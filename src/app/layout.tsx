@@ -1,16 +1,18 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { Header } from '@/components/shared/Header';
-import { Footer } from '@/components/shared/Footer';
-import { AuthProvider } from '@/context/AuthContext';
-import { CartProvider } from '@/context/CartContext';
-import { ThemeProvider } from '@/context/ThemeContext';
-import { FloatingChatButton } from '@/components/shared/FloatingChatButton';
-import { ChatProvider } from '@/context/ChatContext';
-import { SocketProvider } from '@/context/SocketContext';
-import { LayoutProvider } from '@/context/LayoutContext';
-import { MainLayoutWrapper } from '@/components/shared/MainLayoutWrapper';
+import { 
+  Header, 
+  Footer, 
+  AuthProvider, 
+  CartProvider, 
+  ThemeProvider, 
+  FloatingChatButton, 
+  ChatProvider, 
+  SocketProvider, 
+  LayoutProvider, 
+  MainLayoutWrapper 
+} from '@armoyu/ui';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -51,26 +53,28 @@ export default function RootLayout({
               <LayoutProvider>
                 <SocketProvider>
                   <ChatProvider>
-                  {/* Background Decorative Blobs */}
-                  <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none" />
-                  <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none" />
-                  
-                  <Header />
+                    <div key="layout-background-layer" className="fixed inset-0 pointer-events-none z-[-1]">
+                      <div key="bg-blob-1" className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full" />
+                      <div key="bg-blob-2" className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full" />
+                    </div>
+                    
+                    <Header key="layout-header" />
 
-                  <MainLayoutWrapper>
-                    {children}
-                  </MainLayoutWrapper>
-                  
-                  {/* Sadece giriş yapıldığında ekranda belirlenen posizyonda çıkar */}
-                  <FloatingChatButton position="bottom-right" />
+                    <MainLayoutWrapper key="layout-main">
+                      {children}
+                    </MainLayoutWrapper>
+                    
+                    <div key="layout-chat-layer" className="relative z-[80]">
+                      <FloatingChatButton position="bottom-right" />
+                    </div>
 
-                  <Footer />
-                </ChatProvider>
-              </SocketProvider>
-            </LayoutProvider>
-          </CartProvider>
-        </AuthProvider>
-      </ThemeProvider>
+                    <Footer key="layout-footer" />
+                  </ChatProvider>
+                </SocketProvider>
+              </LayoutProvider>
+            </CartProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

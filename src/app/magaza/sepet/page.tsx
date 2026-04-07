@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
+import { PageWidth } from '@armoyu/ui';
 import Link from 'next/link';
-import { BackToStore } from '@/components/modules/magaza/BackToStore';
-import { useCart } from '@/context/CartContext';
+import { BackToStore } from '@armoyu/ui';
+import { useCart } from '@armoyu/ui';
 
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, totalPrice } = useCart();

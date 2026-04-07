@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import { PageWidth } from '@armoyu/ui';
 import { useParams } from 'next/navigation';
-import { PageWidth } from '@/components/shared/PageWidth';
 import Link from 'next/link';
 
 // Mock ticket detail data

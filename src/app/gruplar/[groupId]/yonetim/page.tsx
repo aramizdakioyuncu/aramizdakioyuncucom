@@ -1,13 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
+import { PageWidth, useAuth, groupList, userList, roles, GroupHeader } from '@armoyu/ui';
 import { useParams, useRouter } from 'next/navigation';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { useAuth } from '@/context/AuthContext';
-import { groupList, userList, roles } from '@/lib/constants/seedData';
-import { Group } from '@/models/community/Group';
+import { Group } from '@armoyu/core';
 import Link from 'next/link';
-import { GroupHeader } from '@/components/modules/community/GroupHeader';
 
 export default function GroupManagementPage() {
   const params = useParams();
@@ -17,8 +14,8 @@ export default function GroupManagementPage() {
   const [activeTab, setActiveTab] = useState<'members' | 'settings' | 'roles'>('members');
 
   // Find group
-  const groupRaw = groupList.find(g => 
-    g.slug === groupId || 
+  const groupRaw = groupList.find(g =>
+    g.slug === groupId ||
     g.name.toLowerCase() === groupId ||
     g.name.toLowerCase().replace(/\s+/g, '-') === groupId
   );
@@ -60,12 +57,12 @@ export default function GroupManagementPage() {
   return (
     <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
       <PageWidth width="max-w-[1440px]" />
-      
+
       {/* Reusable Group Header */}
       <GroupHeader group={group} isMember={true} />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
-        
+
         {/* Sidebar Tabs */}
         <div className="lg:col-span-1 space-y-4">
           {[
@@ -76,11 +73,10 @@ export default function GroupManagementPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`w-full flex items-center gap-4 p-5 rounded-3xl border transition-all ${
-                activeTab === tab.id 
-                ? 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-500/20' 
-                : 'bg-armoyu-card-bg border-armoyu-card-border text-armoyu-text hover:bg-white/5'
-              }`}
+              className={`w-full flex items-center gap-4 p-5 rounded-3xl border transition-all ${activeTab === tab.id
+                  ? 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-500/20'
+                  : 'bg-armoyu-card-bg border-armoyu-card-border text-armoyu-text hover:bg-white/5'
+                }`}
             >
               <div className={`p-2 rounded-xl ${activeTab === tab.id ? 'bg-white/20' : 'bg-black/5 dark:bg-white/5'}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -99,7 +95,7 @@ export default function GroupManagementPage() {
         {/* Content Area */}
         <div className="lg:col-span-3">
           <div className="glass-panel p-10 rounded-[50px] border border-armoyu-card-border bg-armoyu-card-bg min-h-[600px]">
-            
+
             {activeTab === 'members' && (
               <div className="animate-in fade-in slide-in-from-right-4 duration-500">
                 <div className="flex items-center justify-between mb-10">
@@ -123,14 +119,14 @@ export default function GroupManagementPage() {
                         </div>
                       </div>
                       <div className="flex gap-3">
-                        <button 
+                        <button
                           onClick={() => handleRoleChange(member.username)}
                           className="px-4 py-2.5 bg-white dark:bg-zinc-900 border border-black/5 dark:border-white/5 text-[10px] font-black text-armoyu-text rounded-xl hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-all uppercase tracking-widest active:scale-95"
                         >
                           ROL DEĞİŞTİR
                         </button>
                         {isOwner && member.username !== user?.username && (
-                          <button 
+                          <button
                             onClick={() => handleKick(member.username)}
                             className="px-4 py-2.5 bg-red-500/10 border border-red-500/20 text-[10px] font-black text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all uppercase tracking-widest active:scale-95"
                           >
@@ -158,13 +154,13 @@ export default function GroupManagementPage() {
             {activeTab === 'settings' && (
               <div className="animate-in fade-in slide-in-from-right-4 duration-500">
                 <h2 className="text-xl font-black text-armoyu-text uppercase tracking-tight italic mb-10">GRUP AYARLARI</h2>
-                
+
                 <form className="space-y-8" onSubmit={handleUpdateSettings}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-3">
                       <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-[0.2em] ml-1">GRUP ADI</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         defaultValue={group.name}
                         className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl px-6 py-4 text-sm text-armoyu-text font-bold focus:outline-none focus:border-blue-500 transition-all"
                       />
@@ -182,7 +178,7 @@ export default function GroupManagementPage() {
 
                   <div className="space-y-3">
                     <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-[0.2em] ml-1">GRUP AÇIKLAMASI</label>
-                    <textarea 
+                    <textarea
                       rows={5}
                       defaultValue={group.description}
                       className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-3xl px-6 py-4 text-sm text-armoyu-text font-bold focus:outline-none focus:border-blue-500 transition-all resize-none"
@@ -191,18 +187,18 @@ export default function GroupManagementPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-4">
                     <div className="p-6 rounded-3xl bg-black/5 dark:bg-white/5 border border-black/5">
-                        <p className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest mb-4">GRUP LOGOSU</p>
-                        <div className="flex items-center gap-6">
-                           <img src={group.logo} className="w-20 h-20 rounded-2xl border border-white/10 shadow-lg object-cover" />
-                           <button type="button" className="px-5 py-2.5 bg-blue-600/10 text-blue-500 text-[10px] font-black rounded-xl hover:bg-blue-600 hover:text-white transition-all uppercase tracking-widest">DEĞİŞTİR</button>
-                        </div>
+                      <p className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest mb-4">GRUP LOGOSU</p>
+                      <div className="flex items-center gap-6">
+                        <img src={group.logo} className="w-20 h-20 rounded-2xl border border-white/10 shadow-lg object-cover" />
+                        <button type="button" className="px-5 py-2.5 bg-blue-600/10 text-blue-500 text-[10px] font-black rounded-xl hover:bg-blue-600 hover:text-white transition-all uppercase tracking-widest">DEĞİŞTİR</button>
+                      </div>
                     </div>
                     <div className="p-6 rounded-3xl bg-black/5 dark:bg-white/5 border border-black/5">
-                        <p className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest mb-4">GRUP BANNER</p>
-                        <div className="flex items-center gap-6">
-                           <img src={group.banner} className="w-20 h-12 rounded-xl border border-white/10 shadow-lg object-cover" />
-                           <button type="button" className="px-5 py-2.5 bg-blue-600/10 text-blue-500 text-[10px] font-black rounded-xl hover:bg-blue-600 hover:text-white transition-all uppercase tracking-widest">DEĞİŞTİR</button>
-                        </div>
+                      <p className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest mb-4">GRUP BANNER</p>
+                      <div className="flex items-center gap-6">
+                        <img src={group.banner} className="w-20 h-12 rounded-xl border border-white/10 shadow-lg object-cover" />
+                        <button type="button" className="px-5 py-2.5 bg-blue-600/10 text-blue-500 text-[10px] font-black rounded-xl hover:bg-blue-600 hover:text-white transition-all uppercase tracking-widest">DEĞİŞTİR</button>
+                      </div>
                     </div>
                   </div>
 

@@ -1,9 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { NewsCard } from '@/components/modules/news/NewsCard';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { MOCK_NEWS } from '@/lib/constants/seedData';
+import { NewsCard, PageWidth, MOCK_NEWS } from '@armoyu/ui';
 
 export default function NewsPage() {
   const [activeTab, setActiveTab] = useState('Hepsi');

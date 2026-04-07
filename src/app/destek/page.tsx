@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
+import { PageWidth } from '@armoyu/ui';
 import Link from 'next/link';
-import { SupportTicket } from '@/models/social/SupportTicket';
+import { SupportTicket } from '@armoyu/core';
+
 
 // Mock support tickets data using the Model class
 const MOCK_TICKETS = [
@@ -173,3 +174,4 @@ export default function SupportTicketsPage() {
     </div>
   );
 }
+

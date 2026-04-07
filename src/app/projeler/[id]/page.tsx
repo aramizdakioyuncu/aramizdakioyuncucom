@@ -1,9 +1,8 @@
 'use client';
 
 import React from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
+import { PageWidth, MOCK_PROJECTS } from '@armoyu/ui';
 import Link from 'next/link';
-import { MOCK_PROJECTS } from '@/lib/constants/seedData';
 import { notFound } from 'next/navigation';
 import { ExternalLink, ArrowLeft, Layers, User, Calendar, Activity } from 'lucide-react';
 

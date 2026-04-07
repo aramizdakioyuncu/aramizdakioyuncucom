@@ -1,10 +1,9 @@
 'use client';
 
 import React from 'react';
+import { PageWidth, MOCK_MODS } from '@armoyu/ui';
 import { useParams } from 'next/navigation';
-import { PageWidth } from '@/components/shared/PageWidth';
 import Link from 'next/link';
-import { MOCK_MODS } from '@/lib/constants/seedData';
 
 export default function ModDetailPage() {
   const { id } = useParams();

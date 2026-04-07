@@ -1,8 +1,6 @@
 'use client';
 
-import { useAuth } from "@/context/AuthContext";
-import { Introduction } from "@/components/modules/guest/Introduction";
-import { Dashboard } from "@/components/modules/auth/Dashboard";
+import { useAuth, Introduction, Dashboard } from "@armoyu/ui";
 
 export default function Home() {
   const { user, isLoading } = useAuth();

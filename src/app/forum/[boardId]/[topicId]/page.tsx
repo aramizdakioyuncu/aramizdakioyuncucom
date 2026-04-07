@@ -1,10 +1,8 @@
 'use client';
 
 import React from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { ForumPost } from '@/components/modules/forum/ForumPost';
+import { PageWidth, ForumPost, MOCK_FORUM_TOPICS } from '@armoyu/ui';
 import Link from 'next/link';
-import { MOCK_FORUM_TOPICS } from '@/lib/constants/seedData';
 
 // Mock data for posts
 const MOCK_POSTS = [

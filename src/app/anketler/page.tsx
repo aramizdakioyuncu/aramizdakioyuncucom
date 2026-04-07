@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { surveyList } from '@/lib/constants/seedData';
-import { SurveyCard } from '@/components/modules/community/SurveyCard';
+import { PageWidth } from '@armoyu/ui';
+import { surveyList } from '@armoyu/ui';
+import { SurveyCard } from '@armoyu/ui';
 import { Plus, Search, Filter, BarChart3, TrendingUp, History } from 'lucide-react';
 
 export default function SurveysPage() {

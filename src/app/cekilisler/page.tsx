@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { GiveawayCard } from '@/components/modules/giveaways/GiveawayCard';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { ViewModeToggle, ViewMode } from '@/components/shared/ViewModeToggle';
+import { GiveawayCard } from '@armoyu/ui';
+import { PageWidth } from '@armoyu/ui';
+import { ViewModeToggle, ViewMode } from '@armoyu/ui';
 
 const MOCK_GIVEAWAYS = [
   {

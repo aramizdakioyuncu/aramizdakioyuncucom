@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { SchoolCard } from '@/components/modules/community/SchoolCard';
-import { schoolList } from '@/lib/constants/seedData';
+import { PageWidth } from '@armoyu/ui';
+import { SchoolCard } from '@armoyu/ui';
+import { schoolList } from '@armoyu/ui';
 import { Search, GraduationCap, Users, Trophy, Plus, MapPin, Building2, Filter } from 'lucide-react';
 
 export default function EducationPage() {

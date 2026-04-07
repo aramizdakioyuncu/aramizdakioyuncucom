@@ -1,10 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // output: 'export' SATIRINI SİLDİK veya yorum satırı yaptık
+  transpilePackages: ['@armoyu/ui', '@armoyu/core'],
   images: {
-    unoptimized: true, // Docker içinde kütüphane çakışması olmaması için kalabilir
+    unoptimized: true,
   },
+  // Turbopack error fix: remove custom webpack if not needed, 
+  // or explicitly allow it if you must use it with --webpack.
+  // Since we want standard node_modules resolution for @armoyu/core,
+  // we don't need the alias anymore.
 };
 
 export default nextConfig;

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
+import { PageWidth } from '@armoyu/ui';
 import Link from 'next/link';
-import { MOCK_PROJECTS } from '@/lib/constants/seedData';
+import { MOCK_PROJECTS } from '@armoyu/ui';
 import { LayoutGrid, List, Search } from 'lucide-react';
 
 export default function ProjectsPage() {

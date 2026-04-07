@@ -1,11 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { TopicItem } from '@/components/modules/forum/TopicItem';
-import { NewTopicModal } from '@/components/modules/forum/NewTopicModal';
+import { PageWidth, TopicItem, NewTopicModal, MOCK_FORUM_TOPICS } from '@armoyu/ui';
 import Link from 'next/link';
-import { MOCK_FORUM_TOPICS } from '@/lib/constants/seedData';
 
 export default function BoardPage({ params }: { params: Promise<{ boardId: string }> }) {
   const resolvedParams = React.use(params);

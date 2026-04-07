@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { MediaLightbox, PostMedia } from '@/components/modules/auth/MediaLightbox';
+import { PageWidth } from '@armoyu/ui';
+import { MediaLightbox, PostMedia } from '@armoyu/ui';
 
 const MOCK_GALLERY_IMAGES: (PostMedia & { id: string; title: string; author: string; category: string })[] = [
   { id: '1', type: 'image', url: 'https://images.unsplash.com/photo-1590333748338-d43cae6a3286?q=80&w=2674&auto=format&fit=crop', title: 'Night Drive in Alps', author: 'berkaytikeno', category: 'ETS2' },

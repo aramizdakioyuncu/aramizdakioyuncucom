@@ -1,16 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
+import { PageWidth, userList, eventList, groupList, getODPStatus } from '@armoyu/ui';
 import Link from 'next/link';
-import { userList, eventList, groupList } from '@/lib/constants/seedData';
 import { notFound } from 'next/navigation';
 import { 
   ArrowLeft, Calendar, MapPin, Users, ShieldAlert, User, Crown, 
   Share2, CheckCircle2, AlertTriangle, MonitorPlay, Star, 
   Flag, X, Info, ChevronDown, Check, Search, ShieldCheck, Trophy, Zap, AlertOctagon
 } from 'lucide-react';
-import { getODPStatus } from '@/lib/utils/odpUtils';
+
 
 // Current User Simulation (Berkay)
 const currentUser = userList[0];

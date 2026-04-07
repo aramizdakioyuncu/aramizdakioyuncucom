@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { StationCard } from '@/components/modules/stations/StationCard';
-import { stationList } from '@/lib/constants/seedData';
+import { PageWidth } from '@armoyu/ui';
+import { StationCard } from '@armoyu/ui';
+import { stationList } from '@armoyu/ui';
 import { MapPin, Search, Filter, Warehouse, Coffee, Monitor, Trophy, Dumbbell } from 'lucide-react';
 
 export default function StationsPage() {

@@ -2,13 +2,8 @@
 
 import React from 'react';
 import { useParams } from 'next/navigation';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { NewsCard } from '@/components/modules/news/NewsCard';
-import { NewsComments } from '@/components/modules/news/NewsComments';
-import { userList } from '@/lib/constants/seedData';
+import { PageWidth, NewsCard, NewsComments, MOCK_NEWS, userList } from '@armoyu/ui';
 import Link from 'next/link';
-
-import { MOCK_NEWS } from '@/lib/constants/seedData';
 
 // MOCK_NEWS is now returning filled News models.
 

@@ -1,9 +1,8 @@
 'use client';
 
 import React, { use, useState } from 'react';
+import { PageWidth, schoolList } from '@armoyu/ui';
 import { notFound } from 'next/navigation';
-import { PageWidth } from '@/components/shared/PageWidth';
-import { schoolList } from '@/lib/constants/seedData';
 import { Users, GraduationCap, Trophy, LayoutDashboard, ShieldCheck, Settings, Plus, Lock, Users2, Swords, MessageSquare, ChevronRight } from 'lucide-react';
 
 interface SchoolDetailPageProps {
