@@ -1,0 +1,10 @@
+kind: pipeline
+name: armoyu-test
+
+steps:
+  - name: build-check
+    image: node:20 # Next.js ise node, Deno ise denoland/deno kullanabilirsin
+    commands:
+      - node --version
+      - npm install
+      - echo "Sistem canavar gibi çalışıyor Berkay hocam!"
