@@ -2,12 +2,12 @@ FROM node:20-alpine
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Artık 'context' direkt 'next' olduğu için dosyalara direkt erişebiliriz:
-COPY package*.json ./
+# Dosyalar 'next' içinde olduğu için yolu belirtiyoruz
+COPY next/package*.json ./
 RUN npm ci --network-timeout 600000
 
-# Tüm kodu kopyala
-COPY . .
+# Tüm 'next' klasörünü konteynerin içine kopyala
+COPY next/ .
 
 # Build al
 RUN npm run build

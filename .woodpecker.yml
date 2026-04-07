@@ -7,4 +7,4 @@ steps:
     settings:
       repo: armoyu-next-app
       dockerfile: Dockerfile
-      context: next
+      context: . # Projenin ana klasöründen başla
