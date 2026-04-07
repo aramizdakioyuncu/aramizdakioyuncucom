@@ -1,25 +1,29 @@
-kind: pipeline
-name: armoyu-next-auto
-
+# Woodpecker v3'te 'kind' ve 'name' artık 'configs' içinde tanımlanır
+# Ama çoğu zaman sadece 'steps' ile başlamak yeterlidir.
 steps:
-  # 1. BÖLÜM: FABRİKA (BUILD)
-  - name: build-image
+  # 1. BÖLÜM: ÜRETİM (BUILD)
+  build-image:
     image: plugins/docker
     settings:
       repo: "armoyu-next-app"
       dockerfile: "Dockerfile"
       context: "."
-      tags:
-        - "latest"
+      tags: ["latest"]
+    # 'bad_habit' uyarısını susturmak için: Sadece push olduğunda çalışsın
+    when:
+      event: push
+      branch: main
 
-  # 2. BÖLÜM: GÖRÜNMEZ YAYIN (DEPLOY)
-  - name: auto-deploy
+  # 2. BÖLÜM: HAYALET YAYIN (DEPLOY)
+  auto-deploy:
     image: "docker:latest"
+    # Sunucunun Docker motoruna sızıyoruz
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     commands:
       - "docker stop next_aramizdakioyuncucom || true"
       - "docker rm next_aramizdakioyuncucom || true"
       - "docker run -d --name next_aramizdakioyuncucom --restart always --network armoyu_network -l 'traefik.enable=true' -l 'traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)' -l 'traefik.http.services.armoyu_next.loadbalancer.server.port=3000' armoyu-next-app:latest"
-
-# Woodpecker v3 için global volume tanımına gerek kalmadan direkt step içinde belirttik.
+    when:
+      event: push
+      branch: main
