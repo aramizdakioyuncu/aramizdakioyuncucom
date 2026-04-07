@@ -1,16 +1,11 @@
 FROM node:20-alpine
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
-
-# Sadece çalışma anında lazım olan dosyaları alıyoruz (İmajı hafifletir)
 COPY package*.json ./
-COPY .next ./.next
-COPY public ./public
-COPY node_modules ./node_modules
-
+RUN npm ci --network-timeout 600000
+COPY . .
+RUN npm run build
 EXPOSE 3000
-ENV NODE_ENV production
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
-
-# Uygulamayı başlat
 CMD ["npm", "run", "start"]

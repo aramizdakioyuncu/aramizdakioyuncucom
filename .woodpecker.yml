@@ -1,17 +1,21 @@
 steps:
-  # 1. ADIM: NEXT.JS BUILD (Woodpecker içinde derleyelim ki hataları orada görelim)
-  next-build:
-    image: node:20-alpine
-    commands:
-      - "apk add --no-cache libc6-compat"
-      - "npm ci --network-timeout 600000"
-      - "npm run build"
+  # 1. ADIM: KODLARI SUNUCUYA FIRLAT (SCP/RSYNC)
+  # GitHub şifresiyle uğraşmadan, Woodpecker'daki kodu sunucuya kopyalarız
+  transfer-code:
+    image: appleboy/drone-scp
+    settings:
+      host: 172.18.0.1
+      username: armoyu
+      key:
+        from_secret: ssh_key
+      port: 22
+      target: /home/armoyu/aramizdakioyuncucom
+      source: ["."] # Her şeyi gönder
     when:
       event: push
       branch: next
 
-  # 2. ADIM: SUNUCUDA PAKETLE VE YAYINA AL (SSH ÜZERİNDEN)
-  # Bu adım hem Docker build yapar hem de konteynerı günceller.
+  # 2. ADIM: SUNUCUDA PİŞİR VE YAYINA AL (SSH)
   deploy-to-prod:
     image: appleboy/drone-ssh
     settings:
@@ -21,13 +25,10 @@ steps:
         from_secret: ssh_key
       port: 22
       script:
-        # 1. Proje klasörüne git (Repo nerede duruyorsa, örn: /home/armoyu/aramizdakioyuncucom)
-        - "cd /home/armoyu/aramizdakioyuncucom || (git clone https://github.com/aramizdakioyuncu/aramizdakioyuncucom.git /home/armoyu/aramizdakioyuncucom && cd /home/armoyu/aramizdakioyuncucom)"
-        # 2. En güncel kodu çek
-        - "git checkout next && git pull origin next"
-        # 3. İmajı doğrudan sunucuda (Metap) build et
+        - "cd /home/armoyu/aramizdakioyuncucom"
+        # Sunucuda imajı build et (Dockerfile artık orada!)
         - "docker build -t armoyu-next-app:latest ."
-        # 4. Eski konteynerı tazele
+        # Konteynerı tazele
         - "docker stop next_aramizdakioyuncucom || true"
         - "docker rm next_aramizdakioyuncucom || true"
         - "docker run -d --name next_aramizdakioyuncucom --restart always --network armoyu_network -l 'traefik.enable=true' -l 'traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)' -l 'traefik.http.services.armoyu_next.loadbalancer.server.port=3000' armoyu-next-app:latest"
