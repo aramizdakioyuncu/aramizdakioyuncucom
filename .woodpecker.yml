@@ -9,7 +9,7 @@ steps:
       tags: ["latest"]
     when:
       event: push
-      branch: main
+      branch: next
 
   # 2. BÖLÜM: YAYIN (DEPLOY) - SSH YÖNTEMİ
   deploy-to-prod:
@@ -27,4 +27,4 @@ steps:
         - "docker run -d --name next_aramizdakioyuncucom --restart always --network armoyu_network -l 'traefik.enable=true' -l 'traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)' -l 'traefik.http.services.armoyu_next.loadbalancer.server.port=3000' armoyu-next-app:latest"
     when:
       event: push
-      branch: main
+      branch: next
