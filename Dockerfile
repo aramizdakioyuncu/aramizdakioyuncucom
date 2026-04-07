@@ -1,26 +1,24 @@
-# ---- BUILD STAGE ----
-FROM node:20-alpine AS builder
-
+# 1. AŞAMA: İMAJIN TEMELİ
+FROM node:20-alpine
+# Next.js'in Alpine üzerinde çalışması için bu şart
+RUN apk add --no-cache libc6-compat 
 WORKDIR /app
 
+# 2. AŞAMA: PAKETLERİ İÇERİ AL (Hız için önce bunlar)
 COPY package*.json ./
-RUN npm ci
+# Woodpecker'daki build'den gelen node_modules'u kullanmak yerine temiz kurulum yapalım
+RUN npm ci --network-timeout 600000 
 
+# 3. AŞAMA: KODLARI VE BUILD ÇIKTILARINI AL
 COPY . .
+# Eğer Woodpecker içinde build aldıysak bunu atlayabiliriz ama 
+# en garantisi imajın içinde bir kez daha build almaktır:
 RUN npm run build
 
-# ---- RUN STAGE ----
-FROM node:20-alpine AS runner
-
-WORKDIR /app
-ENV NODE_ENV=production
-
-COPY --from=builder /app/package*.json ./
-RUN npm ci --only=production
-
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-
+# 4. AŞAMA: ÇALIŞTIRMA
 EXPOSE 3000
+ENV NODE_ENV production
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
 
 CMD ["npm", "run", "start"]

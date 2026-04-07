@@ -1,36 +1,29 @@
+# 1. SIR: Dosyaların kaybolmaması için ortak bir alan tanımlıyoruz
+workspace:
+  base: /app
+  path: armoyu-repo
+
 steps:
-  - name: docker-build-and-push
-    image: plugins/docker
-    settings:
-      repo: username/armoyu-next-app
-      tags: latest
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
+  # 1. ADIM: BUILD (Dosyalar burada üretilir)
+  next-build:
+    image: node:20-alpine
+    commands:
+      - "apk add --no-cache libc6-compat"
+      - "npm ci"
+      - "npm run build"
     when:
       event: push
       branch: next
 
-  - name: deploy
-    image: appleboy/drone-ssh
+  # 2. ADIM: DOCKER (Az önce üretilen dosyaları imaja paketler)
+  docker-package:
+    image: plugins/docker
     settings:
-      host: 172.18.0.1
-      username: armoyu
-      key:
-        from_secret: ssh_key
-      script:
-        - docker pull username/armoyu-next-app:latest
-        - docker stop next_aramizdakioyuncucom || true
-        - docker rm next_aramizdakioyuncucom || true
-        - docker run -d \
-          --name next_aramizdakioyuncucom \
-          --restart always \
-          --network armoyu_network \
-          -l "traefik.enable=true" \
-          -l "traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)" \
-          -l "traefik.http.services.armoyu_next.loadbalancer.server.port=3000" \
-          username/armoyu-next-app:latest
+      repo: "armoyu-next-app"
+      dockerfile: "Dockerfile"
+      context: "." # İşte burası artık 'next-build'den kalanları görüyor!
+      tags: ["latest"]
+      dry_run: true # Şimdilik yerelde kalsın, SSH ile sonra çözeriz
     when:
       event: push
       branch: next
