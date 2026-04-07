@@ -1,10 +1,26 @@
 kind: pipeline
-name: armoyu-test
+name: armoyu-full-auto
 
 steps:
-  - name: build-check
-    image: node:20 # Next.js ise node, Deno ise denoland/deno kullanabilirsin
-    commands:
-      - node --version
-      - npm install
-      - echo "Sistem canavar gibi çalışıyor Berkay hocam!"
+  # 1. ADIM: Paketi (Image) Üret
+  - name: build-image
+    image: plugins/docker
+    settings:
+      repo: armoyu-next-app
+      dockerfile: ./Dockerfile-alpine
+      context: .
+      build_args:
+        - PROJECT_PATH=./next
+
+  # 2. ADIM: Sunucuda Ateşle (Deploy)
+  - name: deploy-to-server
+    image: appleboy/drone-ssh
+    settings:
+      host: localhost # Kendi sunucun
+      username: berkay
+      key:
+        from_secret: ssh_key
+      script:
+        # Eğer konteyner yoksa oluşturur, varsa günceller:
+        - docker stop next_app || true && docker rm next_app || true
+        - docker run -d --name next_app --network armoyu_network -l "traefik.enable=true" -l "traefik.http.routers.next.rule=Host(`next.armoyu.com`)" armoyu-next-app:latest
