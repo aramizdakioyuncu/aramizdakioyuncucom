@@ -9,15 +9,16 @@ steps:
       event: push
       branch: next
 
-  docker-package:
-    image: plugins/docker
-    settings:
-      repo: "armoyu-next-app"
-      dockerfile: "Dockerfile"
-      context: "." # Her şeyi buradan al
-      tags: ["latest"]
-    when:
-      event: push
-      branch: next
+docker-package:
+  image: plugins/docker
+  settings:
+    repo: "armoyu-next-app"
+    dockerfile: "Dockerfile"
+    context: "."
+    tags: ["latest"]
+    dry_run: true # <-- BURAYI EKLEDİK: İnternete yükleme, sadece yerelde oluştur.
+  when:
+    event: push
+    branch: next
 
-  # ... deploy adımı aynı kalıyor ...
+# ... deploy adımı aynı kalıyor ...
