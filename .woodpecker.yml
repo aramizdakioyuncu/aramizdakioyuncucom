@@ -1,5 +1,6 @@
 steps:
-  # 1. ADIM: KODLARI SUNUCUYA FIRLAT (SCP)
+  # 1. ADIM: KODLARI IŞINLA (SCP)
+  # Gereksiz her şeyi dışarıda bırakıp sadece özü gönderiyoruz.
   transfer-code:
     image: appleboy/drone-scp
     settings:
@@ -10,14 +11,19 @@ steps:
       port: 22
       target: /home/armoyu/aramizdakioyuncucom
       source: ["."]
-      # BURASI KRİTİK: Sorun çıkaran .git klasörünü gönderme diyoruz
-      exclude: [".git/*", ".github/*", "node_modules/*"]
-      rm: true # Her seferinde temizleyip baştan atsın, çöp dosya kalmasın
+      exclude: [
+        ".git",
+        ".github",
+        "node_modules",
+        ".next",
+      ] # Sorun çıkaran ne varsa sildik
+      rm: true # Önce temizle sonra at, kafa karışıklığı olmasın
     when:
       event: push
       branch: next
 
-  # 2. ADIM: SUNUCUDA PİŞİR VE YAYINA AL (SSH)
+  # 2. ADIM: SUNUCUDA ATEŞLE (SSH)
+  # Bu adım Metap'ın 16 çekirdeğini sonuna kadar kullanacak.
   deploy-to-prod:
     image: appleboy/drone-ssh
     settings:
@@ -28,11 +34,12 @@ steps:
       port: 22
       script:
         - "cd /home/armoyu/aramizdakioyuncucom"
-        # Sunucunun (Metap) kendi gücüyle build alalım
+        # 1. İmajı sunucuda (Metap) sıfırdan pişiriyoruz
         - "docker build -t armoyu-next-app:latest ."
-        # Konteynerı tazeleyelim
+        # 2. Eski konteynerı temizle
         - "docker stop next_aramizdakioyuncucom || true"
         - "docker rm next_aramizdakioyuncucom || true"
+        # 3. Yeni sürümü Traefik ile buluştur
         - "docker run -d --name next_aramizdakioyuncucom --restart always --network armoyu_network -l 'traefik.enable=true' -l 'traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)' -l 'traefik.http.services.armoyu_next.loadbalancer.server.port=3000' armoyu-next-app:latest"
     when:
       event: push
