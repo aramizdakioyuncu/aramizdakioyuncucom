@@ -4,7 +4,7 @@ name: armoyu-next-build
 steps:
   - name: build-next-app
     image: plugins/docker
-    settings:
-      repo: armoyu-next-app
-      dockerfile: Dockerfile
-      context: . # Projenin ana klasöründen başla
+settings:
+  repo: armoyu-next-app
+  dockerfile: Dockerfile
+  context: . # En dış dizinden başla
