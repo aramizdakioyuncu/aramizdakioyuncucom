@@ -1,6 +1,5 @@
 steps:
-  # 1. ADIM: KODLARI SUNUCUYA FIRLAT (SCP/RSYNC)
-  # GitHub şifresiyle uğraşmadan, Woodpecker'daki kodu sunucuya kopyalarız
+  # 1. ADIM: KODLARI SUNUCUYA FIRLAT (SCP)
   transfer-code:
     image: appleboy/drone-scp
     settings:
@@ -10,7 +9,10 @@ steps:
         from_secret: ssh_key
       port: 22
       target: /home/armoyu/aramizdakioyuncucom
-      source: ["."] # Her şeyi gönder
+      source: ["."]
+      # BURASI KRİTİK: Sorun çıkaran .git klasörünü gönderme diyoruz
+      exclude: [".git/*", ".github/*", "node_modules/*"]
+      rm: true # Her seferinde temizleyip baştan atsın, çöp dosya kalmasın
     when:
       event: push
       branch: next
@@ -26,9 +28,9 @@ steps:
       port: 22
       script:
         - "cd /home/armoyu/aramizdakioyuncucom"
-        # Sunucuda imajı build et (Dockerfile artık orada!)
+        # Sunucunun (Metap) kendi gücüyle build alalım
         - "docker build -t armoyu-next-app:latest ."
-        # Konteynerı tazele
+        # Konteynerı tazeleyelim
         - "docker stop next_aramizdakioyuncucom || true"
         - "docker rm next_aramizdakioyuncucom || true"
         - "docker run -d --name next_aramizdakioyuncucom --restart always --network armoyu_network -l 'traefik.enable=true' -l 'traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)' -l 'traefik.http.services.armoyu_next.loadbalancer.server.port=3000' armoyu-next-app:latest"
