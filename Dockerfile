@@ -2,17 +2,15 @@ FROM node:20-alpine
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-ARG PROJECT_PATH
-# Bağımlılıkları kopyala
-COPY ${PROJECT_PATH}/package*.json ./
+# Artık 'context' direkt 'next' olduğu için dosyalara direkt erişebiliriz:
+COPY package*.json ./
 RUN npm ci --network-timeout 600000
 
 # Tüm kodu kopyala
-COPY ${PROJECT_PATH} .
+COPY . .
 
-# Build al (Artık [username] hatası vermeyecek çünkü statik export yapmıyoruz)
+# Build al
 RUN npm run build
 
-# Next.js varsayılan olarak 3000 portunda çalışır
 EXPOSE 3000
 CMD ["npm", "run", "start"]

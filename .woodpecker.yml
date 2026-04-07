@@ -7,6 +7,4 @@ steps:
     settings:
       repo: armoyu-next-app
       dockerfile: Dockerfile
-      context: .
-      build_args:
-        - PROJECT_PATH=./next
+      context: next
