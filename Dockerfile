@@ -1,11 +1,26 @@
-FROM node:20-alpine
-RUN apk add --no-cache libc6-compat
+# ---- BUILD STAGE ----
+FROM node:20-alpine AS builder
+
 WORKDIR /app
+
 COPY package*.json ./
-RUN npm ci --network-timeout 600000
+RUN npm ci
+
 COPY . .
 RUN npm run build
+
+# ---- RUN STAGE ----
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY --from=builder /app/package*.json ./
+RUN npm ci --only=production
+
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+
 EXPOSE 3000
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+
 CMD ["npm", "run", "start"]

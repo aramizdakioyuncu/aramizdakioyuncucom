@@ -1,37 +1,36 @@
 steps:
-  # 1. ADIM: KODLARI RSYNC İLE SUNUCUYA FIRLAT
-  # Bu yöntem .git klasörünü paketlemeye bile çalışmaz, direkt pas geçer.
-  transfer-code:
-    image: alpine:latest
-    secrets: [ssh_key]
-    commands:
-      - "apk add --no-cache rsync openssh-client"
-      - "mkdir -p ~/.ssh"
-      - "echo \"$SSH_KEY\" > ~/.ssh/id_ed25519"
-      - "chmod 600 ~/.ssh/id_ed25519"
-      # Sunucuyu güvenli listeye ekle (Hata vermemesi için)
-      - "ssh-keyscan -p 22 172.18.0.1 >> ~/.ssh/known_hosts"
-      # RSYNC GÜCÜ: .git klasörünü tamamen görmezden gel ve dosyaları gönder
-      - "rsync -avz --exclude='.git' --exclude='.github' --exclude='node_modules' -e 'ssh -p 22 -i ~/.ssh/id_ed25519' . armoyu@172.18.0.1:/home/armoyu/aramizdakioyuncucom"
+  - name: docker-build-and-push
+    image: plugins/docker
+    settings:
+      repo: username/armoyu-next-app
+      tags: latest
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
     when:
       event: push
       branch: next
 
-  # 2. ADIM: SUNUCUDA ATEŞLE (SSH)
-  deploy-to-prod:
+  - name: deploy
     image: appleboy/drone-ssh
     settings:
       host: 172.18.0.1
       username: armoyu
       key:
         from_secret: ssh_key
-      port: 22
       script:
-        - "cd /home/armoyu/aramizdakioyuncucom"
-        - "docker build -t armoyu-next-app:latest ."
-        - "docker stop next_aramizdakioyuncucom || true"
-        - "docker rm next_aramizdakioyuncucom || true"
-        - "docker run -d --name next_aramizdakioyuncucom --restart always --network armoyu_network -l 'traefik.enable=true' -l 'traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)' -l 'traefik.http.services.armoyu_next.loadbalancer.server.port=3000' armoyu-next-app:latest"
+        - docker pull username/armoyu-next-app:latest
+        - docker stop next_aramizdakioyuncucom || true
+        - docker rm next_aramizdakioyuncucom || true
+        - docker run -d \
+          --name next_aramizdakioyuncucom \
+          --restart always \
+          --network armoyu_network \
+          -l "traefik.enable=true" \
+          -l "traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)" \
+          -l "traefik.http.services.armoyu_next.loadbalancer.server.port=3000" \
+          username/armoyu-next-app:latest
     when:
       event: push
       branch: next
