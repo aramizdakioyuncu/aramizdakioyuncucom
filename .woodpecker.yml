@@ -1,5 +1,3 @@
-# Woodpecker v3'te 'kind' ve 'name' artık 'configs' içinde tanımlanır
-# Ama çoğu zaman sadece 'steps' ile başlamak yeterlidir.
 steps:
   # 1. BÖLÜM: ÜRETİM (BUILD)
   build-image:
@@ -9,21 +7,24 @@ steps:
       dockerfile: "Dockerfile"
       context: "."
       tags: ["latest"]
-    # 'bad_habit' uyarısını susturmak için: Sadece push olduğunda çalışsın
     when:
       event: push
       branch: main
 
-  # 2. BÖLÜM: HAYALET YAYIN (DEPLOY)
-  auto-deploy:
-    image: "docker:latest"
-    # Sunucunun Docker motoruna sızıyoruz
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    commands:
-      - "docker stop next_aramizdakioyuncucom || true"
-      - "docker rm next_aramizdakioyuncucom || true"
-      - "docker run -d --name next_aramizdakioyuncucom --restart always --network armoyu_network -l 'traefik.enable=true' -l 'traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)' -l 'traefik.http.services.armoyu_next.loadbalancer.server.port=3000' armoyu-next-app:latest"
+  # 2. BÖLÜM: YAYIN (DEPLOY) - SSH YÖNTEMİ
+  deploy-to-prod:
+    image: appleboy/drone-ssh
+    settings:
+      host: 172.18.0.1 # Docker gateway veya sunucu IP'n
+      username: berkay # BURAYI KONTROL ET (Ubuntu kullanıcı adın)
+      key:
+        from_secret: ssh_key
+      port: 22
+      script:
+        # Mevcut konteynerı durdur/sil ve yeni imajla ayağa kaldır
+        - "docker stop next_aramizdakioyuncucom || true"
+        - "docker rm next_aramizdakioyuncucom || true"
+        - "docker run -d --name next_aramizdakioyuncucom --restart always --network armoyu_network -l 'traefik.enable=true' -l 'traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)' -l 'traefik.http.services.armoyu_next.loadbalancer.server.port=3000' armoyu-next-app:latest"
     when:
       event: push
       branch: main
