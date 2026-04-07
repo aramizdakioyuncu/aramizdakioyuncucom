@@ -1,10 +1,38 @@
 kind: pipeline
-name: armoyu-next-build
+name: armoyu-next-invisible-deploy
 
 steps:
-  - name: build-next-app
+  # 1. BÖLÜM: ÜRETİM (BUILD)
+  - name: build-image
     image: plugins/docker
-settings:
-  repo: armoyu-next-app
-  dockerfile: Dockerfile
-  context: . # En dış dizinden başla
+    settings:
+      repo: armoyu-next-app
+      dockerfile: Dockerfile
+      context: .
+      tags: [latest]
+
+  # 2. BÖLÜM: GÜNCELLEME (DEPLOY)
+  # SSH yerine doğrudan Docker komutu çalıştıran bir eklenti kullanıyoruz
+  - name: auto-deploy
+    image: docker:latest
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      # Eski konteynerı durdur, sil ve yenisini fırlat!
+      - docker stop next_aramizdakioyuncucom || true
+      - docker rm next_aramizdakioyuncucom || true
+      - docker run -d
+        --name next_aramizdakioyuncucom
+        --restart always
+        --network armoyu_network
+        -l "traefik.enable=true"
+        -l "traefik.http.routers.armoyu_next.rule=Host(\`next.armoyu.com\`) || Host(\`next.aramizdakioyuncu.com\`)"
+        -l "traefik.http.services.armoyu_next.loadbalancer.server.port=3000"
+        armoyu-next-app:latest
+
+# Woodpecker'a bu step'in ana makineye erişmesi gerektiğini söylüyoruz
+volumes:
+  - name: docker_sock
+    host:
+      path: /var/run/docker.sock
