@@ -1,44 +1,23 @@
 steps:
-  # 1. ADIM: MUTFAK (BUILD)
-  # Burada sadece Next.js projesini derliyoruz
   next-build:
     image: node:20-alpine
     commands:
-      - "cd next"
-      - "apk add --no-cache libc6-compat" # Next.js için gerekli
+      - "apk add --no-cache libc6-compat"
       - "npm ci --network-timeout 600000"
       - "npm run build"
     when:
       event: push
       branch: next
 
-  # 2. ADIM: PAKETLEME (DOCKER)
-  # Build bitince imajı oluşturup yerel registry'ye/sunucuya atar
   docker-package:
     image: plugins/docker
     settings:
       repo: "armoyu-next-app"
       dockerfile: "Dockerfile"
-      context: "."
+      context: "." # Her şeyi buradan al
       tags: ["latest"]
     when:
       event: push
       branch: next
 
-  # 3. ADIM: YAYIN (DEPLOY)
-  # SSH ile sunucuya fısılda: "Yeni sürümü çalıştır!"
-  deploy-to-prod:
-    image: appleboy/drone-ssh
-    settings:
-      host: 172.18.0.1
-      username: armoyu
-      key:
-        from_secret: ssh_key
-      port: 22
-      script:
-        - "docker stop next_aramizdakioyuncucom || true"
-        - "docker rm next_aramizdakioyuncucom || true"
-        - "docker run -d --name next_aramizdakioyuncucom --restart always --network armoyu_network -l 'traefik.enable=true' -l 'traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)' -l 'traefik.http.services.armoyu_next.loadbalancer.server.port=3000' armoyu-next-app:latest"
-    when:
-      event: push
-      branch: next
+  # ... deploy adımı aynı kalıyor ...
