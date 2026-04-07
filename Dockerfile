@@ -1,7 +1,7 @@
 FROM node:20-alpine
 WORKDIR /app
 
-# Klasör yolu vermeden direkt kopyala
+# Sadece çalışma anında lazım olan dosyaları alıyoruz (İmajı hafifletir)
 COPY package*.json ./
 COPY .next ./.next
 COPY public ./public
@@ -12,4 +12,5 @@ ENV NODE_ENV production
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
+# Uygulamayı başlat
 CMD ["npm", "run", "start"]

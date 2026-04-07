@@ -1,4 +1,5 @@
 steps:
+  # 1. ADIM: NEXT.JS BUILD (16 CORE GÜCÜYLE)
   next-build:
     image: node:20-alpine
     commands:
@@ -9,16 +10,32 @@ steps:
       event: push
       branch: next
 
-docker-package:
-  image: plugins/docker
-  settings:
-    repo: "armoyu-next-app"
-    dockerfile: "Dockerfile"
-    context: "."
-    tags: ["latest"]
-    dry_run: true # <-- BURAYI EKLEDİK: İnternete yükleme, sadece yerelde oluştur.
-  when:
-    event: push
-    branch: next
+  # 2. ADIM: DOCKER PAKETLEME
+  docker-package:
+    image: plugins/docker
+    settings:
+      repo: "armoyu-next-app"
+      dockerfile: "Dockerfile"
+      context: "."
+      tags: ["latest"]
+      dry_run: true # Docker Hub'a yükleme yapmaz, sadece imajı hazır eder
+    when:
+      event: push
+      branch: next
 
-# ... deploy adımı aynı kalıyor ...
+  # 3. ADIM: OTOMATİK YAYIN (DEPLOY)
+  deploy-to-prod:
+    image: appleboy/drone-ssh
+    settings:
+      host: 172.18.0.1
+      username: berkay
+      key:
+        from_secret: ssh_key
+      port: 22
+      script:
+        - "docker stop next_aramizdakioyuncucom || true"
+        - "docker rm next_aramizdakioyuncucom || true"
+        - "docker run -d --name next_aramizdakioyuncucom --restart always --network armoyu_network -l 'traefik.enable=true' -l 'traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)' -l 'traefik.http.services.armoyu_next.loadbalancer.server.port=3000' armoyu-next-app:latest"
+    when:
+      event: push
+      branch: next
