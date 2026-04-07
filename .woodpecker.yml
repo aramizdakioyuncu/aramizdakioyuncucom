@@ -1,29 +1,23 @@
 steps:
-  # 1. ADIM: KODLARI IŞINLA (SCP)
-  # Gereksiz her şeyi dışarıda bırakıp sadece özü gönderiyoruz.
+  # 1. ADIM: KODLARI RSYNC İLE SUNUCUYA FIRLAT
+  # Bu yöntem .git klasörünü paketlemeye bile çalışmaz, direkt pas geçer.
   transfer-code:
-    image: appleboy/drone-scp
-    settings:
-      host: 172.18.0.1
-      username: armoyu
-      key:
-        from_secret: ssh_key
-      port: 22
-      target: /home/armoyu/aramizdakioyuncucom
-      source: ["."]
-      exclude: [
-        ".git",
-        ".github",
-        "node_modules",
-        ".next",
-      ] # Sorun çıkaran ne varsa sildik
-      rm: true # Önce temizle sonra at, kafa karışıklığı olmasın
+    image: alpine:latest
+    secrets: [ssh_key]
+    commands:
+      - "apk add --no-cache rsync openssh-client"
+      - "mkdir -p ~/.ssh"
+      - "echo \"$SSH_KEY\" > ~/.ssh/id_ed25519"
+      - "chmod 600 ~/.ssh/id_ed25519"
+      # Sunucuyu güvenli listeye ekle (Hata vermemesi için)
+      - "ssh-keyscan -p 22 172.18.0.1 >> ~/.ssh/known_hosts"
+      # RSYNC GÜCÜ: .git klasörünü tamamen görmezden gel ve dosyaları gönder
+      - "rsync -avz --exclude='.git' --exclude='.github' --exclude='node_modules' -e 'ssh -p 22 -i ~/.ssh/id_ed25519' . armoyu@172.18.0.1:/home/armoyu/aramizdakioyuncucom"
     when:
       event: push
       branch: next
 
   # 2. ADIM: SUNUCUDA ATEŞLE (SSH)
-  # Bu adım Metap'ın 16 çekirdeğini sonuna kadar kullanacak.
   deploy-to-prod:
     image: appleboy/drone-ssh
     settings:
@@ -34,12 +28,9 @@ steps:
       port: 22
       script:
         - "cd /home/armoyu/aramizdakioyuncucom"
-        # 1. İmajı sunucuda (Metap) sıfırdan pişiriyoruz
         - "docker build -t armoyu-next-app:latest ."
-        # 2. Eski konteynerı temizle
         - "docker stop next_aramizdakioyuncucom || true"
         - "docker rm next_aramizdakioyuncucom || true"
-        # 3. Yeni sürümü Traefik ile buluştur
         - "docker run -d --name next_aramizdakioyuncucom --restart always --network armoyu_network -l 'traefik.enable=true' -l 'traefik.http.routers.armoyu_next.rule=Host(`next.armoyu.com`) || Host(`next.aramizdakioyuncu.com`)' -l 'traefik.http.services.armoyu_next.loadbalancer.server.port=3000' armoyu-next-app:latest"
     when:
       event: push
