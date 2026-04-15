@@ -5,10 +5,14 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  // Turbopack error fix: remove custom webpack if not needed, 
-  // or explicitly allow it if you must use it with --webpack.
-  // Since we want standard node_modules resolution for @armoyu/core,
-  // we don't need the alias anymore.
+  // Hardcoded to avoid Node ESM module resolution errors from the UI package during Next config loading
+  allowedDevOrigins: [
+    'localhost',
+    '127.0.0.1',
+    '192.168.1.13',
+    'aramizdakioyuncu.com',
+    'api.aramizdakioyuncu.com'
+  ] as any,
 };
 
 export default nextConfig;

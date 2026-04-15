@@ -1,4 +1,4 @@
-import { ChatContainer } from "@armoyu/ui";
+import { ChatLayout } from "@armoyu/ui";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default function ChatPage() {
       </div>
 
       {/* Widget Container */}
-      <ChatContainer />
+      <ChatLayout />
       
     </div>
   );

@@ -1,5 +1,9 @@
 @import "tailwindcss";
-@source "../../node_modules/@armoyu/ui/src/**/*.{js,ts,jsx,tsx}";
+@import "@armoyu/ui/src/globals.css";
+@source "unsafe";
+@source "../../node_modules/@armoyu/ui/dist/**/*.js";
+@source "./components/**/*.{js,ts,jsx,tsx}";
+@source "./app/**/*.{js,ts,jsx,tsx}";
 /* 
  * TAILWIND V4 DARK MODE STRATEGY FIX
  * Varsayılan olarak Tailwind v4 sistem temasına (@media prefers-color-scheme) bakar.

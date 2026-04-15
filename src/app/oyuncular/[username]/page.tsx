@@ -2,10 +2,20 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import { ProfileHeader, ProfileStats, ProfileContent, useAuth, userList } from '@armoyu/ui';
+import { 
+  ProfileHeader, 
+  ProfileStats, 
+  ProfileSidebar, 
+  ProfileTabsArea, 
+  useAuth, 
+  useArmoyu, 
+  userList 
+} from '@armoyu/ui';
+import { User } from '@armoyu/core';
 
 export default function UserProfilePage() {
   const { user, isLoading, setIsLoginModalOpen } = useAuth();
+  const { api } = useArmoyu();
   const params = useParams();
   const searchParams = useSearchParams();
 
@@ -20,7 +30,6 @@ export default function UserProfilePage() {
   const urlAvatar = searchParams?.get('avatar');
   const urlBadge = searchParams?.get('badge');
 
-  // URL üzerinden gelen önbellek verileri ile Hızlı Yükleme (Optimistic UI) hissi verilir.
   const [mockUser, setMockUser] = useState({
     name: urlName || 'Yükleniyor...',
     username: username,
@@ -35,8 +44,6 @@ export default function UserProfilePage() {
   });
 
   useEffect(() => {
-    // API yükleniyor simülasyonu (Veritabanından veriyi çekme süresi)
-    // Eğer tıklanılan yerde "name" URL parametresi eksikse "Yükleniyor..." da takılı kalmasını engeller.
     const timer = setTimeout(() => {
       setMockUser(prev => ({
         ...prev,
@@ -49,19 +56,96 @@ export default function UserProfilePage() {
 
   const targetUser = userList.find(u => u.username === username);
   const isOwnProfile = user?.username === username;
+  const displayUser = isOwnProfile ? user : targetUser;
+
+  // Profil İçeriği Kontrol State'leri
+  const [activeTab, setActiveTab] = useState('Kariyer');
+  const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
+
+  // Arkadaşlık State'leri
+  const [friends, setFriends] = useState<User[]>([]);
+  const [isLoadingFriends, setIsLoadingFriends] = useState(false);
+  const [hasFetchedFriends, setHasFetchedFriends] = useState(false);
+  const [friendsPage, setFriendsPage] = useState(1);
+  const [hasMoreFriends, setHasMoreFriends] = useState(true);
+
+  const fetchFriends = async (isLoadMore = false) => {
+    if (!displayUser?.id) return;
+    
+    setIsLoadingFriends(true);
+    try {
+      const targetPage = isLoadMore ? friendsPage + 1 : 1;
+      const data = await api.users.getFriendsList({ 
+        userId: Number(displayUser.id),
+        page: targetPage,
+        limit: 20 
+      });
+      
+      if (data && Array.isArray(data)) {
+        const mappedFriends = data.map((u: any) => User.fromJSON(u));
+        if (isLoadMore) {
+          setFriends(prev => [...prev, ...mappedFriends]);
+        } else {
+          setFriends(mappedFriends);
+        }
+        setFriendsPage(targetPage);
+        setHasMoreFriends(mappedFriends.length > 0);
+        setHasFetchedFriends(true);
+      } else {
+        setHasMoreFriends(false);
+      }
+    } catch (error) {
+      console.error('[UserProfilePage] Friends fetch error:', error);
+    } finally {
+      setIsLoadingFriends(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'Arkadaşlar' && !hasFetchedFriends) {
+      fetchFriends(false);
+    }
+  }, [activeTab, hasFetchedFriends, displayUser?.id, api]);
 
   return (
     <main className="min-h-screen pt-4 pb-12 w-full animate-in fade-in duration-500">
       <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-6">
         
-        {/* Banner & Header (Kapak resmi, avatar, butonlar) */}
-        <ProfileHeader user={targetUser || mockUser} isOwnProfile={isOwnProfile} />
+        {/* Banner & Header */}
+        <ProfileHeader user={displayUser || mockUser} isOwnProfile={isOwnProfile} />
 
-        {/* Quick Stats & Level (Bar Göstergeleri) */}
-        <ProfileStats />
+        {/* Quick Stats */}
+        <ProfileStats user={(displayUser || mockUser) as any} />
 
-        {/* Sidebar & Content Layout (Sekmeler ve Akış) */}
-        <ProfileContent user={targetUser || undefined} />
+        {/* 
+           Sidebar & Content Layout (Sekmeler ve Akış)
+           Grid yapısı artık ana projede (page.tsx) olduğu için
+           tam olarak isteğe göre şekillendirilebilir.
+        */}
+        <div className="w-full flex flex-col lg:flex-row gap-6 mt-6">
+          <div className="w-full lg:w-80 shrink-0">
+             <ProfileSidebar 
+               displayUser={displayUser || null} 
+               isOwnProfile={isOwnProfile}
+               friends={friends}
+               onManageCloud={() => setIsCloudModalOpen(true)}
+               onSeeAllFriends={() => setActiveTab('Arkadaşlar')}
+             />
+          </div>
+          
+          <div className="flex-1 min-w-0">
+             <ProfileTabsArea 
+               displayUser={displayUser || null} 
+               isOwnProfile={isOwnProfile}
+               activeTab={activeTab}
+               setActiveTab={setActiveTab}
+               friends={friends}
+               hasMoreFriends={hasMoreFriends}
+               isLoadingFriends={isLoadingFriends}
+               onLoadMoreFriends={() => fetchFriends(true)}
+             />
+          </div>
+        </div>
 
       </div>
     </main>
