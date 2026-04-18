@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PageWidth, useAuth, groupList, userList, roles, GroupHeader } from '@armoyu/ui';
+import { PageWidth, useAuth, groupList, userList, roles, GroupHeader, Group } from '@armoyu/ui';
 import { useParams, useRouter } from 'next/navigation';
-import { Group } from '@armoyu/core';
 import Link from 'next/link';
 
 export default function GroupManagementPage() {
@@ -39,10 +38,14 @@ export default function GroupManagementPage() {
 
   // Management Handlers
   const handleKick = (username: string) => {
+    if (!group) return;
     if (!confirm(`${username} kullanıcısını gruptan atmak istediğinize emin misiniz?`)) return;
-    group.members = group.members.filter(m => m.username !== username);
-    group.memberCount = group.members.length;
-    setGroup(new Group(group));
+    const updatedMembers = group.members.filter(m => m.username !== username);
+    setGroup(new Group({
+      ...group,
+      members: updatedMembers,
+      memberCount: updatedMembers.length
+    }));
   };
 
   const handleRoleChange = (username: string) => {

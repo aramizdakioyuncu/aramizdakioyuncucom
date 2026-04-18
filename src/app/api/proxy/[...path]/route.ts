@@ -51,8 +51,16 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
     );
   }
 
-  // Target Armoyu API
-  const targetUrl = `https://api.armoyu.com/botlar/${apiKey}${endpoint}`;
+  // Target Armoyu API - Use environment variable or fallback to lavora
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://api.aramizdakioyuncu.com';
+  
+  // Fix double prefixing: if endpoint already starts with /botlar, don't add it again
+  let targetUrl;
+  if (endpoint.startsWith('/botlar')) {
+    targetUrl = `${apiBase}${endpoint}`;
+  } else {
+    targetUrl = `${apiBase}/botlar/${apiKey}${endpoint}`;
+  }
 
   const method = req.method;
   const headers = new Headers();
@@ -90,8 +98,7 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
 
     if (method !== 'GET' && method !== 'HEAD') {
       try {
-        const bodyClone = req.clone();
-        const arrayBuffer = await bodyClone.arrayBuffer();
+        const arrayBuffer = await req.arrayBuffer();
         if (arrayBuffer.byteLength > 0) {
           fetchOptions.body = arrayBuffer;
         }
@@ -107,7 +114,13 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
     try {
       responseData = JSON.parse(responseText);
     } catch {
-      responseData = responseText;
+      // If not JSON, wrap in a standard error format so the client can handle it
+      responseData = { 
+        durum: 0, 
+        aciklama: responseText.substring(0, 500) || "API'den boş veya geçersiz yanıt geldi.",
+        isRaw: true,
+        status: response.status
+      };
     }
 
     return NextResponse.json(responseData, { 

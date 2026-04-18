@@ -25,8 +25,8 @@ export default function StorePage() {
       if (searchQuery.trim()) {
          const query = searchQuery.toLowerCase().trim();
          filtered = filtered.filter((p: Product) =>
-            p.name.toLowerCase().includes(query) ||
-            p.category.toLowerCase().includes(query)
+            p.name?.toLowerCase().includes(query) ||
+            p.category?.toLowerCase().includes(query)
          );
       }
       return filtered;

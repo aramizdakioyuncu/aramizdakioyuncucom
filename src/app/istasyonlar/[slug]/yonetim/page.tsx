@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { PageWidth, stationList } from '@armoyu/ui';
+import { PageWidth, stationList, Station, StationProduct, StationCoupon } from '@armoyu/ui';
 import { notFound } from 'next/navigation';
 import {
    LayoutDashboard, Settings, List, Tag, Trophy,
@@ -11,7 +11,6 @@ import {
    MousePointer2, Keyboard as KeyboardIcon, Cpu, HardDrive, Laptop, Zap
 } from 'lucide-react';
 import Link from 'next/link';
-import { Station, StationProduct, WorkstationEquipment, StationCoupon } from '@armoyu/core';
 
 
 interface PageProps {
@@ -64,14 +63,16 @@ export default function StationManagementPage({ params }: PageProps) {
    };
 
    const handleDeleteProduct = (id: string) => {
+      if (!station) return;
       setStation(new Station({
          ...station,
-         products: station.products?.filter(p => p.id !== id)
+         products: (station.products || []).filter(p => p.id !== id)
       }));
    };
 
    const handleToggleCampaign = (product: StationProduct) => {
-      const updatedProducts = station.products?.map(p => {
+      if (!station) return;
+      const updatedProducts = (station.products || []).map(p => {
          if (p.id === product.id) {
             return new StationProduct({
                ...p,

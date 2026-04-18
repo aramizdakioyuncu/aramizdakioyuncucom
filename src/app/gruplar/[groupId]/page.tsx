@@ -1,97 +1,125 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { Group, User } from '@armoyu/core';
 import { 
    PageWidth, 
    GroupHeader, 
    GroupMenu, 
    GroupStatsGrid,
    GroupAboutCard,
-   GroupEventsList,
+   EventListWidget,
    GroupFeedSection,
    GroupTopMembers,
    GroupPermissions,
    useAuth, 
-   groupList,
-   postList,
-   eventList
+   useArmoyu,
+   Group,
+   NotFound
 } from '@armoyu/ui';
 import Link from 'next/link';
 
 export default function GroupDetailPage() {
-   const { user, updateUser } = useAuth();
+   const { user } = useAuth();
+   const { ui } = useArmoyu();
    const params = useParams();
-   const groupId = (params?.groupId as string)?.toLowerCase();
+   const groupIdParam = params?.groupId as string;
 
-   // Find group by id, slug, or name
-   const groupRaw = groupList.find(g =>
-      g.id?.toString() === groupId ||
-      g.slug?.toLowerCase() === groupId ||
-      g.urlName?.toLowerCase() === groupId ||
-      g.name.toLowerCase() === groupId ||
-      g.name.toLowerCase().replace(/\s+/g, '-') === groupId
+   const [group, setGroup] = useState<Group | null>(null);
+   const [isLoading, setIsLoading] = useState(true);
+   const [error, setError] = useState<string | null>(null);
+   const [localEvents, setLocalEvents] = useState<any[]>([]);
+
+   useEffect(() => {
+      async function fetchGroupDetail() {
+         if (!ui || !groupIdParam) return;
+
+         setIsLoading(true);
+         setError(null);
+
+         try {
+            const response = await ui.api.groups.getGroupDetail({
+               groupId: isNaN(Number(groupIdParam)) ? undefined : Number(groupIdParam),
+               groupName: isNaN(Number(groupIdParam)) ? groupIdParam : undefined
+            });
+
+            if (response && response.durum === 1 && response.icerik) {
+               const mappedGroup = Group.fromAPI(response.icerik);
+               setGroup(mappedGroup);
+            } else {
+               setError(response?.aciklama || 'Grup bilgileri yüklenirken bir hata oluştu.');
+            }
+         } catch (err) {
+            console.error('[GroupDetailPage] API Error:', err);
+            setError('Sunucuya bağlanırken bir hata oluştu.');
+         } finally {
+            setIsLoading(false);
+         }
+      }
+
+      fetchGroupDetail();
+   }, [ui, groupIdParam]);
+
+   const isMember = user && group ? group.members.some(m => String(m.id) === String(user.id)) : false;
+
+   const isGroupAdmin = user && group && (
+      String(group.owner?.id) === String(user.id) ||
+      group.moderators.some(m => String(m.id) === String(user.id))
    );
 
-   const initialGroup = groupRaw ? (groupRaw instanceof Group ? groupRaw : new Group(groupRaw)) : null;
-   const [group, setGroup] = useState<Group | null>(initialGroup);
-   const [localEvents, setLocalEvents] = useState<any[]>(eventList.slice(0, 3));
+   const handleJoin = async () => {
+      alert('Bu grup için katılım işlemleri şu an sadece davetiye ile yapılabilmektedir.');
+   };
 
-   // Local membership state
-   const initialIsMember = user && initialGroup ? initialGroup.members.some(m => m.username === user.username) : false;
-   const [isMember, setIsMember] = useState(initialIsMember);
+   const handleLeave = async () => {
+      if (!confirm('Gruptan ayrılmak istediğinize emin misiniz?')) return;
+      try {
+         const response = await ui.api.groups.leaveGroup(Number(group!.id));
+         if (response && response.durum === 1) {
+            // Re-fetch to update state
+            const groupRes = await ui.api.groups.getGroupDetail({ groupId: Number(group!.id) });
+            if (groupRes.icerik) setGroup(Group.fromAPI(groupRes.icerik));
+         } else {
+            alert(response?.aciklama || 'Gruptan ayrılamadınız.');
+         }
+      } catch (err) {
+         alert('İşlem sırasında bir hata oluştu.');
+      }
+   };
 
-   // Group Admin Check
-   const isGroupAdmin = user && initialGroup && (
-      initialGroup.owner?.displayName === user.displayName ||
-      initialGroup.members.some(m => m.username === user.username && (m.role?.id === 'admin' || m.role?.id === 'member_mgmt'))
-   );
-
-   if (!group) {
+   if (isLoading) {
       return (
-         <div className="flex flex-col items-center justify-center min-h-[60vh] bg-armoyu-bg text-armoyu-text">
-            <h2 className="text-2xl font-bold mb-4 uppercase italic tracking-tighter">Grup bulunamadı</h2>
-            <Link href="/gruplar" className="text-blue-500 hover:underline uppercase italic font-black text-sm tracking-widest">Gruplara geri dön</Link>
+         <div className="pb-20 animate-in fade-in duration-700">
+            <PageWidth width="max-w-[1440px]" />
+            <div className="h-64 bg-black/5 dark:bg-white/5 rounded-[40px] animate-pulse mb-12" />
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-12">
+               <div className="xl:col-span-3 space-y-12">
+                  <div className="h-40 bg-black/5 dark:bg-white/5 rounded-[40px] animate-pulse" />
+                  <div className="h-60 bg-black/5 dark:bg-white/5 rounded-[40px] animate-pulse" />
+               </div>
+               <div className="xl:col-span-1 space-y-10">
+                  <div className="h-80 bg-black/5 dark:bg-white/5 rounded-[40px] animate-pulse" />
+               </div>
+            </div>
          </div>
       );
    }
 
-   const handleJoin = () => {
-      if (!user) return alert('Lütfen önce giriş yapın!');
-      setIsMember(true);
-      group.members.push(user);
-      group.memberCount = group.members.length;
-      setGroup(new Group(group));
-      // update user groups
-      const updatedUser = new User({ ...user });
-      updatedUser.groups = [...(updatedUser.groups || []), {
-         name: group.name, shortName: group.shortName, logo: group.logo, role: 'Üye'
-      }];
-      updateUser(updatedUser);
-   };
-
-   const handleLeave = () => {
-      if (!confirm('Gruptan ayrılmak istediğinize emin misiniz?')) return;
-      setIsMember(false);
-      group.members = group.members.filter(m => m.username !== user?.username);
-      group.memberCount = group.members.length;
-      setGroup(new Group(group));
-      if (user) {
-         const updatedUser = new User({ ...user });
-         updatedUser.groups = updatedUser.groups?.filter(g => g.name !== group.name);
-         updateUser(updatedUser);
-      }
-   };
-
-   const groupPosts = postList.filter(p =>
-      p.hashtags?.some(h => h.toLowerCase() === group.name.toLowerCase() || h.toLowerCase() === group.shortName.toLowerCase())
-   );
+   if (error || !group) {
+      return (
+         <NotFound 
+            title={error || "Grup Bulunamadı"} 
+            message="Ulaşmaya çalıştığınız grup ARMOYU dünyasında mevcut olmayabilir veya henüz kurulmamış olabilir." 
+            actionHref="/gruplar"
+            actionText="Gruplara Geri Dön"
+         />
+      );
+   }
 
    const stats = {
-      members: group.memberCount || group.members.length,
-      online: Math.floor((group.memberCount || group.members.length) * 0.15),
-      posts: groupPosts.length + Math.floor(Math.random() * 50),
+      members: group.memberCount || 0,
+      online: Math.floor((group.memberCount || 0) * 0.1),
+      posts: 0, // Bu bilgi API'den ayrıca çekilebilir veya grup modeline eklenebilir
       founded: group.date?.split('.')?.[2] || '2024'
    };
 
@@ -114,17 +142,18 @@ export default function GroupDetailPage() {
             {/* Sol / Ana İçerik Bloğu (3/4) */}
             <div className="xl:col-span-3 space-y-12">
                <GroupStatsGrid stats={stats} />
-               <GroupAboutCard description={group.description} />
-               <GroupEventsList 
+               <GroupAboutCard description={group.description || ''} />
+              <EventListWidget 
                   events={localEvents} 
                   setEvents={setLocalEvents} 
-                  isGroupAdmin={!!isGroupAdmin} 
+                  isOwner={!!isGroupAdmin}
+                  title="Etkinlikler"
                />
                <GroupFeedSection 
                   group={group as any} 
                   user={user as any} 
                   isMember={isMember} 
-                  posts={groupPosts} 
+                  posts={[]} // API'den çekilecek
                />
             </div>
 

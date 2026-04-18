@@ -24,8 +24,7 @@ import {
    Edit3,
    Info
 } from 'lucide-react';
-import { userList, roles, useAuth, PUNISHMENT_RULES, PunishmentRule, getRestrictionLabel, getCommunityComplianceLevel, calculateEscalatedDuration } from '@armoyu/ui';
-import { User } from '@armoyu/core';
+import { userList, roles, useAuth, PUNISHMENT_RULES, PunishmentRule, getRestrictionLabel, getCommunityComplianceLevel, calculateEscalatedDuration, User } from '@armoyu/ui';
 
 export default function UserManagementPage() {
    const { user: currentUser } = useAuth();

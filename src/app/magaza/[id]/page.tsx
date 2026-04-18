@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { PageWidth, useCart, MOCK_PRODUCTS, BackToStore } from '@armoyu/ui';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Product } from '@armoyu/core';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -89,7 +88,7 @@ export default function ProductDetailPage() {
 
               {/* Add to Cart */}
               <button
-                onClick={() => addToCart(Product.fromJSON(product), quantity)}
+                onClick={() => addToCart(product as any, quantity)}
                 className="flex-1 min-w-[200px] bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center gap-3 px-8 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-2xl shadow-blue-500/30 active:scale-95 group"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-y-[-2px] transition-transform"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
@@ -149,7 +148,7 @@ export default function ProductDetailPage() {
       <div className="mt-32">
         <h2 className="text-2xl font-black text-armoyu-text uppercase tracking-widest mb-12 italic">SİZİN İÇİN <span className="text-blue-500">SEÇTİKLERİMİZ</span></h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {MOCK_PRODUCTS.slice(0, 4).map((p: Product) => (
+          {MOCK_PRODUCTS.slice(0, 4).map((p) => (
             <Link href={`/magaza/${p.id}`} key={p.id} className="glass-panel p-6 rounded-[32px] border border-armoyu-card-border bg-armoyu-card-bg hover:shadow-2xl hover:shadow-blue-500/10 transition-all group overflow-hidden">
               <div className="aspect-square rounded-2xl overflow-hidden mb-6 relative">
                 <img src={p.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={p.name} />

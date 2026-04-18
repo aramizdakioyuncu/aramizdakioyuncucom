@@ -9,9 +9,8 @@ import {
   ProfileTabsArea, 
   useAuth, 
   useArmoyu, 
-  userList 
+  userList
 } from '@armoyu/ui';
-import { User } from '@armoyu/core';
 
 export default function UserProfilePage() {
   const { user, isLoading, setIsLoginModalOpen } = useAuth();
@@ -63,7 +62,7 @@ export default function UserProfilePage() {
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
 
   // Arkadaşlık State'leri
-  const [friends, setFriends] = useState<User[]>([]);
+  const [friends, setFriends] = useState<any[]>([]);
   const [isLoadingFriends, setIsLoadingFriends] = useState(false);
   const [hasFetchedFriends, setHasFetchedFriends] = useState(false);
   const [friendsPage, setFriendsPage] = useState(1);
@@ -75,14 +74,13 @@ export default function UserProfilePage() {
     setIsLoadingFriends(true);
     try {
       const targetPage = isLoadMore ? friendsPage + 1 : 1;
-      const data = await api.users.getFriendsList({ 
+      const data = await api.users.getFriendsList(targetPage, { 
         userId: Number(displayUser.id),
-        page: targetPage,
         limit: 20 
       });
       
       if (data && Array.isArray(data)) {
-        const mappedFriends = data.map((u: any) => User.fromJSON(u));
+        const mappedFriends = data.map((u: any) => ({ ...u }));
         if (isLoadMore) {
           setFriends(prev => [...prev, ...mappedFriends]);
         } else {

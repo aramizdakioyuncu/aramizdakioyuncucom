@@ -1,5 +1,5 @@
-import { ChatLayout } from "@armoyu/ui";
 import type { Metadata } from 'next';
+import ChatClient from './ChatClient';
 
 export const metadata: Metadata = {
   title: 'Mesajlar | ARMOYU',
@@ -21,7 +21,7 @@ export default function ChatPage() {
       </div>
 
       {/* Widget Container */}
-      <ChatLayout />
+      <ChatClient />
       
     </div>
   );

@@ -1,4 +1,5 @@
-import type { Metadata } from 'next';
+'use client';
+
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
@@ -6,11 +7,6 @@ import { Header, Footer, FloatingChatButton, MainLayoutWrapper } from '@armoyu/u
 import { Providers } from './Providers';
 
 const inter = Inter({ subsets: ['latin'] });
-
-export const metadata: Metadata = {
-  title: 'Aramızdaki Oyuncu | Oyun Topluluğu',
-  description: 'ARMOYU Topluluk Sunucusu ve Platformu. Oyun dünyasındaki gelişmeleri takip et, arkadaşlarınla oyun oyna.',
-};
 
 export default function RootLayout({
   children,
@@ -34,15 +30,15 @@ export default function RootLayout({
             <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full" />
           </div>
-          
+
           <Header />
 
           <MainLayoutWrapper>
             {children}
           </MainLayoutWrapper>
-          
+
           <div className="relative z-[80]">
-            <FloatingChatButton position="bottom-right" />
+            <FloatingChatButton position="bottom-right" key="main-floating-chat" />
           </div>
 
           <Footer />
