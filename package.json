@@ -9,8 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@armoyu/core": "^1.1.24",
-    "@armoyu/ui": "^1.1.14",
+    "@armoyu/core": "^1.1.31",
+    "@armoyu/ui": "^1.1.21",
     "lucide-react": "^1.7.0",
     "next": "^16.1.7",
     "react": "19.2.3",

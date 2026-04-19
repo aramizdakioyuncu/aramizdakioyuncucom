@@ -9,7 +9,8 @@ import {
   ProfileTabsArea, 
   useAuth, 
   useArmoyu, 
-  userList
+  userList,
+  User 
 } from '@armoyu/ui';
 
 export default function UserProfilePage() {
@@ -53,11 +54,9 @@ export default function UserProfilePage() {
     return () => clearTimeout(timer);
   }, [username]);
 
-  const targetUser = userList.find(u => u.username === username);
-  const isOwnProfile = user?.username === username;
-  const displayUser = isOwnProfile ? user : targetUser;
-
-  // Profil İçeriği Kontrol State'leri
+  // Profil Verisi State'leri
+  const [fetchedUser, setFetchedUser] = useState<any>(null);
+  const [isFetchingUser, setIsFetchingUser] = useState(false);
   const [activeTab, setActiveTab] = useState('Kariyer');
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
 
@@ -68,19 +67,45 @@ export default function UserProfilePage() {
   const [friendsPage, setFriendsPage] = useState(1);
   const [hasMoreFriends, setHasMoreFriends] = useState(true);
 
+  // Profil Verisini API'den Çekme
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!username || username === 'oyuncu') return;
+      
+      setIsFetchingUser(true);
+      try {
+        const result = await api.users.getUserByUsername(username);
+        if (result && result.icerik) {
+          setFetchedUser(User.fromAPI(result.icerik));
+        } else {
+          console.warn('[UserProfilePage] User not found or invalid response:', result);
+        }
+      } catch (error) {
+        console.error('[UserProfilePage] Profile fetch error:', error);
+      } finally {
+        setIsFetchingUser(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, [username, api]);
+
+  const isOwnProfile = user?.username === username;
+  const displayUser = isOwnProfile ? user : (fetchedUser || userList.find(u => u.username === username));
+
   const fetchFriends = async (isLoadMore = false) => {
     if (!displayUser?.id) return;
     
     setIsLoadingFriends(true);
     try {
       const targetPage = isLoadMore ? friendsPage + 1 : 1;
-      const data = await api.users.getFriendsList(targetPage, { 
+      const d = await api.users.getFriendsList(targetPage, { 
         userId: Number(displayUser.id),
         limit: 20 
       });
       
-      if (data && Array.isArray(data)) {
-        const mappedFriends = data.map((u: any) => ({ ...u }));
+      if (d && d.icerik && Array.isArray(d.icerik)) {
+        const mappedFriends = d.icerik.map((u: any) => User.fromAPI(u));
         if (isLoadMore) {
           setFriends(prev => [...prev, ...mappedFriends]);
         } else {
