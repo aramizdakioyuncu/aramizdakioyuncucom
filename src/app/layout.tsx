@@ -3,6 +3,7 @@
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
+import 'plyr-react/plyr.css';
 import { Header, Footer, FloatingChatButton, MainLayoutWrapper } from '@armoyu/ui';
 import { Providers } from './Providers';
 
@@ -31,7 +32,40 @@ export default function RootLayout({
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full" />
           </div>
 
-          <Header />
+          <Header 
+            items={[
+              { name: 'Gruplar', href: '/gruplar' },
+              { name: 'Etkinlikler', href: '/etkinlikler' },
+              { name: 'Okullar', href: '/egitim' },
+              { name: 'Forum', href: '/forum' },
+              { name: 'Haberler', href: '/haberler' },
+              { name: 'Çekilişler', href: '/cekilisler' },
+              { name: 'Anketler', href: '/anketler' },
+              { name: 'Modlar', href: '/modlar' },
+              { name: 'Galeriler', href: '/galeriler' },
+              {
+                name: 'Ekibimiz',
+                href: '#',
+                submenu: [
+                  { name: 'Çalışma Ekibi', href: '/ekibimiz/ekip' },
+                  { name: 'İnsan Kaynakları', href: '/ekibimiz/ik' },
+                  { name: 'Topluluk Kuralları', href: '/kurallar' },
+                  { name: 'Hakkımızda', href: '/ekibimiz/hakkimizda' },
+                  { name: 'Gizlilik Politikası', href: '/ekibimiz/gizlilik' }
+                ]
+              },
+              { name: 'Mağaza', href: '/magaza' },
+            ]}
+            drawerLinks={{
+              posts: '/yazilarim',
+              comments: '/yazilarim',
+              polls: '/anketler',
+              giveaways: '/cekilisler',
+              education: '/egitim',
+              support: '/destek'
+            }}
+            profilePrefix="/oyuncular"
+          />
 
           <MainLayoutWrapper>
             {children}

@@ -35,11 +35,11 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
   const origin = req.headers.get('origin') || '*';
   const apiKey = req.headers.get('x-api-key') || '';
   const endpoint = '/' + pathSegments.join('/');
-  
+
   if (!apiKey) {
     return NextResponse.json(
-      { durum: 0, aciklama: 'X-API-KEY header missing' }, 
-      { 
+      { durum: 0, aciklama: 'X-API-KEY header missing' },
+      {
         status: 400,
         headers: {
           'Access-Control-Allow-Origin': origin,
@@ -52,8 +52,8 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
   }
 
   // Target Armoyu API - Use environment variable or fallback to lavora
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://api.aramizdakioyuncu.com';
-  
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://api.armoyu.com';
+
   // Fix double prefixing: if endpoint already starts with /botlar, don't add it again
   let targetUrl;
   if (endpoint.startsWith('/botlar')) {
@@ -64,7 +64,7 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
 
   const method = req.method;
   const headers = new Headers();
-  
+
   // Helper to safely set headers and avoid ISO-8859-1 errors
   const safeSetHeader = (key: string, value: string) => {
     if (!value) return;
@@ -78,7 +78,7 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
 
   // Whitelist of headers to forward
   const allowedHeaders = ['authorization', 'content-type', 'x-api-key', 'accept', 'user-agent', 'x-requested-with'];
-  
+
   req.headers.forEach((value, key) => {
     if (allowedHeaders.includes(key.toLowerCase())) {
       safeSetHeader(key, value);
@@ -109,21 +109,21 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
 
     const response = await fetch(targetUrl, fetchOptions);
     const responseText = await response.text();
-    
+
     let responseData;
     try {
       responseData = JSON.parse(responseText);
     } catch {
       // If not JSON, wrap in a standard error format so the client can handle it
-      responseData = { 
-        durum: 0, 
+      responseData = {
+        durum: 0,
         aciklama: responseText.substring(0, 500) || "API'den boş veya geçersiz yanıt geldi.",
         isRaw: true,
         status: response.status
       };
     }
 
-    return NextResponse.json(responseData, { 
+    return NextResponse.json(responseData, {
       status: response.status,
       headers: {
         'Access-Control-Allow-Origin': origin,
@@ -134,12 +134,12 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
     });
   } catch (error: any) {
     console.error(`[Proxy Error] ${method} ${targetUrl}:`, error);
-    return NextResponse.json({ 
-      durum: 0, 
+    return NextResponse.json({
+      durum: 0,
       aciklama: `Proxy Error: ${error.message}`,
       targetUrl,
-      error: error.stack 
-    }, { 
+      error: error.stack
+    }, {
       status: 500,
       headers: {
         'Access-Control-Allow-Origin': origin,

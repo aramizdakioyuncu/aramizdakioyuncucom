@@ -165,6 +165,7 @@ export default function UserProfilePage() {
                friends={friends}
                hasMoreFriends={hasMoreFriends}
                isLoadingFriends={isLoadingFriends}
+               hasFetchedFriends={hasFetchedFriends}
                onLoadMoreFriends={() => fetchFriends(true)}
              />
           </div>

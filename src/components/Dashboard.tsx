@@ -11,9 +11,10 @@ import {
   SocialFeed,
   PostComposer,
   CloudModal,
+  TrendingWidget,
+  NewMembersWidget,
   type SocialFeedRef
 } from '@armoyu/ui';
-import { ArmoyuApi, Post } from '@armoyu/core';
 import {
   RefreshCcw,
   Wifi,
@@ -55,9 +56,9 @@ export function Dashboard() {
 
   return (
     <div className="w-full flex-1 flex flex-col lg:flex-row gap-6 pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700 items-start">
-      <CloudModal 
-        isOpen={isCloudOpen} 
-        onClose={() => setIsCloudOpen(false)} 
+      <CloudModal
+        isOpen={isCloudOpen}
+        onClose={() => setIsCloudOpen(false)}
         onSelectMedia={(media) => {
           setAttachments(prev => [...prev, media]);
           setIsCloudOpen(false);
@@ -71,43 +72,10 @@ export function Dashboard() {
 
       {/* Ana Akış */}
       <div className="flex-1 w-full max-w-2xl mx-auto space-y-6">
-
-        {/* API CONFIG PANEL - Discreet for Prod/Staging */}
-        <div className="bg-black/10 dark:bg-white/5 p-4 rounded-3xl border border-white/5 flex flex-col md:flex-row items-center gap-4">
-          <div className="flex items-center gap-3 shrink-0">
-            <div className={`p-2 rounded-xl ${currentToken ? 'bg-emerald-500/20 text-emerald-500' : 'bg-amber-500/20 text-amber-500'}`}>
-              {currentToken ? <Wifi size={18} /> : <WifiOff size={18} />}
-            </div>
-            <div>
-              <h4 className="text-[10px] font-black uppercase tracking-widest text-armoyu-text">
-                {isLoading ? 'Bağlanıyor...' : (currentToken ? 'Canlı Bağlantı' : 'Sınırlı Erişim')}
-              </h4>
-              <p className="text-[9px] font-bold text-armoyu-text-muted uppercase tracking-tighter">
-                {isLoading ? 'Kontrol Ediliyor' : (currentToken ? 'Oturum Aktif' : 'Giriş Gerekli')}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex-1 flex gap-2 w-full">
-            <div className="flex-1 bg-black/20 border border-white/5 rounded-xl px-4 py-2 flex items-center gap-2">
-              <Lock size={12} className="text-armoyu-text-muted" />
-              <span className="text-[9px] font-mono text-armoyu-text-muted truncate max-w-[150px]">
-                {currentToken ? `TOKEN: ${currentToken.substring(0, 10)}...` : 'Giriş yaparak tüm özellikleri açın.'}
-              </span>
-            </div>
-            <button
-              onClick={() => feedRef.current?.refresh()}
-              className="p-2 bg-blue-600/80 hover:bg-blue-600 rounded-xl text-white transition-all shadow-lg shadow-blue-600/10"
-            >
-              <RefreshCcw size={14} />
-            </button>
-          </div>
-        </div>
-
         <Stories />
 
-        <PostComposer 
-          user={user} 
+        <PostComposer
+          user={user}
           onPost={handleCreatePost}
           isPosting={isPosting}
           onOpenCloudGallery={() => setIsCloudOpen(true)}
@@ -116,7 +84,7 @@ export function Dashboard() {
         />
 
         {/* POST AKIŞI */}
-        <SocialFeed 
+        <SocialFeed
           ref={feedRef}
           emptyMessage="Henüz bir paylaşım bulunamadı. Takip ettiğin kişilerin paylaşımları burada görünür."
         />
@@ -147,11 +115,14 @@ export function Dashboard() {
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-blue-500" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted">Kütüphane: @armoyu/v3 v1.0.2</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-armoyu-text-muted">Kütüphane: @armoyu/ui v{require('@armoyu/ui/package.json').version}</span>
               </div>
             </div>
           </div>
         </div>
+
+        <TrendingWidget />
+        <NewMembersWidget />
       </aside>
 
     </div>
