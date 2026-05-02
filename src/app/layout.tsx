@@ -44,13 +44,13 @@ export default function RootLayout({
               { name: 'Modlar', href: '/modlar' },
               { name: 'Galeriler', href: '/galeriler' },
               {
-                name: 'Ekibimiz',
+                name: 'Kurumsal',
                 href: '#',
                 submenu: [
-                  { name: 'Çalışma Ekibi', href: '/ekibimiz/ekip' },
-                  { name: 'İnsan Kaynakları', href: '/ekibimiz/ik' },
-                  { name: 'Topluluk Kuralları', href: '/kurallar' },
                   { name: 'Hakkımızda', href: '/ekibimiz/hakkimizda' },
+                  { name: 'Çalışma Ekibi', href: '/ekibimiz/ekip' },
+                  { name: 'Topluluk Kuralları', href: '/kurallar' },
+                  { name: 'İnsan Kaynakları', href: '/ekibimiz/ik' },
                   { name: 'Gizlilik Politikası', href: '/ekibimiz/gizlilik' }
                 ]
               },
