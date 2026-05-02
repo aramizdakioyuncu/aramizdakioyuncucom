@@ -13,6 +13,7 @@ import {
   CloudModal,
   TrendingWidget,
   NewMembersWidget,
+  PageWidth,
   type SocialFeedRef
 } from '@armoyu/ui';
 import {
@@ -55,7 +56,8 @@ export function Dashboard() {
   };
 
   return (
-    <div className="w-full flex-1 flex flex-col lg:flex-row gap-6 pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700 items-start">
+    <div className="w-full flex-1 flex flex-col lg:flex-row gap-6 pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700 items-start justify-center">
+      <PageWidth width="max-w-[1280px]" />
       <CloudModal
         isOpen={isCloudOpen}
         onClose={() => setIsCloudOpen(false)}
@@ -64,14 +66,14 @@ export function Dashboard() {
           setIsCloudOpen(false);
         }}
       />
-
+      
       {/* Sol Yan Panel */}
-      <aside className="hidden lg:block w-72 h-fit sticky top-24">
+      <aside className="hidden lg:block w-72 h-fit sticky top-24 shrink-0">
         <SocialSidebar />
       </aside>
 
       {/* Ana Akış */}
-      <div className="flex-1 w-full max-w-2xl mx-auto space-y-6">
+      <div className="flex-1 w-full min-w-0 space-y-6">
         <Stories />
 
         <PostComposer
@@ -91,7 +93,7 @@ export function Dashboard() {
       </div>
 
       {/* Sağ Yan Panel */}
-      <aside className="hidden xl:flex w-80 flex-col gap-6 sticky top-24">
+      <aside className="hidden xl:flex w-80 flex-col gap-6 sticky top-24 shrink-0">
         <div className="bg-armoyu-card-bg border border-armoyu-card-border rounded-[40px] p-8 space-y-6 overflow-hidden relative group">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
             <CheckCircle2 size={120} />

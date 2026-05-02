@@ -22,7 +22,7 @@ import {
    Trash2,
    Terminal
 } from 'lucide-react';
-import { SystemSettings } from '@armoyu/core';
+import { SystemSettings } from '@armoyu/ui';
 
 type TabType = 'genel' | 'erisim' | 'sosyal' | 'gelismis';
 
@@ -40,7 +40,7 @@ export default function SettingsPage() {
    ];
 
    const handleToggle = (field: 'isMaintenanceMode' | 'isRegistrationOpen') => {
-      setSettings(prev => {
+      setSettings((prev: SystemSettings) => {
          const next = prev.clone();
          next[field] = !next[field];
          return next;

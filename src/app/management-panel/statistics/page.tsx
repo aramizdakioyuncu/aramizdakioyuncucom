@@ -15,8 +15,7 @@ import {
    Calendar,
    ChevronRight
 } from 'lucide-react';
-import { mockGlobalStats } from '@armoyu/ui';
-import { PlatformStats } from '@armoyu/core';
+import { mockGlobalStats, PlatformStats } from '@armoyu/ui';
 
 // --- SVG Chart Components ---
 
@@ -98,11 +97,17 @@ const DonutChart = ({ percent, label, subLabel, color }: { percent: number, labe
    );
 };
 
+interface ActivityDataPoint {
+   label: string;
+   value: number;
+   color: string;
+}
+
 export default function StatisticsPage() {
    const statsProcessor = useMemo(() => new PlatformStats(mockGlobalStats), []);
    const { malePercent, femalePercent } = statsProcessor.getGenderDistribution();
    const visitorTrend = statsProcessor.getVisitorTrend();
-   const activityData = statsProcessor.getActivityBreakdown();
+   const activityData: ActivityDataPoint[] = statsProcessor.getActivityBreakdown();
 
    const primaryStats = [
       { name: 'Aktif Kullanıcı (24s)', value: statsProcessor.activeUsers24h.toLocaleString('tr-TR'), growth: statsProcessor.getGrowthRate('activeUsers24h'), label: 'Aktiflik', icon: UserCheck, color: '#3b82f6' },
@@ -191,8 +196,8 @@ export default function StatisticsPage() {
                </div>
 
                <div className="space-y-6">
-                  {activityData.map((item) => {
-                     const maxVal = Math.max(...activityData.map(d => d.value));
+                  {activityData.map((item: ActivityDataPoint) => {
+                     const maxVal = Math.max(...activityData.map((d: ActivityDataPoint) => d.value));
                      const progress = (item.value / maxVal) * 100;
 
                      return (

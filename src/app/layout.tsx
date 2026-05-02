@@ -3,7 +3,6 @@
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
-import 'plyr-react/plyr.css';
 import { Header, Footer, FloatingChatButton, MainLayoutWrapper } from '@armoyu/ui';
 import { Providers } from './Providers';
 
