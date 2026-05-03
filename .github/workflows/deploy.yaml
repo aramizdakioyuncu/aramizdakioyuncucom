@@ -1,42 +1,29 @@
-name: Auto Deploy Next
+name: Auto Deploy to Coolify
 
 on:
   push:
     branches:
-      - next
+      - next  # `next` branch'ine yapılan push tetikler
 
 jobs:
-  deploy:
-    runs-on: self-hosted
+  build:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Sync and Deploy
+      - name: Build Docker image
         run: |
-          echo "Dosyalar güncelleniyor..."
-          
-          # Klasör hazırlığı
-          mkdir -p /app/next
-          
-          # İçeriği kopyala
-          cp -rf ./* /app/next/
-          cp -rf ./.[!.]* /app/next/ 2>/dev/null || true 
-          
-          echo "Kopyalama tamamlandı. Docker işlemleri başlıyor..."
+          docker build -t my-app .
+          docker tag my-app your_dockerhub_account/my-app:latest
+          docker push your_dockerhub_account/my-app:latest
 
-          # İşlem dizinine git
-          cd /app
-          
-          # 1. Önce çakışan veya eski konteyneri zorla kaldır
-          docker rm -f next_aramizdakioyuncucom || true
-
-          # 2. Bozuk buildkit snapshot cache'ini temizle (ana hata bu yüzden oluşuyor)
-          docker buildx prune -f || true
-          docker builder prune -f || true
-
-          # 3. Docker compose ile build et ve ayağa kaldır
-          docker compose up -d --build --force-recreate next
-          
-          # 4. Temizlik (dangling image'lar)
-          docker image prune -f
+      - name: Deploy to Coolify (via API)
+        env:
+          COOLIFY_API_KEY: ${{ secrets.COOLIFY_API_KEY }}  # GitHub Secrets'tan alır
+        run: |
+          curl -X POST https://api.coolify.app/v1/apps/your-app-id/deploy \
+            -H "Authorization: Bearer $COOLIFY_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"image": "your_dockerhub_account/my-app:latest"}'
