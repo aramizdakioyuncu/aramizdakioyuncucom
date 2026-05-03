@@ -31,19 +31,15 @@ export default function RootLayout({
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full" />
           </div>
 
-          <Header 
+          <Header
+            menuAlign="right"
+            logoUrl="/img/logo.png"
             items={[
               { name: 'Gruplar', href: '/gruplar' },
-              { name: 'Etkinlikler', href: '/etkinlikler' },
-              { name: 'Okullar', href: '/egitim' },
-              { name: 'Forum', href: '/forum' },
-              { name: 'Haberler', href: '/haberler' },
-              { name: 'Çekilişler', href: '/cekilisler' },
-              { name: 'Anketler', href: '/anketler' },
-              { name: 'Modlar', href: '/modlar' },
               { name: 'Galeriler', href: '/galeriler' },
+              { name: 'Haberler', href: '/haberler' },
               {
-                name: 'Kurumsal',
+                name: 'Ekibimiz',
                 href: '#',
                 submenu: [
                   { name: 'Hakkımızda', href: '/ekibimiz/hakkimizda' },
@@ -53,6 +49,11 @@ export default function RootLayout({
                   { name: 'Gizlilik Politikası', href: '/ekibimiz/gizlilik' }
                 ]
               },
+              { name: 'Etkinlikler', href: '/etkinlikler' },
+              { name: 'Forum', href: '/forum' },
+              { name: 'Çekilişler', href: '/cekilisler' },
+              { name: 'Anketler', href: '/anketler' },
+              { name: 'Modlar', href: '/modlar' },
               { name: 'Mağaza', href: '/magaza' },
             ]}
             drawerLinks={{
