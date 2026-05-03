@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@armoyu/core": "^1.1.63",
-    "@armoyu/ui": "^1.1.35",
+    "@armoyu/ui": "^1.1.38",
     "plyr": "^3.8.4",
     "plyr-react": "^6.0.0",
     "lucide-react": "^1.7.0",
