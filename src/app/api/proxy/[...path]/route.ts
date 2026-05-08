@@ -61,7 +61,8 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
   const apiBase = process.env.ARMOYU_API_URL || 'https://api.armoyu.com';
   const targetUrl = `${apiBase}/botlar/${secretApiKey}${actualPath}`;
 
-  console.log(`[Proxy] ${req.method} -> ${targetUrl}`);
+  // Log everything clearly for Coolify
+  process.stdout.write(`[Proxy DEBUG] ${req.method} ${actualPath} -> KEY_HIDDEN_URL\n`);
 
   const method = req.method;
   const headers = new Headers();
