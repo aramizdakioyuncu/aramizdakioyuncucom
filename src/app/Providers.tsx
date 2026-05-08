@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ArmoyuApi } from '@armoyu/core';
+import { ARMOYUCore } from '@armoyu/core';
 import { 
   ArmoyuUI,
   AuthProvider, 
@@ -14,17 +14,13 @@ import {
   Session
 } from '@armoyu/ui';
 
-const api = new ArmoyuApi(process.env.NEXT_PUBLIC_API_KEY ?? 'dev', {
-  baseUrl: typeof window !== 'undefined' 
-    ? `${window.location.origin}/api/proxy`
-    : '/api/proxy'
-});
+const api = ARMOYUCore.initForProxy('/api/proxy');
 
 // Sync token from localStorage to API instance on initial load
 if (typeof window !== 'undefined') {
   const token = localStorage.getItem('armoyu_token');
   if (token) {
-    api.setToken(token);
+    api.setAuthToken(token);
     console.log('[Providers] Initial token found and restored to API instance');
   }
 }

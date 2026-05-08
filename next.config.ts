@@ -1,3 +1,4 @@
+import path from 'path';
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -9,6 +10,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  outputFileTracingRoot: path.resolve(__dirname),
   // Hardcoded to avoid Node ESM module resolution errors from the UI package during Next config loading
   allowedDevOrigins: [
     'localhost',

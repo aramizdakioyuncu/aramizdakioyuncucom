@@ -33,34 +33,35 @@ export async function OPTIONS() {
 
 async function handleProxy(req: NextRequest, pathSegments: string[]) {
   const origin = req.headers.get('origin') || '*';
-  const apiKey = req.headers.get('x-api-key') || '';
-  const endpoint = '/' + pathSegments.join('/');
-
-  if (!apiKey) {
+  
+  // 1. Get secret key from server environment
+  const secretApiKey = process.env.ARMOYU_API_KEY;
+  
+  if (!secretApiKey) {
+    console.error('[Proxy] ARMOYU_API_KEY is missing in .env');
     return NextResponse.json(
-      { durum: 0, aciklama: 'X-API-KEY header missing' },
-      {
-        status: 400,
-        headers: {
-          'Access-Control-Allow-Origin': origin,
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, X-API-KEY, Authorization',
-          'Access-Control-Allow-Credentials': 'true',
-        }
-      }
+      { durum: 0, aciklama: 'Sunucu yapılandırması eksik (API Key)' },
+      { status: 500, headers: { 'Access-Control-Allow-Origin': origin } }
     );
   }
 
-  // Target Armoyu API - Use environment variable or fallback to lavora
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://api.armoyu.com';
-
-  // Fix double prefixing: if endpoint already starts with /botlar, don't add it again
-  let targetUrl;
-  if (endpoint.startsWith('/botlar')) {
-    targetUrl = `${apiBase}${endpoint}`;
-  } else {
-    targetUrl = `${apiBase}/botlar/${apiKey}${endpoint}`;
+  // 2. Clean the path - we want to support both "clean" paths and legacy /botlar/ paths
+  let actualPath = '/' + pathSegments.join('/');
+  
+  // If the path already starts with /botlar/, it might have a dummy key we need to strip
+  if (actualPath.startsWith('/botlar/')) {
+    const segments = actualPath.split('/');
+    // segments: ["", "botlar", "DUMMY_KEY", "real", "path", ...]
+    if (segments.length >= 4) {
+      actualPath = '/' + segments.slice(3).join('/');
+    }
   }
+
+  // 3. Target Armoyu API
+  const apiBase = process.env.ARMOYU_API_URL || 'https://api.armoyu.com';
+  const targetUrl = `${apiBase}/botlar/${secretApiKey}${actualPath}`;
+
+  console.log(`[Proxy] ${req.method} -> ${targetUrl}`);
 
   const method = req.method;
   const headers = new Headers();
@@ -76,8 +77,8 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
     }
   };
 
-  // Whitelist of headers to forward
-  const allowedHeaders = ['authorization', 'content-type', 'x-api-key', 'accept', 'user-agent', 'x-requested-with'];
+  // Whitelist of headers to forward from client
+  const allowedHeaders = ['authorization', 'content-type', 'accept', 'user-agent', 'x-requested-with'];
 
   req.headers.forEach((value, key) => {
     if (allowedHeaders.includes(key.toLowerCase())) {
@@ -85,9 +86,8 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
     }
   });
 
-  if (apiKey) {
-    safeSetHeader('X-API-KEY', apiKey);
-  }
+  // Inject the REAL API KEY to headers
+  safeSetHeader('X-API-KEY', secretApiKey);
 
   try {
     const fetchOptions: any = {
@@ -114,7 +114,6 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
     try {
       responseData = JSON.parse(responseText);
     } catch {
-      // If not JSON, wrap in a standard error format so the client can handle it
       responseData = {
         durum: 0,
         aciklama: responseText.substring(0, 500) || "API'den boş veya geçersiz yanıt geldi.",
@@ -136,9 +135,7 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
     console.error(`[Proxy Error] ${method} ${targetUrl}:`, error);
     return NextResponse.json({
       durum: 0,
-      aciklama: `Proxy Error: ${error.message}`,
-      targetUrl,
-      error: error.stack
+      aciklama: `Proxy Error: ${error.message}`
     }, {
       status: 500,
       headers: {
