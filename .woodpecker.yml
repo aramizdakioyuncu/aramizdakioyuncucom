@@ -1,0 +1,29 @@
+# 1. SIR: Dosyaların kaybolmaması için ortak bir alan tanımlıyoruz
+workspace:
+  base: /app
+  path: armoyu-repo
+
+steps:
+  # 1. ADIM: BUILD (Dosyalar burada üretilir)
+  next-build:
+    image: node:20-alpine
+    commands:
+      - "apk add --no-cache libc6-compat"
+      - "npm ci"
+      - "npm run build"
+    when:
+      event: push
+      branch: next
+
+  # 2. ADIM: DOCKER (Az önce üretilen dosyaları imaja paketler)
+  docker-package:
+    image: plugins/docker
+    settings:
+      repo: "armoyu-next-app"
+      dockerfile: "Dockerfile"
+      context: "." # İşte burası artık 'next-build'den kalanları görüyor!
+      tags: ["latest"]
+      dry_run: true # Şimdilik yerelde kalsın, SSH ile sonra çözeriz
+    when:
+      event: push
+      branch: next

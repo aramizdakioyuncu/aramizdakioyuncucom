@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@import "@armoyu/ui/src/globals.css";
+
+/* 
+ * TAILWIND V4 KAYNAK TARAMA (Sadece bu projedeki dosyalar için)
+ */
+@source "../../node_modules/@armoyu/ui/dist/**/*.js";
+@source "./components/**/*.{js,ts,jsx,tsx}";
+@source "./app/**/*.{js,ts,jsx,tsx}";
+
+@custom-variant dark (&:where(.dark, .dark *));
