@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@armoyu/core": "^1.1.65",
+    "@armoyu/core": "^1.1.66",
     "@armoyu/ui": "^1.1.42",
     "plyr": "^3.8.4",
     "plyr-react": "^6.0.0",
