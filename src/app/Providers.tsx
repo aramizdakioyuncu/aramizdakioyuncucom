@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ARMOYUCore } from '@armoyu/core';
+import { ARMOYUCore, ApiVersion } from '@armoyu/core';
 import { 
   ArmoyuUI,
   AuthProvider, 
@@ -14,7 +14,7 @@ import {
   Session
 } from '@armoyu/ui';
 
-const api = ARMOYUCore.initForProxy('/api/proxy');
+const api = ARMOYUCore.initForProxy(ApiVersion.CURRENT, '/api/proxy');
 
 // Sync token from localStorage to API instance on initial load
 if (typeof window !== 'undefined') {

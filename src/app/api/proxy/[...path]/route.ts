@@ -47,7 +47,7 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
 
   // 2. Clean the path - we want to support both "clean" paths and legacy /botlar/ paths
   let actualPath = '/' + pathSegments.join('/');
-  
+
   // If the path already starts with /botlar/, it might have a dummy key we need to strip
   if (actualPath.startsWith('/botlar/')) {
     const segments = actualPath.split('/');
@@ -57,12 +57,15 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
     }
   }
 
-  // 3. Target Armoyu API
+  // 3. Target Armoyu API: /v1 is the current API, anything else the legacy bot API
+  const isCurrentApi = actualPath.startsWith('/v1/');
   const apiBase = process.env.ARMOYU_API_URL || 'https://api.armoyu.com';
-  const targetUrl = `${apiBase}/botlar/${secretApiKey}${actualPath}`;
+  const targetUrl = isCurrentApi
+    ? `${apiBase}${actualPath}${req.nextUrl.search}`
+    : `${apiBase}/botlar/${secretApiKey}${actualPath}${req.nextUrl.search}`;
 
   // Log everything clearly for Coolify
-  process.stdout.write(`[Proxy DEBUG] ${req.method} ${actualPath} -> KEY_HIDDEN_URL\n`);
+  process.stdout.write(`[Proxy DEBUG] ${req.method} ${actualPath}\n`);
 
   const method = req.method;
   const headers = new Headers();
@@ -88,7 +91,7 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
   });
 
   // Inject the REAL API KEY to headers
-  safeSetHeader('X-API-KEY', secretApiKey);
+  safeSetHeader(isCurrentApi ? 'apikey' : 'X-API-KEY', secretApiKey);
 
   try {
     const fetchOptions: any = {
