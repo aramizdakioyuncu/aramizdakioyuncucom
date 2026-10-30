@@ -1,17 +1,26 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { GroupCard, PageWidth, useArmoyu, Group } from '@armoyu/ui';
+import { CreateGroupModal, GroupCard, PageWidth, useArmoyu, useAuth, Group } from '@armoyu/ui';
 
 export default function GroupsPage() {
   const { ui } = useArmoyu();
+  const { user, setIsLoginModalOpen } = useAuth();
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   const [groups, setGroups] = useState<Group[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('Hepsi');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const categories = ['Hepsi', 'E-Spor/Takım', 'Spor', 'Spor/Takım', 'Yazılım'];
+  const [categories, setCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    ui.api.groups.getCategories().then((response) => {
+      if (response.durum === 1 && Array.isArray(response.icerik)) setCategories(response.icerik);
+    });
+  }, [ui.api.groups]);
 
   useEffect(() => {
     async function fetchGroups() {
@@ -38,7 +47,22 @@ export default function GroupsPage() {
     }
 
     fetchGroups();
-  }, [activeTab, ui.api.groups]);
+  }, [activeTab, ui.api.groups, refreshKey]);
+
+  const handleCreateClick = () => {
+    if (user) setIsCreateOpen(true);
+    else setIsLoginModalOpen(true);
+  };
+
+  const handleCreateGroup = async (group: { name: string; shortName: string; category: string; logo: string; description: string }) => {
+    const response = await ui.api.groups.createGroup(group);
+    if (response?.durum === 1) {
+      setIsCreateOpen(false);
+      setRefreshKey((key) => key + 1);
+    } else {
+      alert(response?.aciklama || 'Grup oluşturulamadı.');
+    }
+  };
 
   const filteredGroups = useMemo(() => {
     if (!Array.isArray(groups)) return [];
@@ -72,7 +96,7 @@ export default function GroupsPage() {
       {/* Filters & Search */}
       <div className="flex flex-col md:flex-row gap-6 items-center justify-between mb-12">
         <div className="flex bg-black/5 dark:bg-white/5 p-1.5 rounded-2xl border border-black/5 dark:border-white/5 overflow-x-auto no-scrollbar max-w-full">
-          {categories.map((cat) => (
+          {['Hepsi', ...categories].map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveTab(cat)}
@@ -146,7 +170,7 @@ export default function GroupsPage() {
               </div>
               <h3 className="font-black text-armoyu-text text-xl mb-2 italic">KENDİ GRUBUNU KUR</h3>
               <p className="text-sm font-bold text-armoyu-text-muted leading-relaxed mb-6 italic opacity-60 uppercase">Fikirlerini paylaşacak bir ekip mi arıyorsun? Hemen bir topluluk oluştur.</p>
-              <button className="px-6 py-2.5 bg-armoyu-text text-armoyu-bg rounded-xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-opacity">BAŞLAT</button>
+              <button onClick={handleCreateClick} className="px-6 py-2.5 bg-armoyu-text text-armoyu-bg rounded-xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-opacity">BAŞLAT</button>
             </div>
           </div>
         )}
@@ -158,6 +182,7 @@ export default function GroupsPage() {
            </div>
         )}
       </div>
+      <CreateGroupModal isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} categories={categories} onCreateGroup={handleCreateGroup} />
     </div>
   );
 }

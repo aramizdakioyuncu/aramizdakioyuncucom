@@ -20,7 +20,7 @@ import {
 import Link from 'next/link';
 
 export default function GroupDetailPage() {
-   const { user } = useAuth();
+   const { user, setIsLoginModalOpen } = useAuth();
    const { ui } = useArmoyu();
    const params = useParams();
    const groupIdParam = params?.groupId as string;
@@ -40,7 +40,7 @@ export default function GroupDetailPage() {
          try {
             const response = await ui.api.groups.getGroupDetail({
                groupId: isNaN(Number(groupIdParam)) ? undefined : Number(groupIdParam),
-               groupName: isNaN(Number(groupIdParam)) ? groupIdParam : undefined
+               groupUrl: isNaN(Number(groupIdParam)) ? groupIdParam : undefined
             });
 
             if (response && response.durum === 1 && response.icerik) {
@@ -67,18 +67,34 @@ export default function GroupDetailPage() {
       group.moderators.some(m => String(m.id) === String(user.id))
    );
 
+   const reloadGroup = async () => {
+      const groupRes = await ui.api.groups.getGroupDetail({ groupUrl: group!.slug });
+      if (groupRes.icerik) setGroup(Group.fromAPI(groupRes.icerik));
+   };
+
    const handleJoin = async () => {
-      alert('Bu grup için katılım işlemleri şu an sadece davetiye ile yapılabilmektedir.');
+      if (!user) {
+         setIsLoginModalOpen(true);
+         return;
+      }
+      try {
+         const response = await ui.api.groupMembers.join(group!.id as any);
+         if (response && response.durum === 1) {
+            await reloadGroup();
+         } else {
+            alert(response?.aciklama || 'Gruba katılamadınız.');
+         }
+      } catch (err) {
+         alert('İşlem sırasında bir hata oluştu.');
+      }
    };
 
    const handleLeave = async () => {
       if (!confirm('Gruptan ayrılmak istediğinize emin misiniz?')) return;
       try {
-         const response = await ui.api.groups.leaveGroup(Number(group!.id));
+         const response = await ui.api.groupMembers.leave(group!.id as any);
          if (response && response.durum === 1) {
-            // Re-fetch to update state
-            const groupRes = await ui.api.groups.getGroupDetail({ groupId: Number(group!.id) });
-            if (groupRes.icerik) setGroup(Group.fromAPI(groupRes.icerik));
+            await reloadGroup();
          } else {
             alert(response?.aciklama || 'Gruptan ayrılamadınız.');
          }

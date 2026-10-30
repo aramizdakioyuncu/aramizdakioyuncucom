@@ -1,15 +1,39 @@
 'use client';
 
-import React, { useState } from 'react';
-import { NewsCard, PageWidth, MOCK_NEWS } from '@armoyu/ui';
+import React, { useEffect, useMemo, useState } from 'react';
+import { NewsCard, PageWidth, MOCK_NEWS, News, useArmoyu } from '@armoyu/ui';
 
 export default function NewsPage() {
   const [activeTab, setActiveTab] = useState('Hepsi');
   const [searchTerm, setSearchTerm] = useState('');
+  const { ui } = useArmoyu();
+  const [newsList, setNewsList] = useState<News[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchNews() {
+      setIsLoading(true);
+      try {
+        const response = await ui.api.blog.getNews(1, 20);
+        if (response.durum === 1 && Array.isArray(response.icerik)) {
+          setNewsList(response.icerik.map((n: any) => News.fromAPI(n)));
+        } else {
+          setNewsList(MOCK_NEWS);
+        }
+      } catch (error) {
+        console.error('[NewsPage] Fetch failed:', error);
+        setNewsList(MOCK_NEWS);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchNews();
+  }, [ui.api.blog]);
+
+  const categories = useMemo(() => ['Hepsi', ...new Set(newsList.map(n => n.category).filter(Boolean))], [newsList]);
   
-  const categories = ['Hepsi', 'Oyun Haberleri', 'Güncelleme', 'E-spor', 'Etkinlikler'];
-  
-  const filteredNews = MOCK_NEWS.filter(n => {
+  const filteredNews = newsList.filter(n => {
     const matchesTab = activeTab === 'Hepsi' || n.category === activeTab;
     const matchesSearch = n.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           (n.author?.displayName?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
@@ -61,6 +85,10 @@ export default function NewsPage() {
           <NewsCard key={idx} {...news} />
         ))}
       </div>
+
+      {!isLoading && filteredNews.length === 0 && (
+        <p className="text-center py-20 text-armoyu-text-muted font-bold">Haber bulunamadı.</p>
+      )}
 
       {/* Newsletter / Abone Ol (Premium look) */}
       <div className="mt-20 glass-panel p-10 md:p-16 rounded-[40px] border border-armoyu-card-border bg-gradient-to-br from-blue-600/10 to-indigo-600/5 flex flex-col items-center text-center">

@@ -1,22 +1,45 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { PageWidth, NewsCard, NewsComments, MOCK_NEWS, userList } from '@armoyu/ui';
+import { PageWidth, NewsCard, NewsComments, MOCK_NEWS, News, NotFound, useArmoyu, userList } from '@armoyu/ui';
 import Link from 'next/link';
-
-// MOCK_NEWS is now returning filled News models.
 
 export default function NewsDetailPage() {
   const { slug } = useParams();
-  
-  const articleData = MOCK_NEWS.find(n => n.slug === slug) || MOCK_NEWS[0];
-  
-  const article = articleData;
+  const { ui } = useArmoyu();
+  const [article, setArticle] = useState<News | null>(null);
+  const [SUGGESTED_NEWS, setSuggestedNews] = useState<News[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const SUGGESTED_NEWS = MOCK_NEWS
-    .filter(n => n.slug !== slug)
-    .slice(0, 3);
+  useEffect(() => {
+    async function fetchArticle() {
+      setIsLoading(true);
+      try {
+        const detail = await ui.api.blog.getNewsBySlug(String(slug));
+        setArticle(detail.durum === 1 && detail.icerik ? News.fromAPI(detail.icerik) : null);
+
+        const list = await ui.api.blog.getNews(1, 6);
+        const others = list.durum === 1 && Array.isArray(list.icerik)
+          ? list.icerik.map((n: any) => News.fromAPI(n))
+          : MOCK_NEWS;
+        setSuggestedNews(others.filter((n: News) => n.slug !== slug).slice(0, 3));
+      } catch (error) {
+        console.error('[NewsDetailPage] Fetch failed:', error);
+        setArticle(null);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchArticle();
+  }, [slug, ui.api.blog]);
+
+  if (isLoading) {
+    return <div className="h-96 bg-black/5 dark:bg-white/5 rounded-[40px] animate-pulse" />;
+  }
+
+  if (!article) return <NotFound />;
 
   return (
     <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -38,7 +61,7 @@ export default function NewsDetailPage() {
         </h1>
 
         <div className="aspect-[21/9] w-full rounded-[40px] overflow-hidden border border-armoyu-card-border shadow-2xl">
-           <img src={article.image} alt="Featured" className="w-full h-full object-cover" />
+           <img src={article.image || undefined} alt="Featured" className="w-full h-full object-cover" />
         </div>
       </div>
 
@@ -46,7 +69,7 @@ export default function NewsDetailPage() {
          {/* Article Body */}
          <div className="flex-1 max-w-4xl">
             <div 
-              className="prose prose-lg dark:prose-invert max-w-none 
+              className="prose prose-lg dark:prose-invert max-w-none whitespace-pre-line 
               prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-headings:text-armoyu-text
               prose-p:text-armoyu-text-muted prose-p:font-medium prose-p:leading-relaxed
               prose-blockquote:border-l-4 prose-blockquote:border-blue-600 prose-blockquote:bg-blue-600/5 prose-blockquote:p-6 prose-blockquote:rounded-2xl prose-blockquote:italic prose-blockquote:font-bold prose-blockquote:text-armoyu-text
