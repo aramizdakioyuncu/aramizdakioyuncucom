@@ -1,17 +1,34 @@
 'use client';
 
-import React from 'react';
-import { PageWidth } from '@armoyu/ui';
+import React, { useEffect, useState } from 'react';
+import { PageWidth, useArmoyu, useAuth } from '@armoyu/ui';
 import Link from 'next/link';
 import { BackToStore } from '@armoyu/ui';
 
-const MOCK_ORDERS = [
-  { id: 'AR-2024-812', date: '31 Mart 2024', total: '₺297.48', status: 'Hazırlanıyor', color: '#3b82f6', items: ['Premium VIP Üyelik', '1000 ARMOYU Coin (x2)'] },
-  { id: 'AR-2024-754', date: '15 Mart 2024', total: '₺599.00', status: 'Tamamlandı', color: '#10b981', items: ['ARMOYU Kapşonlu (Siyah)'] },
-  { id: 'AR-2024-102', date: '02 Ocak 2024', total: '₺89.90', status: 'Tamamlandı', color: '#10b981', items: ['Elite Minecraft Paketi'] }
-];
+const formatPrice = (price: number) =>
+  new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(price);
 
 export default function OrdersPage() {
+  const { ui } = useArmoyu();
+  const { user, isLoading: isAuthLoading, setIsLoginModalOpen } = useAuth();
+  const [orders, setOrders] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (isAuthLoading) return;
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
+
+    ui.api.shop.getOrders().then((response: any) => {
+      if (response.durum === 1) setOrders(response.icerik);
+      else setError(response.aciklama || 'Siparişler yüklenemedi.');
+      setIsLoading(false);
+    });
+  }, [user, isAuthLoading, ui.api.shop]);
+
   return (
     <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
       <PageWidth width="max-w-[1000px]" />
@@ -25,7 +42,17 @@ export default function OrdersPage() {
       </div>
 
       <div className="space-y-6">
-        {MOCK_ORDERS.map((order) => (
+        {!isLoading && !user && (
+          <button onClick={() => setIsLoginModalOpen(true)} className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl">
+            SİPARİŞLERİNİ GÖRMEK İÇİN GİRİŞ YAP
+          </button>
+        )}
+        {error && <p role="alert" className="text-center font-bold text-red-500">{error}</p>}
+        {!isLoading && user && !error && orders.length === 0 && (
+          <p className="text-center py-20 text-armoyu-text-muted font-bold">Henüz siparişin yok.</p>
+        )}
+
+        {orders.map((order) => (
           <div key={order.id} className="glass-panel p-8 rounded-[40px] border border-armoyu-card-border bg-armoyu-card-bg shadow-xl hover:shadow-blue-500/5 transition-all group overflow-hidden relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             
@@ -33,7 +60,7 @@ export default function OrdersPage() {
                
                <div className="space-y-4">
                   <div className="flex items-center gap-4">
-                     <span className="text-lg font-black text-armoyu-text tracking-tight italic">#{order.id}</span>
+                     <span className="text-lg font-black text-armoyu-text tracking-tight italic">#{order.orderNumber}</span>
                      <span 
                        style={{ backgroundColor: `${order.color}20`, color: order.color }}
                        className="px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-current transition-all group-hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]"
@@ -54,7 +81,12 @@ export default function OrdersPage() {
                </div>
 
                <div className="flex flex-col md:items-end justify-between gap-4">
-                  <div className="text-2xl font-black text-armoyu-text">{order.total}</div>
+                  <div className="text-2xl font-black text-armoyu-text">{formatPrice(order.total)}</div>
+                  {order.canPay && (
+                    <Link href={`/magaza/odeme?siparis=${order.id}`} className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-black text-[10px] uppercase tracking-widest rounded-xl text-center">
+                       ÖDEMEYİ TAMAMLA
+                    </Link>
+                  )}
                   <button className="px-8 py-3 bg-white/5 hover:bg-white/10 text-armoyu-text font-black text-[10px] uppercase tracking-widest rounded-xl transition-all border border-white/5 flex items-center gap-2 group/btn">
                      DETAYLARI GÖR
                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="group-hover/btn:translate-x-1 transition-transform"><polyline points="9 18 15 12 9 6"></polyline></svg>
@@ -65,7 +97,7 @@ export default function OrdersPage() {
 
             {/* Expander Area for Items (Hidden by default for multi-order view, briefly listed here) */}
             <div className="mt-8 pt-8 border-t border-white/5 space-y-3">
-               {order.items.map((item, idx) => (
+               {order.items.map((item: string, idx: number) => (
                  <div key={idx} className="flex items-center gap-3 text-[11px] font-bold text-armoyu-text-muted opacity-60">
                     <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                     {item}

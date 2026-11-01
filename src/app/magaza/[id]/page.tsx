@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { PageWidth, useCart, MOCK_PRODUCTS, BackToStore } from '@armoyu/ui';
+import React, { useEffect, useState } from 'react';
+import { PageWidth, useArmoyu, useCart, MOCK_PRODUCTS, BackToStore, Product } from '@armoyu/ui';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
@@ -15,7 +15,31 @@ export default function ProductDetailPage() {
     return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(price);
   };
 
-  const product = MOCK_PRODUCTS.find(p => p.id === id);
+  const { ui } = useArmoyu();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [suggested, setSuggested] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProduct() {
+      setIsLoading(true);
+      const detail = await ui.api.shop.getProductDetails(String(id));
+      setProduct(detail.durum === 1 && detail.icerik ? Product.fromAPI(detail.icerik) : null);
+
+      const list = await ui.api.shop.getProducts(1, { limit: 5 });
+      const others = list.durum === 1 && Array.isArray(list.icerik)
+        ? list.icerik.map((p: any) => Product.fromAPI(p))
+        : MOCK_PRODUCTS;
+      setSuggested(others.filter((p: Product) => p.id !== id).slice(0, 4));
+      setIsLoading(false);
+    }
+
+    fetchProduct();
+  }, [id, ui.api.shop]);
+
+  if (isLoading) {
+    return <div className="h-96 bg-black/5 dark:bg-white/5 rounded-[40px] animate-pulse" />;
+  }
 
   if (!product) {
     return (
@@ -148,7 +172,7 @@ export default function ProductDetailPage() {
       <div className="mt-32">
         <h2 className="text-2xl font-black text-armoyu-text uppercase tracking-widest mb-12 italic">SİZİN İÇİN <span className="text-blue-500">SEÇTİKLERİMİZ</span></h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {MOCK_PRODUCTS.slice(0, 4).map((p) => (
+          {suggested.map((p) => (
             <Link href={`/magaza/${p.id}`} key={p.id} className="glass-panel p-6 rounded-[32px] border border-armoyu-card-border bg-armoyu-card-bg hover:shadow-2xl hover:shadow-blue-500/10 transition-all group overflow-hidden">
               <div className="aspect-square rounded-2xl overflow-hidden mb-6 relative">
                 <img src={p.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={p.name} />

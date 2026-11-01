@@ -1,24 +1,39 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { 
   PageWidth, 
   StoreHeader, 
   StoreSidebar, 
   StoreProductGrid, 
   StoreTrustBadges,
+  useArmoyu,
   useCart,
-  MOCK_PRODUCTS 
+  MOCK_PRODUCTS,
+  Product
 } from '@armoyu/ui';
-import { Product } from '@armoyu/core';
 
 export default function StorePage() {
    const { addToCart } = useCart();
+   const { ui } = useArmoyu();
+   const [products, setProducts] = useState<Product[]>([]);
    const [activeCategory, setActiveCategory] = useState('Tüm Ürünler');
    const [searchQuery, setSearchQuery] = useState('');
 
+   useEffect(() => {
+      async function fetchProducts() {
+         // shortcut: en çok 100 ürün yüklenir, katalog büyüyünce sunucu tarafı sayfalama gerekir
+         const response = await ui.api.shop.getProducts(1, { limit: 100 });
+         setProducts(response.durum === 1 && Array.isArray(response.icerik)
+            ? response.icerik.map((p: any) => Product.fromAPI(p))
+            : MOCK_PRODUCTS);
+      }
+
+      fetchProducts();
+   }, [ui.api.shop]);
+
    const filteredProducts = useMemo(() => {
-      let filtered = MOCK_PRODUCTS;
+      let filtered = products;
       if (activeCategory !== 'Tüm Ürünler') {
          filtered = filtered.filter((p: Product) => p.category === activeCategory);
       }
@@ -30,9 +45,9 @@ export default function StorePage() {
          );
       }
       return filtered;
-   }, [activeCategory, searchQuery]);
+   }, [products, activeCategory, searchQuery]);
 
-   const categories = ['Tüm Ürünler', 'Üyelik & VIP', 'Oyun İçi Paralar', 'Minecraft Eşyaları', 'Lisanslı Giyim', 'Dijital Kodlar'];
+   const categories = useMemo(() => ['Tüm Ürünler', ...new Set(products.map((p) => p.category))], [products]);
 
    return (
       <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">

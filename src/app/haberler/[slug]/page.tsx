@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { PageWidth, NewsCard, NewsComments, MOCK_NEWS, News, NotFound, useArmoyu, userList } from '@armoyu/ui';
+import { PageWidth, NewsCard, NewsComments, MOCK_NEWS, News, NotFound, useArmoyu, useAuth, userList } from '@armoyu/ui';
 import Link from 'next/link';
 
 export default function NewsDetailPage() {
@@ -11,13 +11,37 @@ export default function NewsDetailPage() {
   const [article, setArticle] = useState<News | null>(null);
   const [SUGGESTED_NEWS, setSuggestedNews] = useState<News[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { user, setIsLoginModalOpen } = useAuth();
+  const [comments, setComments] = useState<any[]>([]);
+
+  const handleAddComment = async (content: string) => {
+    if (!user) {
+      setIsLoginModalOpen(true);
+      return false;
+    }
+
+    const response = await ui.api.blog.addComment(article!.id as any, content);
+    if (response.durum === 1) {
+      setComments((current) => [response.icerik, ...current]);
+      return true;
+    }
+
+    alert(response.aciklama || 'Yorum gönderilemedi.');
+    return false;
+  };
 
   useEffect(() => {
     async function fetchArticle() {
       setIsLoading(true);
       try {
         const detail = await ui.api.blog.getNewsBySlug(String(slug));
-        setArticle(detail.durum === 1 && detail.icerik ? News.fromAPI(detail.icerik) : null);
+        const loaded = detail.durum === 1 && detail.icerik ? News.fromAPI(detail.icerik) : null;
+        setArticle(loaded);
+
+        if (loaded) {
+          const commentList = await ui.api.blog.getComments(loaded.id as any);
+          setComments(commentList.durum === 1 ? commentList.icerik : []);
+        }
 
         const list = await ui.api.blog.getNews(1, 6);
         const others = list.durum === 1 && Array.isArray(list.icerik)
@@ -96,7 +120,7 @@ export default function NewsDetailPage() {
             </div>
 
             {/* Comments System */}
-            <NewsComments />
+            <NewsComments comments={comments} onAddComment={handleAddComment} avatar={user?.avatar} />
          </div>
 
          {/* Sidebar - Trending / Popular */}

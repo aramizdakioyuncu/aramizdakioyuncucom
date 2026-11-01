@@ -1,23 +1,110 @@
 'use client';
 
-import React, { useState } from 'react';
-import { PageWidth } from '@armoyu/ui';
+import React, { useEffect, useState } from 'react';
+import { PageWidth, useArmoyu, useAuth, useCart } from '@armoyu/ui';
 import Link from 'next/link';
 import { BackToStore } from '@armoyu/ui';
 
+const formatPrice = (price: number) =>
+  new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(price);
+
 export default function CheckoutPage() {
+  const { ui } = useArmoyu();
+  const { user, setIsLoginModalOpen } = useAuth();
+  const { cart, clearCart, totalPrice } = useCart();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    cardNumber: '',
-    expiry: '',
-    cvv: ''
+    address: '',
+    city: '',
+    district: '',
+    postalCode: ''
   });
+  const [order, setOrder] = useState<{ total: number; shippingCost: number } | null>(null);
+  const [iframeUrl, setIframeUrl] = useState('');
+  const [isBusy, setIsBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [paymentError, setPaymentError] = useState('');
+  const [provinces, setProvinces] = useState<any[]>([]);
+  const [counties, setCounties] = useState<any[]>([]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleCityChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({ ...formData, city: e.target.value, district: '' });
+    setCounties([]);
+
+    const province = provinces.find((p) => p.name === e.target.value);
+    if (!province) return;
+
+    const response = await ui.api.locations.getCounties(1, province.id);
+    if (response.durum === 1) setCounties(response.icerik);
+  };
+
+  useEffect(() => {
+    ui.api.locations.getProvinces(1).then((response: any) => {
+      if (response.durum === 1) setProvinces(response.icerik);
+    });
+  }, [ui.api.locations]);
+
+  // Yalnızca boş alanlar doldurulur: yazılanın üzerine yazılmaz
+  useEffect(() => {
+    if (!user) return;
+
+    ui.api.auth.me().then((response: any) => {
+      if (response.durum !== 1 || !response.icerik) return;
+      const { displayName, email, phone } = response.icerik;
+      setFormData((current) => ({
+        ...current,
+        name: current.name || displayName || '',
+        email: current.email || email || '',
+        phone: current.phone || phone || '',
+      }));
+    });
+  }, [user?.id, ui.api.auth]);
+
+  // Kart bilgisi sitemize girmez: ödeme, ödeme kuruluşunun iframe'inde alınır
+  const startPayment = async (orderId: string) => {
+    const returnUrl = `${window.location.origin}/magaza/siparislerim`;
+    const response = await ui.api.shop.startPayment(orderId, { successUrl: returnUrl, failUrl: returnUrl });
+
+    if (response.durum === 1) {
+      setIframeUrl(response.icerik.iframeUrl);
+      setStep(2);
+    } else {
+      setPaymentError(response.aciklama || 'Ödeme başlatılamadı.');
+      setStep(3);
+    }
+  };
+
+  // Siparişlerim'den "Ödemeyi tamamla" ile gelindiğinde
+  useEffect(() => {
+    const orderId = new URLSearchParams(window.location.search).get('siparis');
+    if (orderId && user) startPayment(orderId);
+  }, [user]);
+
+  const handleCreateOrder = async () => {
+    if (!user) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+
+    setIsBusy(true);
+    setError('');
+    const response = await ui.api.shop.createOrder(formData);
+
+    if (response.durum === 1) {
+      setOrder(response.icerik);
+      clearCart();
+      await startPayment(response.icerik.id);
+    } else {
+      setError(response.aciklama || 'Sipariş oluşturulamadı.');
+    }
+    setIsBusy(false);
   };
 
   return (
@@ -50,69 +137,57 @@ export default function CheckoutPage() {
                <div className="space-y-6">
                  <div className="space-y-2">
                     <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest ml-1">Ad Soyad</label>
-                    <input type="text" name="name" onChange={handleInputChange} placeholder="Adınız ve Soyadınız" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
+                    <input type="text" name="name" value={formData.name} onChange={handleInputChange} placeholder="Adınız ve Soyadınız" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
                  </div>
                  <div className="space-y-2">
                     <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest ml-1">E-Posta</label>
-                    <input type="email" name="email" onChange={handleInputChange} placeholder="ornek@mail.com" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
+                    <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="ornek@mail.com" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
                  </div>
                  <div className="space-y-2">
                     <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest ml-1">Telefon</label>
-                    <input type="tel" name="phone" onChange={handleInputChange} placeholder="05XX XXX XX XX" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
+                    <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} placeholder="05XX XXX XX XX" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
                  </div>
-                 <button onClick={() => setStep(2)} className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-blue-500/20 active:scale-95">SONRAKİ ADIM</button>
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest ml-1">Adres</label>
+                    <input type="text" name="address" value={formData.address} onChange={handleInputChange} placeholder="Mahalle, sokak, kapı no" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest ml-1">Şehir</label>
+                    {provinces.length > 0 ? (
+                       <select name="city" value={formData.city} onChange={handleCityChange} aria-label="Şehir seçin" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner">
+                         <option value="">Şehir seçin</option>
+                         {provinces.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}
+                       </select>
+                    ) : (
+                       <input type="text" name="city" value={formData.city} onChange={handleInputChange} placeholder="İstanbul" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
+                    )}
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest ml-1">İlçe</label>
+                    {counties.length > 0 ? (
+                       <select name="district" value={formData.district} onChange={handleInputChange} aria-label="İlçe seçin" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner">
+                         <option value="">İlçe seçin</option>
+                         {counties.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}
+                       </select>
+                    ) : (
+                       <input type="text" name="district" value={formData.district} onChange={handleInputChange} placeholder="Kadıköy" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
+                    )}
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest ml-1">Posta Kodu</label>
+                    <input type="text" name="postalCode" value={formData.postalCode} onChange={handleInputChange} placeholder="34000" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
+                 </div>
+                 {error && <p role="alert" className="text-xs font-bold text-red-500">{error}</p>}
+                 <button onClick={handleCreateOrder} disabled={isBusy || cart.length === 0} className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-blue-500/20 active:scale-95 disabled:opacity-50">
+                    {isBusy ? 'SİPARİŞ OLUŞTURULUYOR...' : 'SİPARİŞİ OLUŞTUR VE ÖDEMEYE GEÇ'}
+                 </button>
                </div>
              </div>
            )}
 
            {step === 2 && (
-             <div className="glass-panel p-8 rounded-[40px] border border-armoyu-card-border bg-armoyu-card-bg shadow-xl">
-               <h2 className="text-sm font-black text-armoyu-text uppercase tracking-widest mb-8">ÖDEME BİLGİLERİ</h2>
-               
-               {/* Card Preview Mockup */}
-               <div className="w-full aspect-[1.586/1] bg-gradient-to-br from-blue-600 to-indigo-900 rounded-3xl p-8 mb-8 text-white shadow-2xl relative overflow-hidden flex flex-col justify-between group">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl group-hover:scale-110 transition-transform duration-700" />
-                  <div className="flex justify-between items-start z-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="opacity-80"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
-                    <span className="text-[10px] font-black tracking-widest opacity-80 uppercase italic">GÜVENLİ KART</span>
-                  </div>
-                  <div className="space-y-4 z-10">
-                    <div className="text-2xl font-mono tracking-[0.2em] font-medium transition-all group-hover:scale-105 origin-left">
-                       {formData.cardNumber ? formData.cardNumber.padEnd(16, '•').replace(/(.{4})/g, '$1 ') : '•••• •••• •••• ••••'}
-                    </div>
-                    <div className="flex justify-between items-end">
-                       <div>
-                         <p className="text-[8px] font-black uppercase tracking-widest opacity-60 mb-1 leading-none">Kart Sahibi</p>
-                         <p className="text-xs uppercase font-bold tracking-tight">{formData.name || 'AD SOYAD'}</p>
-                       </div>
-                       <div className="text-right">
-                         <p className="text-[8px] font-black uppercase tracking-widest opacity-60 mb-1 leading-none">SKT</p>
-                         <p className="text-xs font-bold">{formData.expiry || 'MM/YY'}</p>
-                       </div>
-                    </div>
-                  </div>
-               </div>
-
-               <div className="space-y-6">
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest ml-1">Kart Numarası</label>
-                    <input type="text" name="cardNumber" maxLength={16} onChange={handleInputChange} placeholder="0000 0000 0000 0000" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
-                 </div>
-                 <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                       <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest ml-1">Son Kullanma</label>
-                       <input type="text" name="expiry" maxLength={5} onChange={handleInputChange} placeholder="AA/YY" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
-                    </div>
-                    <div className="space-y-2">
-                       <label className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest ml-1">CVV</label>
-                       <input type="password" name="cvv" maxLength={3} onChange={handleInputChange} placeholder="***" className="w-full bg-black/10 dark:bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-armoyu-text focus:outline-none focus:border-blue-500 transition-all shadow-inner" />
-                    </div>
-                 </div>
-                 <div className="flex gap-4 pt-4">
-                    <button onClick={() => setStep(1)} className="flex-1 py-5 bg-white/5 hover:bg-white/10 text-armoyu-text font-black text-xs uppercase tracking-widest rounded-2xl transition-all border border-white/5">GERİ DÖN</button>
-                    <button onClick={() => setStep(3)} className="flex-[2] py-5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-blue-500/20 active:scale-95">ÖDEMEYİ TAMAMLA</button>
-                 </div>
-               </div>
+             <div className="glass-panel p-4 rounded-[40px] border border-armoyu-card-border bg-armoyu-card-bg shadow-xl overflow-hidden">
+               <iframe src={iframeUrl} title="Güvenli ödeme" className="w-full min-h-[640px] rounded-3xl border-0 bg-white" />
              </div>
            )}
 
@@ -122,7 +197,9 @@ export default function CheckoutPage() {
                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </div>
                 <h2 className="text-3xl font-black text-armoyu-text uppercase tracking-tighter italic mb-4">SİPARİŞİN ALINDI!</h2>
-                <p className="text-armoyu-text-muted font-medium mb-12">Siparişin başarıyla oluşturuldu. <span className="text-blue-500 font-bold">#AR-2024-812</span> numaralı siparişini profilinden takip edebilirsin.</p>
+                <p className="text-armoyu-text-muted font-medium mb-12">
+                   {paymentError ? `Ödeme alınamadı: ${paymentError} Siparişin "Ödeme Bekliyor" olarak duruyor.` : 'Siparişin başarıyla oluşturuldu.'}
+                </p>
                 <div className="flex flex-col gap-4">
                    <Link href="/magaza/siparislerim" className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-blue-500/20">SİPARİŞLERİME GİT</Link>
                    <Link href="/magaza" className="w-full py-4 text-armoyu-text-muted hover:text-armoyu-text font-black text-xs uppercase tracking-widest transition-colors tracking-tighter">ALIŞVERİŞE DEVAM ET</Link>
@@ -136,34 +213,25 @@ export default function CheckoutPage() {
            <div className="glass-panel p-8 rounded-[40px] border border-armoyu-card-border bg-armoyu-card-bg">
               <h2 className="text-xs font-black text-armoyu-text uppercase tracking-widest mb-6">SİPARİŞ ÖZETİ</h2>
               <div className="space-y-4 mb-6">
-                 <div className="flex justify-between items-center bg-black/10 dark:bg-white/5 p-4 rounded-2xl border border-white/5">
-                    <div className="flex items-center gap-3">
-                       <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-500 font-black text-xs">VIP</div>
-                       <div className="text-[10px] font-black uppercase text-armoyu-text leading-tight">Premium VIP Üyelik</div>
-                    </div>
-                    <span className="text-xs font-black text-blue-500">₺149.90</span>
-                 </div>
-                 <div className="flex justify-between items-center bg-black/10 dark:bg-white/5 p-4 rounded-2xl border border-white/5">
-                    <div className="flex items-center gap-3">
-                       <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-500 font-black text-xs">C1K</div>
-                       <div className="text-[10px] font-black uppercase text-armoyu-text leading-tight">1000 ARMOYU Coin (x2)</div>
-                    </div>
-                    <span className="text-xs font-black text-blue-500">₺98.00</span>
-                 </div>
+                 {cart.map((item: any) => (
+                   <div key={item.product.id} className="flex justify-between items-center bg-black/10 dark:bg-white/5 p-4 rounded-2xl border border-white/5">
+                      <div className="text-[10px] font-black uppercase text-armoyu-text leading-tight">{item.product.name} (x{item.quantity})</div>
+                      <span className="text-xs font-black text-blue-500">{formatPrice(item.getTotalPrice())}</span>
+                   </div>
+                 ))}
               </div>
               <div className="border-t border-white/5 pt-6 space-y-4">
-                 <div className="flex justify-between text-[11px] font-bold text-armoyu-text-muted uppercase tracking-widest">
-                    <span>ARA TOPLAM</span>
-                    <span>₺247.90</span>
-                 </div>
-                 <div className="flex justify-between text-[11px] font-bold text-armoyu-text-muted uppercase tracking-widest">
-                    <span>KDV (%20)</span>
-                    <span>₺49.58</span>
-                 </div>
+                 {order && (
+                   <div className="flex justify-between text-[11px] font-bold text-armoyu-text-muted uppercase tracking-widest">
+                      <span>KARGO</span>
+                      <span>{formatPrice(order.shippingCost)}</span>
+                   </div>
+                 )}
                  <div className="flex justify-between text-xl font-black text-armoyu-text pt-4">
-                    <span>TOPLAM</span>
-                    <span className="text-blue-500">₺297.48</span>
+                    <span>{order ? 'TOPLAM' : 'ARA TOPLAM'}</span>
+                    <span className="text-blue-500">{formatPrice(order ? order.total : totalPrice)}</span>
                  </div>
+                 {!order && <p className="text-[10px] font-bold text-armoyu-text-muted">Kargo ücreti sipariş oluşturulunca eklenir.</p>}
               </div>
            </div>
 

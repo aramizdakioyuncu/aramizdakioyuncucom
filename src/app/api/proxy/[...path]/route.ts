@@ -82,7 +82,7 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
   };
 
   // Whitelist of headers to forward from client
-  const allowedHeaders = ['authorization', 'content-type', 'accept', 'user-agent', 'x-requested-with'];
+  const allowedHeaders = ['authorization', 'content-type', 'accept', 'user-agent', 'x-requested-with', 'x-forwarded-for'];
 
   req.headers.forEach((value, key) => {
     if (allowedHeaders.includes(key.toLowerCase())) {
