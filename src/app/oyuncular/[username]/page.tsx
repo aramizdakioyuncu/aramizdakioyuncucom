@@ -6,6 +6,7 @@ import {
   ProfileHeader, 
   ProfileStats, 
   ProfileSidebar, 
+  CloudModal,
   ProfileTabsArea, 
   useAuth, 
   useArmoyu, 
@@ -172,6 +173,7 @@ export default function UserProfilePage() {
         </div>
 
       </div>
+      <CloudModal isOpen={isCloudModalOpen} onClose={() => setIsCloudModalOpen(false)} />
     </main>
   );
 }
