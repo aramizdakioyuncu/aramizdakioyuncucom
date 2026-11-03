@@ -10,7 +10,8 @@ import {
   ProfileTabsArea, 
   useAuth, 
   useArmoyu, 
-  userList,
+  NotFound,
+  ProfileSkeleton,
   User 
 } from '@armoyu/ui';
 
@@ -27,37 +28,10 @@ export default function UserProfilePage() {
   }, [user, isLoading, setIsLoginModalOpen]);
 
   const username = (params?.username as string) || 'oyuncu';
-  const urlName = searchParams?.get('name');
-  const urlAvatar = searchParams?.get('avatar');
-  const urlBadge = searchParams?.get('badge');
-
-  const [mockUser, setMockUser] = useState({
-    name: urlName || 'Yükleniyor...',
-    username: username,
-    avatar: urlAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
-    banner: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?q=80&w=2574&auto=format&fit=crop',
-    badge: urlBadge || '',
-    socials: {
-      discord: 'https://discord.com',
-      steam: 'https://steamcommunity.com',
-      instagram: 'https://instagram.com'
-    }
-  });
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setMockUser(prev => ({
-        ...prev,
-        name: prev.name === 'Yükleniyor...' ? (username.charAt(0).toUpperCase() + username.slice(1)) : prev.name
-      }));
-    }, 600);
-
-    return () => clearTimeout(timer);
-  }, [username]);
-
   // Profil Verisi State'leri
   const [fetchedUser, setFetchedUser] = useState<any>(null);
-  const [isFetchingUser, setIsFetchingUser] = useState(false);
+  const [isFetchingUser, setIsFetchingUser] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [activeTab, setActiveTab] = useState('Kariyer');
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
 
@@ -74,12 +48,14 @@ export default function UserProfilePage() {
       if (!username || username === 'oyuncu') return;
       
       setIsFetchingUser(true);
+      setNotFound(false);
       try {
         const result = await api.users.getUserByUsername(username);
-        if (result && result.icerik) {
+        if (result && result.durum === 1 && result.icerik) {
           setFetchedUser(User.fromAPI(result.icerik));
         } else {
-          console.warn('[UserProfilePage] User not found or invalid response:', result);
+          setFetchedUser(null);
+          setNotFound(true);
         }
       } catch (error) {
         console.error('[UserProfilePage] Profile fetch error:', error);
@@ -92,7 +68,8 @@ export default function UserProfilePage() {
   }, [username, api]);
 
   const isOwnProfile = user?.username === username;
-  const displayUser = isOwnProfile ? user : (fetchedUser || userList.find(u => u.username === username));
+  // Kendi profilinde sayaçlar ziyaretten de gelir; ad ve avatar oturumdaki son halinden
+  const displayUser = isOwnProfile ? (fetchedUser ? Object.assign(Object.create(Object.getPrototypeOf(fetchedUser)), fetchedUser, { ...user }) : user) : fetchedUser;
 
   const fetchFriends = async (isLoadMore = false) => {
     if (!displayUser?.id) return;
@@ -131,15 +108,26 @@ export default function UserProfilePage() {
     }
   }, [activeTab, hasFetchedFriends, displayUser?.id, api]);
 
+  if (notFound && !isOwnProfile) return <NotFound />;
+
+  // Mock yerine yükleme görünümü: oturum ya da profil gelene kadar
+  if (!displayUser || (isFetchingUser && !isOwnProfile)) {
+    return (
+      <main className="min-h-screen pt-4 pb-12 w-full">
+        <ProfileSkeleton />
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen pt-4 pb-12 w-full animate-in fade-in duration-500">
       <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-6">
         
         {/* Banner & Header */}
-        <ProfileHeader user={displayUser || mockUser} isOwnProfile={isOwnProfile} />
+        <ProfileHeader user={displayUser} isOwnProfile={isOwnProfile} />
 
         {/* Quick Stats */}
-        <ProfileStats user={(displayUser || mockUser) as any} />
+        <ProfileStats user={displayUser as any} />
 
         {/* 
            Sidebar & Content Layout (Sekmeler ve Akış)
