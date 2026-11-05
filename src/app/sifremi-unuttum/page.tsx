@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { KeyRound, Mail, Smartphone, CheckCircle2, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@armoyu/ui';
 
 type Method = 'email' | 'phone';
@@ -26,7 +27,8 @@ async function post(path: string, body: Record<string, unknown>) {
  * /forgot-password ve /reset-password (Phatsa'nın e-posta bağlantısı) da bu sayfayı açar.
  */
 export default function ForgotPasswordPage() {
-  const { setIsLoginModalOpen } = useAuth();
+  const { user, isLoading, setIsLoginModalOpen } = useAuth();
+  const router = useRouter();
   const [step, setStep] = useState<Step>('request');
   const [method, setMethod] = useState<Method>('email');
   const [target, setTarget] = useState('');
@@ -38,6 +40,11 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const [resendIn, setResendIn] = useState(0);
+
+  // Oturum açıkken şifre sıfırlamaya gerek yok (kayıt da yalnızca oturum kapalıyken açılan giriş penceresinde)
+  useEffect(() => {
+    if (!isLoading && user) router.replace('/');
+  }, [isLoading, user, router]);
 
   // E-postadaki bağlantıyla gelindiyse kod adımı atlanır
   useEffect(() => {
@@ -81,6 +88,9 @@ export default function ForgotPasswordPage() {
     if (!result.ok) return setError(result.message);
     setStep('done');
   };
+
+  // Oturum durumu belli olana kadar ya da yönlendirilirken form gösterilmez
+  if (isLoading || user) return <main className="min-h-[70vh]" aria-busy="true" />;
 
   return (
     <main className="min-h-[70vh] flex items-center justify-center px-4 py-16">
