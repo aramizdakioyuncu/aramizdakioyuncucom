@@ -5,6 +5,7 @@ import Script from 'next/script';
 import './globals.css';
 import { Header, Footer, FloatingChatButton, MainLayoutWrapper } from '@armoyu/ui';
 import { Providers } from './Providers';
+import { BackendSwitch } from '@/components/BackendSwitch';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -76,6 +77,7 @@ export default function RootLayout({
           </div>
 
           <Footer />
+          <BackendSwitch />
         </Providers>
       </body>
     </html>

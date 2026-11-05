@@ -14,7 +14,10 @@ import {
   Session
 } from '@armoyu/ui';
 
-const api = ARMOYUCore.initForProxy(ApiVersion.CURRENT, '/api/proxy');
+// Test için eski / yeni backend seçimi (BackendSwitch); varsayılan yeni (Phatsa)
+export const API_VERSION_KEY = 'armoyu_api_version';
+const apiVersion = typeof window !== 'undefined' && localStorage.getItem(API_VERSION_KEY) === 'old' ? ApiVersion.OLD : ApiVersion.CURRENT;
+const api = ARMOYUCore.initForProxy(apiVersion, '/api/proxy');
 
 // Sync token from localStorage to API instance on initial load
 if (typeof window !== 'undefined') {

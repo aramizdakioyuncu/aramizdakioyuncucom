@@ -58,11 +58,22 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
   }
 
   // 3. Target Armoyu API: /v1 is the current API, anything else the legacy bot API
+  // Yollar ayrık: /v1 yeni backend (Phatsa), diğerleri eski API; böylece istemcideki eski / yeni seçimi tek başına yeter
   const isCurrentApi = actualPath.startsWith('/v1/');
-  const apiBase = process.env.ARMOYU_API_URL || 'https://api.armoyu.com';
+  const apiBase = isCurrentApi
+    ? process.env.ARMOYU_API_URL
+    : (process.env.ARMOYU_LEGACY_API_URL || 'https://api.armoyu.com');
+  // Eski API kendi anahtarını ister; ayrı tanımlı değilse ortak anahtar
+  const targetKey = isCurrentApi ? secretApiKey : (process.env.ARMOYU_LEGACY_API_KEY || secretApiKey);
+  if (!apiBase) {
+    return NextResponse.json(
+      { durum: 0, aciklama: 'Sunucu yapılandırması eksik (ARMOYU_API_URL)' },
+      { status: 500, headers: { 'Access-Control-Allow-Origin': origin } }
+    );
+  }
   const targetUrl = isCurrentApi
     ? `${apiBase}${actualPath}${req.nextUrl.search}`
-    : `${apiBase}/botlar/${secretApiKey}${actualPath}${req.nextUrl.search}`;
+    : `${apiBase}/botlar/${targetKey}${actualPath}${req.nextUrl.search}`;
 
   // Log everything clearly for Coolify
   process.stdout.write(`[Proxy DEBUG] ${req.method} ${actualPath}\n`);
@@ -91,7 +102,7 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
   });
 
   // Inject the REAL API KEY to headers
-  safeSetHeader(isCurrentApi ? 'apikey' : 'X-API-KEY', secretApiKey);
+  safeSetHeader(isCurrentApi ? 'apikey' : 'X-API-KEY', targetKey);
 
   try {
     const fetchOptions: any = {
