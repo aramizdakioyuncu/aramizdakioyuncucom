@@ -32,7 +32,7 @@ export function Dashboard() {
   const { api } = useArmoyu();
   const [isPosting, setIsPosting] = useState(false);
   const [isCloudOpen, setIsCloudOpen] = useState(false);
-  const [attachments, setAttachments] = useState<{ url: string; type: 'image' | 'video' | 'audio' }[]>([]);
+  const [attachments, setAttachments] = useState<{ id: string; url: string; type: 'image' | 'video' | 'audio' }[]>([]);
   const feedRef = useRef<SocialFeedRef>(null);
 
   const currentToken = session?.token || '';
@@ -40,7 +40,7 @@ export function Dashboard() {
   const handleCreatePost = async (content: string, mediaUrls?: string[]) => {
     setIsPosting(true);
     try {
-      const result = await api.social.createPost(content, []);
+      const result = await api.social.createPost(content, attachments.map(a => a.id));
       if (result.durum === 1) {
         setAttachments([]);
         feedRef.current?.refresh();
@@ -61,8 +61,10 @@ export function Dashboard() {
       <CloudModal
         isOpen={isCloudOpen}
         onClose={() => setIsCloudOpen(false)}
+        isSelectionMode
         onSelectMedia={(media) => {
-          setAttachments(prev => [...prev, media]);
+          // Aynı dosya iki kez eklenmez
+          setAttachments(prev => prev.some(a => a.id === media.id) ? prev : [...prev, media]);
           setIsCloudOpen(false);
         }}
       />

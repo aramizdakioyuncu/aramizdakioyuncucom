@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
-import { PageWidth, stationList, Station, StationProduct, StationCoupon } from '@armoyu/ui';
+import React, { useState } from 'react';
+import { PageWidth, Station, StationProduct, StationCoupon, ProfileSkeleton, useArmoyu } from '@armoyu/ui';
+import { useStation } from '../../useStation';
 import { notFound } from 'next/navigation';
 import {
    LayoutDashboard, Settings, List, Tag, Trophy,
@@ -19,17 +20,27 @@ interface PageProps {
 
 export default function StationManagementPage({ params }: PageProps) {
    const { slug } = React.use(params);
-   const initialStation = useMemo(() => stationList.find(s => s.slug === slug), [slug]);
-
-   // Local state for full CRUD simulation
-   const [station, setStation] = useState<Station | undefined>(initialStation);
+   const { ui } = useArmoyu();
+   const { station, setStation, canManage, isLoading, notFound: missing, reload } = useStation(slug);
+   const [saveError, setSaveError] = useState('');
+   const [isSaving, setIsSaving] = useState(false);
    const [activeTab, setActiveTab] = useState('Genel Bakış');
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [modalType, setModalType] = useState<'PRODUCT' | 'EQUIPMENT' | 'CAMPAIGN' | 'GENERAL'>('PRODUCT');
    const [editingItem, setEditingItem] = useState<any>(null);
 
-   if (!station) {
-      notFound();
+   if (missing) notFound();
+   if (isLoading || !station) {
+      return <div className="pt-6 pb-32"><ProfileSkeleton /></div>;
+   }
+   if (!canManage) {
+      return (
+         <div className="py-40 text-center">
+            <h1 className="text-3xl font-black text-armoyu-text uppercase tracking-tighter italic mb-3">YETKİN YOK</h1>
+            <p className="text-armoyu-text-muted font-bold text-sm mb-8">Bu istasyonu yalnızca sahibi ve yetkilileri yönetebilir.</p>
+            <Link href={`/istasyonlar/${slug}`} className="px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest">İSTASYONA DÖN</Link>
+         </div>
+      );
    }
 
    const tabs = [
@@ -41,35 +52,35 @@ export default function StationManagementPage({ params }: PageProps) {
    ];
 
    // --- HANDLERS ---
-   const handleSaveProduct = (e: React.FormEvent) => {
+   // shortcut: yayınlanan @armoyu/core tiplerinde saveProduct / deleteProduct yok; yeni sürüm çıkınca cast kalkacak
+   const stations = ui.api.stations as any;
+
+   const handleSaveProduct = async (e: React.FormEvent) => {
       e.preventDefault();
       const formData = new FormData(e.target as HTMLFormElement);
-      const newProduct = new StationProduct({
-         id: editingItem?.id || Math.random().toString(36).substr(2, 9),
+      setIsSaving(true);
+      setSaveError('');
+      const response = await stations.saveProduct(slug, {
          name: formData.get('name') as string,
          price: Number(formData.get('price')),
          category: formData.get('category') as string,
-         isDeal: editingItem?.isDeal || false,
-         discountRate: editingItem?.discountRate || ''
-      });
-
-      const updatedProducts = [...(station.products || [])];
-      const index = updatedProducts.findIndex(p => p.id === newProduct.id);
-      if (index > -1) updatedProducts[index] = newProduct;
-      else updatedProducts.push(newProduct);
-
-      setStation(new Station({ ...station, products: updatedProducts }));
+      }, editingItem?.id);
+      setIsSaving(false);
+      if (response.durum !== 1) {
+         setSaveError(response.aciklama || 'Ürün kaydedilemedi.');
+         return;
+      }
       setIsModalOpen(false);
+      reload();
    };
 
-   const handleDeleteProduct = (id: string) => {
-      if (!station) return;
-      setStation(new Station({
-         ...station,
-         products: (station.products || []).filter(p => p.id !== id)
-      }));
+   const handleDeleteProduct = async (id: string) => {
+      const response = await stations.deleteProduct(slug, id);
+      if (response.durum === 1) reload();
+      else alert(response.aciklama || 'Ürün silinemedi.');
    };
 
+   // Kampanya (indirim) eklentide yok; yalnızca bu ekranda gösterilir
    const handleToggleCampaign = (product: StationProduct) => {
       if (!station) return;
       const updatedProducts = (station.products || []).map(p => {
@@ -200,7 +211,7 @@ export default function StationManagementPage({ params }: PageProps) {
                               <p className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest opacity-60">MENÜ ÖĞELERİNİ VE FİYATLARINI YÖNET</p>
                            </div>
                            <button
-                              onClick={() => { setModalType('PRODUCT'); setEditingItem(null); setIsModalOpen(true); }}
+                              onClick={() => { setModalType('PRODUCT'); setEditingItem(null); setSaveError(''); setIsModalOpen(true); }}
                               className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-blue-500/20 active:scale-95 transition-all"
                            >
                               <Plus size={16} strokeWidth={3} /> YENİ ÜRÜN EKLE
@@ -228,7 +239,7 @@ export default function StationManagementPage({ params }: PageProps) {
                                        <div className="px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-[8px] font-black uppercase tracking-widest border border-amber-500/20">AKTİF KAMPANYA</div>
                                     )}
                                     <button
-                                       onClick={() => { setModalType('PRODUCT'); setEditingItem(product); setIsModalOpen(true); }}
+                                       onClick={() => { setModalType('PRODUCT'); setEditingItem(product); setSaveError(''); setIsModalOpen(true); }}
                                        className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all shadow-sm"
                                     >
                                        <Edit2 size={16} />
@@ -389,9 +400,10 @@ export default function StationManagementPage({ params }: PageProps) {
                         </div>
                      </div>
 
-                     <div className="pt-6">
-                        <button className="w-full py-5 bg-blue-600 text-white rounded-[25px] font-black text-xs uppercase tracking-widest shadow-2xl shadow-blue-500/20 active:scale-95 transition-all">
-                           {editingItem ? 'KAYDET' : 'ÜRÜNÜ EKLE'}
+                     <div className="pt-6 space-y-3">
+                        {saveError && <p role="alert" className="text-sm font-bold text-red-500">{saveError}</p>}
+                        <button disabled={isSaving} className="w-full py-5 bg-blue-600 text-white rounded-[25px] font-black text-xs uppercase tracking-widest shadow-2xl shadow-blue-500/20 active:scale-95 transition-all disabled:opacity-50">
+                           {isSaving ? 'KAYDEDİLİYOR...' : editingItem ? 'KAYDET' : 'ÜRÜNÜ EKLE'}
                         </button>
                      </div>
                   </form>

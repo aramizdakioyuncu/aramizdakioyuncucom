@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
-import { PageWidth, StationQRModal, stationList } from '@armoyu/ui';
+import React, { useState } from 'react';
+import { PageWidth, StationQRModal, ProfileSkeleton } from '@armoyu/ui';
+import { useStation } from '../useStation';
 import { notFound } from 'next/navigation';
 import {
    MapPin, Star, Coffee, Monitor, Trophy, Dumbbell,
@@ -22,12 +23,13 @@ interface PageProps {
 
 export default function StationDetailPage({ params }: PageProps) {
    const { slug } = React.use(params);
-   const station = useMemo(() => stationList.find(s => s.slug === slug), [slug]);
+   const { station, canManage, isLoading, notFound: missing } = useStation(slug);
    const [selectedItem, setSelectedItem] = useState<StationProduct | null>(null);
    const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
-   if (!station) {
-      notFound();
+   if (missing) notFound();
+   if (isLoading || !station) {
+      return <div className="pt-6 pb-32"><ProfileSkeleton /></div>;
    }
 
    const handleProductClick = (product: StationProduct) => {
@@ -68,12 +70,12 @@ export default function StationDetailPage({ params }: PageProps) {
 
                   {/* Top Actions */}
                   <div className="flex gap-4 pb-4">
-                     <Link
+                     {canManage && <Link
                         href={`/istasyonlar/${station.slug}/yonetim`}
                         className="px-6 py-3.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl text-white font-black text-xs uppercase tracking-widest hover:bg-white/20 transition-all flex items-center gap-2"
                      >
                         <Settings size={16} /> YÖNETİM
-                     </Link>
+                     </Link>}
                      <button className="px-8 py-3.5 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-blue-500/20 active:scale-95 transition-all">
                         REZERVASYON YAP
                      </button>

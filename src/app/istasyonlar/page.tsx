@@ -1,10 +1,20 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { PageWidth, FilterTabs, SearchBar, StationCard, stationList } from '@armoyu/ui';
+import React, { useState, useMemo, useEffect } from 'react';
+import { PageWidth, FilterTabs, SearchBar, StationCard, Skeleton, useArmoyu, Station } from '@armoyu/ui';
 import { MapPin, Filter, Warehouse } from 'lucide-react';
 
 export default function StationsPage() {
+  const { ui } = useArmoyu();
+  const [stations, setStations] = useState<Station[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    ui.api.stations.getStations(1).then((response) => {
+      if (response.durum === 1 && Array.isArray(response.icerik)) setStations(response.icerik.map((s: any) => Station.fromAPI(s)));
+    }).finally(() => setIsLoading(false));
+  }, [ui.api.stations]);
+
   const [activeTypeLabel, setActiveTypeLabel] = useState<string>('TÜMÜ');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -20,7 +30,7 @@ export default function StationsPage() {
 
   const filteredStations = useMemo(() => {
     const activeTypeId = typeMapping[activeTypeLabel];
-    return stationList.filter(station => {
+    return stations.filter(station => {
       const matchesType = activeTypeId === 'Hepsi' || station.type === activeTypeId;
       const matchesSearch = 
         station.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -29,7 +39,7 @@ export default function StationsPage() {
       
       return matchesType && matchesSearch;
     });
-  }, [activeTypeLabel, searchQuery]);
+  }, [stations, activeTypeLabel, searchQuery]);
 
   return (
     <div className="pb-32 animate-in fade-in duration-1000">
@@ -83,7 +93,11 @@ export default function StationsPage() {
       </div>
 
       {/* Grid */}
-      {filteredStations.length === 0 ? (
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" aria-busy="true">
+          {[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-96 rounded-[32px]" />)}
+        </div>
+      ) : filteredStations.length === 0 ? (
          <div className="py-40 text-center glass-panel rounded-[60px] border border-dashed border-armoyu-card-border">
             <div className="w-24 h-24 bg-blue-500/5 rounded-full flex items-center justify-center mx-auto mb-8 border border-blue-500/10">
                <MapPin size={48} className="text-blue-500 opacity-20" />

@@ -133,6 +133,7 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, X-API-KEY, Authorization',
         'Access-Control-Allow-Credentials': 'true',
+        'Cache-Control': 'private, no-store',
       }
     });
   } catch (error: any) {
@@ -147,6 +148,7 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, X-API-KEY, Authorization',
         'Access-Control-Allow-Credentials': 'true',
+        'Cache-Control': 'private, no-store',
       }
     });
   }

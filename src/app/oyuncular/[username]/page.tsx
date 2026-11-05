@@ -12,6 +12,11 @@ import {
   useArmoyu, 
   NotFound,
   ProfileSkeleton,
+  OfflineNotice,
+  readRecentProfiles,
+  rememberProfile,
+  Group,
+  SoulmateSelectorModal,
   User 
 } from '@armoyu/ui';
 
@@ -32,7 +37,12 @@ export default function UserProfilePage() {
   const [fetchedUser, setFetchedUser] = useState<any>(null);
   const [isFetchingUser, setIsFetchingUser] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [activeTab, setActiveTab] = useState('Kariyer');
+  const [offlineAt, setOfflineAt] = useState<number | null>(null);
+  const [userGroups, setUserGroups] = useState<any[]>([]);
+  const [isSoulmateOpen, setIsSoulmateOpen] = useState(false);
+  // Ruh eşi / takım değişince profil yeniden çekilir
+  const [profileVersion, setProfileVersion] = useState(0);
+  const [activeTab, setActiveTab] = useState('Gönderiler');
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
 
   // Arkadaşlık State'leri
@@ -49,10 +59,18 @@ export default function UserProfilePage() {
       
       setIsFetchingUser(true);
       setNotFound(false);
+      setOfflineAt(null);
+      // Daha önce açılan profil anında görünür; güncel bilgi arkadan gelir
+      const recent = readRecentProfiles().find(p => p.username === username);
+      setFetchedUser(recent ? User.fromAPI({ id: recent.user_id, username: recent.username, displayName: recent.display_name, avatar: recent.avatar_url }) : null);
       try {
         const result = await api.users.getUserByUsername(username);
         if (result && result.durum === 1 && result.icerik) {
-          setFetchedUser(User.fromAPI(result.icerik));
+          const profile = User.fromAPI(result.icerik);
+          setFetchedUser(profile);
+          rememberProfile({ user_id: String(profile.id), username: profile.username, display_name: profile.displayName, avatar_url: profile.avatar });
+        } else if (recent && !navigator.onLine) {
+          setOfflineAt(recent.at ?? Date.now());
         } else {
           setFetchedUser(null);
           setNotFound(true);
@@ -65,11 +83,35 @@ export default function UserProfilePage() {
     };
 
     fetchUserProfile();
-  }, [username, api]);
+  }, [username, api, profileVersion]);
+
+  // Profilin grupları: kenar çubuğu ve "Tümünü gör" sekmesi displayUser.groups'u okur
+  const profileUserId = fetchedUser?.id;
+  useEffect(() => {
+    setUserGroups([]);
+    if (!profileUserId) return;
+    // shortcut: yayınlanan @armoyu/core tiplerinde userId yalnızca sayı; yeni sürüm çıkınca cast kalkacak
+    (api.groups as any).getUserGroups(profileUserId).then((response: any) => {
+      const list = response.durum === 1 && Array.isArray(response.icerik) ? response.icerik : [];
+      // Grup kutusu görseli avatar alanından okur
+      setUserGroups(list.map((g: any) => { const group = Group.fromAPI(g); return Object.assign(group, { avatar: group.logo }); }));
+    });
+  }, [profileUserId, api]);
 
   const isOwnProfile = user?.username === username;
   // Kendi profilinde sayaçlar ziyaretten de gelir; ad ve avatar oturumdaki son halinden
-  const displayUser = isOwnProfile ? (fetchedUser ? Object.assign(Object.create(Object.getPrototypeOf(fetchedUser)), fetchedUser, { ...user }) : user) : fetchedUser;
+  // Kendi profilinde ad / avatar oturumdan (en güncel); /me'de olmayan profil alanları profilden
+  const baseUser = isOwnProfile
+    ? (fetchedUser
+        ? Object.assign(Object.create(Object.getPrototypeOf(fetchedUser)), fetchedUser, { ...user }, {
+            bio: fetchedUser.bio,
+            soulmate: fetchedUser.soulmate,
+            education: fetchedUser.education,
+            favoriteTeam: fetchedUser.favoriteTeam,
+          })
+        : user)
+    : fetchedUser;
+  const displayUser = baseUser && userGroups.length ? Object.assign(Object.create(Object.getPrototypeOf(baseUser)), baseUser, { groups: userGroups }) : baseUser;
 
   const fetchFriends = async (isLoadMore = false) => {
     if (!displayUser?.id) return;
@@ -77,8 +119,10 @@ export default function UserProfilePage() {
     setIsLoadingFriends(true);
     try {
       const targetPage = isLoadMore ? friendsPage + 1 : 1;
-      const d = await api.users.getFriendsList(targetPage, { 
-        userId: Number(displayUser.id),
+      // Kimlik Phatsa'da UUID; sayıya çevrilmez
+      // shortcut: yayınlanan @armoyu/core tiplerinde userId yalnızca sayı; yeni sürüm çıkınca cast kalkacak
+      const d = await (api.users as any).getFriendsList(targetPage, { 
+        userId: displayUser.id,
         limit: 20 
       });
       
@@ -102,16 +146,15 @@ export default function UserProfilePage() {
     }
   };
 
+  // Kenar çubuğundaki arkadaş kutusu da kullandığı için sekme beklenmeden yüklenir
   useEffect(() => {
-    if (activeTab === 'Arkadaşlar' && !hasFetchedFriends) {
-      fetchFriends(false);
-    }
-  }, [activeTab, hasFetchedFriends, displayUser?.id, api]);
+    if (!hasFetchedFriends) fetchFriends(false);
+  }, [hasFetchedFriends, displayUser?.id, api]);
 
   if (notFound && !isOwnProfile) return <NotFound />;
 
   // Mock yerine yükleme görünümü: oturum ya da profil gelene kadar
-  if (!displayUser || (isFetchingUser && !isOwnProfile)) {
+  if (!displayUser) {
     return (
       <main className="min-h-screen pt-4 pb-12 w-full">
         <ProfileSkeleton />
@@ -122,12 +165,26 @@ export default function UserProfilePage() {
   return (
     <main className="min-h-screen pt-4 pb-12 w-full animate-in fade-in duration-500">
       <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-6">
-        
+        <OfflineNotice at={offlineAt} />
+
         {/* Banner & Header */}
         <ProfileHeader user={displayUser} isOwnProfile={isOwnProfile} />
 
         {/* Quick Stats */}
-        <ProfileStats user={displayUser as any} />
+        <ProfileStats
+          user={displayUser as any}
+          isOwnProfile={isOwnProfile}
+          onSaveBio={async (bio: string) => {
+            // shortcut: yayınlanan @armoyu/core tiplerinde updateProfileChoices yok; yeni sürüm çıkınca cast kalkacak
+            const response = await (api.users as any).updateProfileChoices({ bio });
+            if (response.durum !== 1) {
+              alert(response.aciklama || 'Kaydedilemedi.');
+              return false;
+            }
+            setProfileVersion(v => v + 1);
+            return true;
+          }}
+        />
 
         {/* 
            Sidebar & Content Layout (Sekmeler ve Akış)
@@ -142,6 +199,7 @@ export default function UserProfilePage() {
                friends={friends}
                onManageCloud={() => setIsCloudModalOpen(true)}
                onSeeAllFriends={() => setActiveTab('Arkadaşlar')}
+               onSoulmateEdit={isOwnProfile ? () => setIsSoulmateOpen(true) : undefined}
              />
           </div>
           
@@ -162,6 +220,18 @@ export default function UserProfilePage() {
 
       </div>
       <CloudModal isOpen={isCloudModalOpen} onClose={() => setIsCloudModalOpen(false)} />
+      <SoulmateSelectorModal
+        isOpen={isSoulmateOpen}
+        onClose={() => setIsSoulmateOpen(false)}
+        friends={friends}
+        onSelect={async (soulmate: any) => {
+          // shortcut: yayınlanan @armoyu/core tiplerinde updateProfileChoices yok; yeni sürüm çıkınca cast kalkacak
+          const response = await (api.users as any).updateProfileChoices({ soulmateUserId: soulmate?.id ?? null });
+          setIsSoulmateOpen(false);
+          if (response.durum === 1) setProfileVersion(v => v + 1);
+          else alert(response.aciklama || 'Ruh eşi kaydedilemedi.');
+        }}
+      />
     </main>
   );
 }
