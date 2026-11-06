@@ -2,6 +2,7 @@
 
 import { useAuth, Introduction } from "@armoyu/ui";
 import { Dashboard } from "../components/Dashboard";
+import { VersionInfo } from "../components/VersionInfo";
 
 export default function Home() {
   const { user, isLoading } = useAuth();
@@ -17,5 +18,10 @@ export default function Home() {
     );
   }
 
-  return user ? <Dashboard /> : <Introduction />;
+  return (
+    <>
+      {user ? <Dashboard /> : <Introduction />}
+      <VersionInfo />
+    </>
+  );
 }

@@ -1,7 +1,16 @@
+import fs from 'fs';
 import path from 'path';
 import type { NextConfig } from "next";
 
+// Ana sayfada gösterilen sürümler: derlemede gerçekten kurulu paketlerden okunur
+const versionOf = (file: string) => JSON.parse(fs.readFileSync(path.resolve(__dirname, file), 'utf8')).version as string;
+
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_WEB_VERSION: versionOf('package.json'),
+    NEXT_PUBLIC_UI_VERSION: versionOf('node_modules/@armoyu/ui/package.json'),
+    NEXT_PUBLIC_CORE_VERSION: versionOf('node_modules/@armoyu/core/package.json'),
+  },
   transpilePackages: ['@armoyu/ui', '@armoyu/core'],
   typescript: {
     // Temporary: core/ui model definitions are not fully aligned yet.
