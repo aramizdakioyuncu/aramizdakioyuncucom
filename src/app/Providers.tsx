@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ARMOYUCore, ApiVersion } from '@armoyu/core';
 import { 
   ArmoyuUI,
@@ -8,6 +8,7 @@ import {
   CartProvider, 
   ThemeProvider, 
   ChatProvider, 
+  CallProvider,
   SocketProvider, 
   LayoutProvider,
   ArmoyuProvider,
@@ -39,6 +40,13 @@ if (typeof window !== 'undefined' && localStorage.getItem(CONSENT_KEY) === 'all'
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  // P2P arama (Phatsa Görüşmeler) yalnızca yeni API'de; adres ve açık anahtar sunucudan
+  const [callConfig, setCallConfig] = useState<{ url?: string; key?: string }>({});
+  useEffect(() => {
+    if (apiVersion !== ApiVersion.CURRENT) return;
+    fetch('/api/call-config').then((r) => r.json()).then((c) => c.enabled && setCallConfig(c)).catch(() => undefined);
+  }, []);
+
   return (
     <ThemeProvider>
       <ArmoyuProvider 
@@ -64,7 +72,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <LayoutProvider>
               <SocketProvider>
                 <ChatProvider>
-                  {children}
+                  <CallProvider phatsaUrl={callConfig.url} phatsaKey={callConfig.key}>
+                    {children}
+                  </CallProvider>
                 </ChatProvider>
               </SocketProvider>
             </LayoutProvider>
