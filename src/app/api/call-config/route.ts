@@ -8,5 +8,6 @@ export function GET() {
   const key = process.env.PHATSA_PUBLISHABLE_KEY;
   // Yanlışlıkla gizli anahtar girilirse tarayıcıya gönderilmez
   if (!url || !key?.startsWith('pk_')) return NextResponse.json({ enabled: false });
-  return NextResponse.json({ enabled: true, url: url.replace(/\/+$/, ''), key });
+  // SDK /api/v1'i kendisi ekler: adres panel kökü ya da /api/v1 ile girilse de çalışsın
+  return NextResponse.json({ enabled: true, url: url.replace(/\/+$/, '').replace(/\/api\/v1$/, ''), key });
 }
