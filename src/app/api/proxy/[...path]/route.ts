@@ -60,9 +60,11 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
   // 3. Target Armoyu API: /v1 is the current API, anything else the legacy bot API
   // Yollar ayrık: /v1 yeni backend (Phatsa), diğerleri eski API; böylece istemcideki eski / yeni seçimi tek başına yeter
   const isCurrentApi = actualPath.startsWith('/v1/');
-  const apiBase = isCurrentApi
+  const rawBase = isCurrentApi
     ? process.env.ARMOYU_API_URL
     : (process.env.ARMOYU_LEGACY_API_URL || 'https://api.armoyu.com');
+  // Ortam değişkeni "api.armoyu.com" gibi şemasız girilirse fetch adresi çözemez
+  const apiBase = rawBase && (/^https?:\/\//.test(rawBase) ? rawBase : `https://${rawBase}`).replace(/\/+$/, '');
   // Eski API kendi anahtarını ister; ayrı tanımlı değilse ortak anahtar
   const targetKey = isCurrentApi ? secretApiKey : (process.env.ARMOYU_LEGACY_API_KEY || secretApiKey);
   if (!apiBase) {
@@ -148,10 +150,10 @@ async function handleProxy(req: NextRequest, pathSegments: string[]) {
       }
     });
   } catch (error: any) {
-    console.error(`[Proxy Error] ${method} ${targetUrl}:`, error);
+    console.error(`[Proxy Error] ${method} ${actualPath}:`, error); // adreste eski API anahtarı var, loga yazılmaz
     return NextResponse.json({
       durum: 0,
-      aciklama: `Proxy Error: ${error.message}`
+      aciklama: 'Sunucuya ulaşılamadı. Lütfen biraz sonra tekrar deneyin.'
     }, {
       status: 500,
       headers: {
