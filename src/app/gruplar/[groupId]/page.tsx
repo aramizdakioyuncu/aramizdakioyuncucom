@@ -89,6 +89,13 @@ export default function GroupDetailPage() {
       }
    };
 
+   // Daveti reddetmek davet kaydını siler (ayrılmakla aynı uç)
+   const handleDecline = async () => {
+      const response = await ui.api.groupMembers.leave(group!.id as any);
+      if (response && response.durum === 1) await reloadGroup();
+      else alert(response?.aciklama || 'Davet reddedilemedi.');
+   };
+
    const handleLeave = async () => {
       if (!confirm('Gruptan ayrılmak istediğinize emin misiniz?')) return;
       try {
@@ -142,6 +149,17 @@ export default function GroupDetailPage() {
    return (
       <div className="pb-20 animate-in fade-in slide-in-from-bottom-8 duration-700 relative text-left leading-none">
          <PageWidth width="max-w-[1440px]" />
+
+         {/* Davet: kabul et ya da reddet */}
+         {group.myStatus === 'invited' && (
+            <div role="status" className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 rounded-2xl border border-armoyu-primary/30 bg-armoyu-primary/10">
+               <p className="text-sm font-bold text-armoyu-text">Bu gruba davet edildin.</p>
+               <div className="flex gap-2">
+                  <button type="button" onClick={handleJoin} className="px-5 py-2 rounded-xl bg-armoyu-primary text-white text-xs font-black uppercase tracking-widest">Kabul Et</button>
+                  <button type="button" onClick={handleDecline} aria-label="Daveti reddet" title="Daveti reddet" className="w-9 h-9 rounded-xl bg-black/5 dark:bg-white/10 text-armoyu-text flex items-center justify-center hover:bg-red-500/10 hover:text-red-500">✕</button>
+               </div>
+            </div>
+         )}
 
          {/* 1. Header (Kapak, İsim, Katıl Butonları) */}
          <GroupHeader

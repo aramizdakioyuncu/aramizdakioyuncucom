@@ -6,6 +6,7 @@ import './globals.css';
 import { Header, Footer, FloatingChatButton, MainLayoutWrapper } from '@armoyu/ui';
 import { Providers } from './Providers';
 import { BackendSwitch } from '@/components/BackendSwitch';
+import { CookieConsent } from '@/components/CookieConsent';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -78,6 +79,7 @@ export default function RootLayout({
 
           <Footer />
           <BackendSwitch />
+          <CookieConsent />
         </Providers>
       </body>
     </html>

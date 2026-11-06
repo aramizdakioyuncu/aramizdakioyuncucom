@@ -11,8 +11,10 @@ import {
   SocketProvider, 
   LayoutProvider,
   ArmoyuProvider,
-  Session
+  Session,
+  CONSENT_KEY
 } from '@armoyu/ui';
+import { registerServiceWorker } from '@/components/CookieConsent';
 
 // Test için eski / yeni backend seçimi (BackendSwitch); varsayılan yeni (Phatsa)
 export const API_VERSION_KEY = 'armoyu_api_version';
@@ -30,11 +32,10 @@ if (typeof window !== 'undefined') {
 
 const ui = new ArmoyuUI(api);
 
-// Çevrimdışı açılış için service worker; geliştirmede kapalı (anlık yeniden yükleme önbelleğe takılmasın)
-if (typeof window !== 'undefined' && 'serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-  const register = () => navigator.serviceWorker.register('/sw.js').catch((error) => console.warn('[Providers] Service worker kaydı başarısız:', error));
-  if (document.readyState === 'complete') register();
-  else window.addEventListener('load', register, { once: true });
+// Çevrimdışı açılış için service worker; yalnızca çerez onayında "tümü" seçildiyse (CookieConsent)
+if (typeof window !== 'undefined' && localStorage.getItem(CONSENT_KEY) === 'all') {
+  if (document.readyState === 'complete') registerServiceWorker();
+  else window.addEventListener('load', registerServiceWorker, { once: true });
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
