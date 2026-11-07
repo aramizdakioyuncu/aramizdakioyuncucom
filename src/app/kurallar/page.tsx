@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Search, 
   Shield, 
@@ -17,24 +17,63 @@ import {
   LayoutGrid,
   List
 } from 'lucide-react';
-import { PUNISHMENT_RULES, PunishmentRule, getRestrictionLabel, RuleCategory, getCommunityComplianceLevel } from '@armoyu/ui';
+import { getCommunityComplianceLevel } from '@armoyu/ui';
+
+type Penalty = { step: number; penalty: 'warning' | 'mute' | 'ban'; duration_minutes: number | null };
+type Rule = { id: string; code: string; title: string; description: string | null; category: string | null; penalties: Penalty[] };
+type Severity = 'low' | 'medium' | 'high' | 'critical';
+
+const PENALTY_TR = { warning: 'Uyarı', mute: 'Susturma', ban: 'Yasak' } as const;
+const SEVERITY_TR: Record<Severity, string> = { low: 'Düşük', medium: 'Orta', high: 'Yüksek', critical: 'Kritik' };
+
+/** 1440 → "1 gün", 60 → "1 saat"; boş süre kalıcıdır */
+function durationLabel(minutes: number | null) {
+  if (minutes == null) return 'kalıcı';
+  if (minutes % 1440 === 0) return `${minutes / 1440} gün`;
+  if (minutes % 60 === 0) return `${minutes / 60} saat`;
+  return `${minutes} dakika`;
+}
+
+const penaltyLabel = (p: Penalty) =>
+  p.penalty === 'warning' ? 'Uyarı' : `${durationLabel(p.duration_minutes)} ${PENALTY_TR[p.penalty].toLowerCase()}`.replace('kalıcı yasak', 'Kalıcı yasak');
+
+/** Risk, kuralın en ağır cezasından */
+function severityOf(rule: Rule): Severity {
+  if (rule.penalties.some((p) => p.penalty === 'ban' && p.duration_minutes == null)) return 'critical';
+  if (rule.penalties.some((p) => p.penalty === 'ban')) return 'high';
+  if (rule.penalties.some((p) => p.penalty === 'mute')) return 'medium';
+  return 'low';
+}
 
 export default function RulesPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState<RuleCategory | 'HEPSİ'>('HEPSİ');
+  const [activeCategory, setActiveCategory] = useState<string>('HEPSİ');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [rules, setRules] = useState<Rule[] | null>(null);
+  const [loadError, setLoadError] = useState('');
 
-  const categories: (RuleCategory | 'HEPSİ')[] = ['HEPSİ', 'SOHBET', 'İÇERİK', 'GÜVENLİK', 'HESAP', 'ETKİNLİK'];
+  // Kurallar panelden yönetilir (Phatsa Kurallar eklentisi)
+  // shortcut: yayınlanan @armoyu/core kural metodu eski biçimi bekliyor; proxy'ye doğrudan gidiliyor
+  useEffect(() => {
+    fetch('/api/proxy/v1/rules')
+      .then((r) => r.json())
+      .then((d) => (d?.durum === 1 && Array.isArray(d.icerik) ? setRules(d.icerik) : setLoadError(d?.aciklama || 'Kurallar yüklenemedi.')))
+      .catch(() => setLoadError('Kurallar yüklenemedi.'));
+  }, []);
+
+  const categories = useMemo(
+    () => ['HEPSİ', ...Array.from(new Set((rules ?? []).map((r) => r.category).filter(Boolean) as string[]))],
+    [rules],
+  );
 
   const filteredRules = useMemo(() => {
-    return PUNISHMENT_RULES.filter(rule => {
-      const matchesSearch = rule.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           rule.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           rule.article.toLowerCase().includes(searchQuery.toLowerCase());
+    const q = searchQuery.toLocaleLowerCase('tr');
+    return (rules ?? []).filter(rule => {
+      const matchesSearch = [rule.title, rule.description ?? '', rule.code].some((t) => t.toLocaleLowerCase('tr').includes(q));
       const matchesCategory = activeCategory === 'HEPSİ' || rule.category === activeCategory;
       return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, activeCategory]);
+  }, [rules, searchQuery, activeCategory]);
 
   return (
     <div className="min-h-screen bg-transparent pb-20 animate-in fade-in duration-1000">
@@ -137,7 +176,9 @@ export default function RulesPage() {
         {viewMode === 'grid' ? (
           /* Grid View */
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
-             {filteredRules.length > 0 ? (
+             {!rules ? (
+               <div className="col-span-full py-20 text-center text-sm font-bold text-armoyu-text-muted">{loadError || 'Kurallar yükleniyor…'}</div>
+             ) : filteredRules.length > 0 ? (
                filteredRules.map((rule, idx) => (
                  <div 
                    key={rule.id}
@@ -146,58 +187,43 @@ export default function RulesPage() {
                  >
                     <div className="flex justify-between items-start mb-6">
                        <div className="px-4 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-500 text-xs font-black italic">
-                          {rule.article}
+                          {rule.code}
                        </div>
                        <div className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] ${
-                          rule.severity === 'critical' ? 'bg-red-600 text-white animate-pulse' :
-                          rule.severity === 'high' ? 'bg-orange-500/20 text-orange-500' :
-                          rule.severity === 'medium' ? 'bg-yellow-500/20 text-yellow-600' :
+                          severityOf(rule) === 'critical' ? 'bg-red-600 text-white' :
+                          severityOf(rule) === 'high' ? 'bg-orange-500/20 text-orange-500' :
+                          severityOf(rule) === 'medium' ? 'bg-yellow-500/20 text-yellow-600' :
                           'bg-blue-500/20 text-blue-500'
                        }`}>
-                          {rule.severity} Risk
+                          {SEVERITY_TR[severityOf(rule)]} Risk
                        </div>
                     </div>
 
                     <h3 className="text-2xl font-black text-armoyu-text uppercase italic tracking-tighter leading-none mb-3 group-hover:text-blue-500 transition-colors">
-                       {rule.name}
+                       {rule.title}
                     </h3>
                     
                     <p className="text-sm font-medium text-armoyu-text-muted leading-relaxed line-clamp-3 mb-8 opacity-80 min-h-[4.5rem]">
                        {rule.description}
                     </p>
 
-                    <div className="space-y-6 pt-6 border-t border-white/5 text-left">
-                       <div className="flex justify-between items-center text-left">
-                          <div className="flex items-center gap-3">
-                             <Clock size={16} className="text-blue-500" />
-                             <span className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">UYGULANAN MÜEYYİDE:</span>
-                          </div>
-                          <span className="text-xs font-black text-white bg-blue-600/20 border border-blue-600/30 px-3 py-1 rounded-lg italic">
-                             {rule.duration === 0 ? 'KALICI BAN' : `${rule.duration} SAAT`}
-                          </span>
+                    <div className="pt-6 border-t border-white/5 text-left space-y-4">
+                       <div className="flex items-center gap-3">
+                          <Clock size={16} className="text-blue-500" />
+                          <span className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">CEZA KADEMELERİ</span>
                        </div>
-
-                       <div className="space-y-4 text-left">
-                          <div className="flex items-center gap-3">
-                             <Lock size={16} className="text-red-500" />
-                             <span className="text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">KISITLAMALAR:</span>
-                          </div>
-                          <div className="flex flex-wrap gap-2 text-left">
-                             {rule.restrictions.map(req => (
-                               <div 
-                                 key={req}
-                                 className="flex items-center gap-2 px-3 py-1.5 bg-red-500/10 border border-red-500/20 rounded-xl text-[9px] font-black text-red-500 uppercase tracking-widest italic"
-                               >
-                                  {req === 'CHAT_BAN' && <MessageSquareX size={12} />}
-                                  {req === 'POST_BAN' && <FileX size={12} />}
-                                  {req === 'LOGIN_BAN' && <Ban size={12} />}
-                                  {req === 'PERMANENT_BAN' && <Lock size={12} />}
-                                  {req === 'PROFILE_EDIT_BAN' && <Edit3 size={12} />}
-                                  {getRestrictionLabel(req)}
-                               </div>
-                             ))}
-                          </div>
-                       </div>
+                       <ol className="space-y-2">
+                          {rule.penalties.map((p) => (
+                            <li key={p.step} className="flex items-center justify-between gap-3 text-xs">
+                               <span className="font-bold text-armoyu-text-muted">{p.step}. ihlal</span>
+                               <span className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-black ${p.penalty === 'ban' ? 'bg-red-500/10 text-red-500' : p.penalty === 'mute' ? 'bg-yellow-500/10 text-yellow-600' : 'bg-blue-500/10 text-blue-500'}`}>
+                                  {p.penalty === 'ban' ? <Ban size={12} /> : p.penalty === 'mute' ? <MessageSquareX size={12} /> : <AlertTriangle size={12} />}
+                                  {penaltyLabel(p)}
+                               </span>
+                            </li>
+                          ))}
+                       </ol>
+                       <p className="text-[10px] font-bold text-armoyu-text-muted opacity-70">Son kademeden sonraki ihlaller son kademeyle cezalandırılır.</p>
                     </div>
                  </div>
                ))
@@ -214,9 +240,8 @@ export default function RulesPage() {
                       <tr className="bg-black/20 border-b border-armoyu-card-border">
                          <th className="px-8 py-6 text-[10px] font-black text-armoyu-text-muted uppercase tracking-[0.3em] italic">Madde</th>
                          <th className="px-8 py-6 text-[10px] font-black text-armoyu-text-muted uppercase tracking-[0.3em] italic">Başlık & Açıklama</th>
-                         <th className="px-8 py-6 text-[10px] font-black text-armoyu-text-muted uppercase tracking-[0.3em] italic">Süre</th>
+                         <th className="px-8 py-6 text-[10px] font-black text-armoyu-text-muted uppercase tracking-[0.3em] italic">Ceza Kademeleri</th>
                          <th className="px-8 py-6 text-[10px] font-black text-armoyu-text-muted uppercase tracking-[0.3em] italic">Risk</th>
-                         <th className="px-8 py-6 text-[10px] font-black text-armoyu-text-muted uppercase tracking-[0.3em] italic text-right">Kısıtlamalar</th>
                       </tr>
                    </thead>
                    <tbody className="divide-y divide-white/5">
@@ -225,39 +250,24 @@ export default function RulesPage() {
                           <tr key={rule.id} className="hover:bg-blue-600/[0.03] transition-all group duration-300">
                              <td className="px-8 py-6 whitespace-nowrap">
                                 <span className="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-500 text-[10px] font-black italic">
-                                   {rule.article}
+                                   {rule.code}
                                 </span>
                              </td>
                              <td className="px-8 py-6">
-                                <div className="text-sm font-black text-armoyu-text uppercase italic tracking-tighter group-hover:text-blue-500 transition-colors">{rule.name}</div>
+                                <div className="text-sm font-black text-armoyu-text uppercase italic tracking-tighter group-hover:text-blue-500 transition-colors">{rule.title}</div>
                                 <div className="text-[10px] text-armoyu-text-muted truncate max-w-xs">{rule.description}</div>
                              </td>
                              <td className="px-8 py-6 whitespace-nowrap">
-                                <span className="text-[10px] font-black text-white bg-blue-600/20 border border-blue-600/30 px-3 py-1 rounded-lg italic">
-                                   {rule.duration === 0 ? 'KALICI' : `${rule.duration} SA`}
-                                </span>
+                                <span className="text-[10px] font-bold text-armoyu-text">{rule.penalties.map(penaltyLabel).join(' → ')}</span>
                              </td>
-                             <td className="px-8 py-6 whitespace-nowrap text-left text-left">
+                             <td className="px-8 py-6 whitespace-nowrap">
                                 <div className={`text-[9px] font-black uppercase tracking-widest ${
-                                   rule.severity === 'critical' ? 'text-red-500' :
-                                   rule.severity === 'high' ? 'text-orange-500' :
-                                   rule.severity === 'medium' ? 'text-yellow-500' :
+                                   severityOf(rule) === 'critical' ? 'text-red-500' :
+                                   severityOf(rule) === 'high' ? 'text-orange-500' :
+                                   severityOf(rule) === 'medium' ? 'text-yellow-500' :
                                    'text-blue-500'
                                 }`}>
-                                   {rule.severity}
-                                </div>
-                             </td>
-                             <td className="px-8 py-6 text-right">
-                                <div className="flex justify-end gap-1.5 flex-wrap">
-                                   {rule.restrictions.map(req => (
-                                     <div key={req} className="p-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500" title={getRestrictionLabel(req)}>
-                                        {req === 'CHAT_BAN' && <MessageSquareX size={12} />}
-                                        {req === 'POST_BAN' && <FileX size={12} />}
-                                        {req === 'LOGIN_BAN' && <Ban size={12} />}
-                                        {req === 'PERMANENT_BAN' && <Lock size={12} />}
-                                        {req === 'PROFILE_EDIT_BAN' && <Edit3 size={12} />}
-                                     </div>
-                                   ))}
+                                   {SEVERITY_TR[severityOf(rule)]}
                                 </div>
                              </td>
                           </tr>
@@ -265,7 +275,7 @@ export default function RulesPage() {
                       ) : null }
                    </tbody>
                 </table>
-                {filteredRules.length === 0 && <NoResults />}
+                {rules && filteredRules.length === 0 && <NoResults />}
              </div>
           </div>
         )}
