@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { PageWidth, GroupApplicationModal as ApplicationModal, roles, YoutubeIcon, TwitterIcon, LinkedinIcon } from '@armoyu/ui';
 import { CheckCircle2, Star, Sparkles, PlusCircle } from 'lucide-react';
 
@@ -83,8 +84,59 @@ const TEAM_DATA: TeamCategory[] = [
   }
 ];
 
+type DirectoryMember = { user_id: string; username?: string | null; display_name?: string | null; avatar_url?: string | null };
+type DirectoryRole = { role_key: string; role_name: string; description: string | null; color: string | null; members?: DirectoryMember[] };
+type DirectoryGroup = { id: string; name: string; description: string | null; roles: DirectoryRole[] };
+
+/** Panelden yönetilen ekip: rol grupları → roller → (Phatsa verdiğinde) rolü taşıyan üyeler */
+function RoleDirectory({ groups }: { groups: DirectoryGroup[] }) {
+  return (
+    <div className="space-y-24">
+      {groups.map((group) => (
+        <section key={group.id} aria-label={group.name} className="space-y-10">
+          <div className="pb-6 border-b border-armoyu-card-border">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-blue-600/10 border border-armoyu-card-border flex items-center justify-center text-blue-600"><Sparkles size={24} /></div>
+              <h2 className="text-3xl font-black uppercase tracking-tighter italic text-armoyu-text">{group.name}</h2>
+              <span className="ml-auto text-[10px] font-black text-armoyu-text-muted uppercase tracking-widest">{group.roles.length} ROL</span>
+            </div>
+            {group.description && <p className="mt-3 text-sm font-medium text-armoyu-text-muted max-w-3xl">{group.description}</p>}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {group.roles.map((role) => (
+              <article key={role.role_key} className="relative p-7 rounded-[36px] bg-armoyu-card-bg border border-armoyu-card-border overflow-hidden">
+                <div className="absolute inset-x-0 top-0 h-1" style={{ backgroundColor: role.color || '#3b82f6' }} />
+                <h3 className="text-lg font-black uppercase tracking-tight italic" style={{ color: role.color || undefined }}>{role.role_name}</h3>
+                {role.description && <p className="mt-3 text-sm text-armoyu-text-muted leading-relaxed">{role.description}</p>}
+                {!!role.members?.length && (
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    {role.members.map((m) => (
+                      <Link key={m.user_id} href={`/oyuncular/${m.username ?? ''}`} className="flex items-center gap-2 pr-3 rounded-full bg-black/5 dark:bg-white/5 hover:bg-blue-600/10 transition-colors">
+                        <img src={m.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${m.username || m.user_id}`} alt="" className="w-8 h-8 rounded-full object-cover" />
+                        <span className="text-xs font-bold text-armoyu-text">{m.display_name || m.username}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}
+
 export default function TeamPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [groups, setGroups] = useState<DirectoryGroup[]>([]);
+
+  // shortcut: @armoyu/core'da ekip metodu yok; proxy'ye doğrudan gidiliyor
+  useEffect(() => {
+    fetch('/api/proxy/v1/ekip').then((r) => r.json()).then((d) => {
+      if (d?.durum === 1) setGroups((d.icerik?.groups ?? []).filter((g: DirectoryGroup) => g.roles.length));
+    }).catch(() => undefined);
+  }, []);
 
   return (
     <div className="pb-32 animate-in fade-in duration-1000">
@@ -112,6 +164,8 @@ export default function TeamPage() {
         </p>
       </div>
 
+      {/* Panelde rol grupları tanımlıysa onlar; yoksa eski sabit liste */}
+      {groups.length ? <RoleDirectory groups={groups} /> : (
       <div className="space-y-32">
         {TEAM_DATA.map((group, gIdx) => (
           <div key={gIdx} className="space-y-12">
@@ -177,6 +231,8 @@ export default function TeamPage() {
           </div>
         ))}
       </div>
+
+      )}
 
       {/* Join the team section - Modernized */}
       <div className="mt-40 relative overflow-hidden rounded-[80px] border border-blue-500/20 bg-blue-600/[0.03] p-16 md:p-24 text-center group">
