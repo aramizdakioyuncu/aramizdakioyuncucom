@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { CreateGroupModal, GroupCard, PageWidth, useArmoyu, useAuth, Group } from '@armoyu/ui';
+import { CreateGroupModal, GroupCard, PageWidth, useArmoyu, useAuth, useChat, Group } from '@armoyu/ui';
 
 export default function GroupsPage() {
   const { ui } = useArmoyu();
@@ -49,6 +49,9 @@ export default function GroupsPage() {
     fetchGroups();
   }, [activeTab, ui.api.groups, refreshKey]);
 
+  // Açılan grup sohbetteki Gruplar sekmesinde hemen görünsün
+  const { fetchChatList } = useChat();
+
   const handleCreateClick = () => {
     if (user) setIsCreateOpen(true);
     else setIsLoginModalOpen(true);
@@ -59,6 +62,7 @@ export default function GroupsPage() {
     if (response?.durum === 1) {
       setIsCreateOpen(false);
       setRefreshKey((key) => key + 1);
+      fetchChatList(1, true);
     } else {
       alert(response?.aciklama || 'Grup oluşturulamadı.');
     }

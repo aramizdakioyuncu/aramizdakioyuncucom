@@ -14,6 +14,7 @@ import {
    GroupPermissions,
    useAuth, 
    useArmoyu,
+   useChat,
    Group,
    NotFound
 } from '@armoyu/ui';
@@ -22,6 +23,8 @@ import Link from 'next/link';
 export default function GroupDetailPage() {
    const { user, setIsLoginModalOpen } = useAuth();
    const { ui } = useArmoyu();
+   // Katılınca / ayrılınca sohbetteki gruplar sayfa yenilenmeden güncellensin
+   const { fetchChatList } = useChat();
    const params = useParams();
    const groupIdParam = params?.groupId as string;
 
@@ -80,7 +83,7 @@ export default function GroupDetailPage() {
       try {
          const response = await ui.api.groupMembers.join(group!.id as any);
          if (response && response.durum === 1) {
-            await reloadGroup();
+            { await reloadGroup(); fetchChatList(1, true); }
          } else {
             alert(response?.aciklama || 'Gruba katılamadınız.');
          }
@@ -92,7 +95,7 @@ export default function GroupDetailPage() {
    // Daveti reddetmek davet kaydını siler (ayrılmakla aynı uç)
    const handleDecline = async () => {
       const response = await ui.api.groupMembers.leave(group!.id as any);
-      if (response && response.durum === 1) await reloadGroup();
+      if (response && response.durum === 1) { await reloadGroup(); fetchChatList(1, true); }
       else alert(response?.aciklama || 'Davet reddedilemedi.');
    };
 
@@ -101,7 +104,7 @@ export default function GroupDetailPage() {
       try {
          const response = await ui.api.groupMembers.leave(group!.id as any);
          if (response && response.durum === 1) {
-            await reloadGroup();
+            { await reloadGroup(); fetchChatList(1, true); }
          } else {
             alert(response?.aciklama || 'Gruptan ayrılamadınız.');
          }
